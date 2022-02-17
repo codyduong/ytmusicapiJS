@@ -1,0 +1,29 @@
+{
+  "name": "ytmusicapijs",
+  "version": "0.20.0-prerelease.1",
+  "description": "unofficial API for YouTube Music",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Cody Duong",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^17.0.18",
+    "@types/utf8": "^3.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^4.0.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-promise": "^5.2.0",
+    "prettier": "^2.4.1",
+    "prettier-eslint-cli": "^5.0.1",
+    "typescript": "^4.6.1-rc"
+  },
+  "dependencies": {
+    "utf8": "^3.0.0"
+  }
+}
