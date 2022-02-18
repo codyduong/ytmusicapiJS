@@ -3,6 +3,14 @@ name: lint
 on:
   push:
     branches: [ main ]
+    paths:
+      - '**.ts'
+      - '.github/workflows/tsc-lint.yml'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tsconfig.json'
+      - '.prettierrc'
+      - 'eslintrc.js'
   pull_request:
     branches: [ main ]
 

@@ -3,6 +3,12 @@ name: tsc
 on:
   push:
     branches: [ main ]
+    paths:
+      - '**.ts'
+      - '.github/workflows/tsc-lint.yml'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tsconfig.json'
   pull_request:
     branches: [ main ]
 
