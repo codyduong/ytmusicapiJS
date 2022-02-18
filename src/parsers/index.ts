@@ -1,15 +1,23 @@
 //Equivalent to __init__.py
-export const RUN_TEXT = ['runs', 0, 'text'];
-export const TAB_CONTENT = ['tabs', 0, 'tabRenderer', 'content'];
-export const SINGLE_COLUMN_TAB = [
+export const RUN_TEXT: ['runs', 0, 'text'] = ['runs', 0, 'text'];
+export const TAB_CONTENT: ['tabs', number, 'tabRenderer', 'content'] = [
+  'tabs',
+  0,
+  'tabRenderer',
+  'content',
+];
+export const SINGLE_COLUMN_TAB: [
   'contents',
   'singleColumnBrowseResultsRenderer',
-  ...TAB_CONTENT,
+  ...typeof TAB_CONTENT
+] = ['contents', 'singleColumnBrowseResultsRenderer', ...TAB_CONTENT];
+export const SECTION_LIST: ['sectionListRenderer', 'contents'] = [
+  'sectionListRenderer',
+  'contents',
 ];
-export const SECTION_LIST = ['sectionListRenderer', 'contents'];
 export const SECTION_LIST_ITEM = ['sectionListRenderer', 'contents', 0];
 export const ITEM_SECTION = ['itemSectionRenderer', 'contents', 0];
-export const MUSIC_SHELF = ['musicShelfRenderer'];
+export const MUSIC_SHELF: ['musicShelfRenderer'] = ['musicShelfRenderer'];
 export const GRID = ['gridRenderer'];
 export const GRID_ITEMS = [...GRID, 'items'];
 export const MENU = ['menu', 'menuRenderer'];
@@ -31,23 +39,26 @@ export const NAVIGATION_BROWSE_ID = [
   'browseEndpoint',
   'browseId',
 ];
-export const NAVIGATION_VIDEO_ID = [
+export const NAVIGATION_VIDEO_ID: [
   'navigationEndpoint',
   'watchEndpoint',
-  'videoId',
-];
-export const NAVIGATION_PLAYLIST_ID = [
+  'videoId'
+] = ['navigationEndpoint', 'watchEndpoint', 'videoId'];
+export const NAVIGATION_PLAYLIST_ID: [
   'navigationEndpoint',
   'watchEndpoint',
-  'playlistId',
-];
-export const NAVIGATION_WATCH_PLAYLIST_ID = [
+  'playlistId'
+] = ['navigationEndpoint', 'watchEndpoint', 'playlistId'];
+export const NAVIGATION_WATCH_PLAYLIST_ID: [
   'navigationEndpoint',
   'watchPlaylistEndpoint',
-  'playlistId',
-];
+  'playlistId'
+] = ['navigationEndpoint', 'watchPlaylistEndpoint', 'playlistId'];
 export const HEADER_DETAIL = ['header', 'musicDetailHeaderRenderer'];
-export const DESCRIPTION = ['description', ...RUN_TEXT];
+export const DESCRIPTION: ['description', ...typeof RUN_TEXT] = [
+  'description',
+  ...RUN_TEXT,
+];
 export const CAROUSEL = ['musicCarouselShelfRenderer'];
 export const CAROUSEL_CONTENTS = [...CAROUSEL, 'contents'];
 export const CAROUSEL_TITLE = [
@@ -62,8 +73,8 @@ export const FRAMEWORK_MUTATIONS = [
   'entityBatchUpdate',
   'mutations',
 ];
-export const TITLE = ['title', 'runs', 0];
-export const TITLE_TEXT = ['title', ...RUN_TEXT];
+export const TITLE: ['title', 'runs', 0] = ['title', 'runs', 0];
+export const TITLE_TEXT: ['title', ...typeof RUN_TEXT] = ['title', ...RUN_TEXT];
 export const TEXT_RUN = ['text', 'runs', 0];
 export const TEXT_RUN_TEXT = ['text', 'runs', 0, 'text'];
 export const SUBTITLE = ['subtitle', ...RUN_TEXT];

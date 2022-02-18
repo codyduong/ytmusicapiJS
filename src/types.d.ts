@@ -11,11 +11,11 @@ export type Headers = {
   authorization?: string;
   cookie?: string;
 };
-
 export type Filter =
   | 'songs'
   | 'videos'
   | 'albums'
+  | 'artists'
   | 'playlists'
   | 'community_playlists'
   | 'featured_playlists'
@@ -24,13 +24,12 @@ export type FilterSingular =
   | 'song'
   | 'video'
   | 'album'
+  | 'artist'
   | 'playlist'
   | 'community_playlist'
   | 'featured_playlist'
   | 'upload';
 export type Scope = 'library' | 'uploads';
-
-//@codyduong verify this is correct...
 export type Album = {
   title: string;
   year: string; //number?

@@ -73,12 +73,16 @@ More comprehensive list and explanation [here in the original repo](https://gith
         </tr>
         <tr><td>create/delete playlists</td><td>❌</td><td>0.20.0</td></tr>
         <tr><td>modify playlists</td><td>❌</td><td>0.20.0</td></tr>
-        <tr><td>get playlist contents</td><td>❌</td><td>0.20.0</td></tr>
+        <tr><td>get playlist contents</td><td>🐣</td><td>0.20.0</td></tr>
         <tr>
             <td colspan=3 align="center">Uploads</td>
         </tr>
         <tr><td>upload/remove songs</td><td>❌</td><td>0.20.0</td></tr>
         <tr><td>list uploaded songs</td><td>❌</td><td>0.20.0</td></tr>
+        <tr>
+            <td colspan=3 align="center">Other</td>
+        </tr>
+        <tr><td>locale</td><td>❌</td><td>0.20.0</td></tr>
     </tbody>
 </table>
 

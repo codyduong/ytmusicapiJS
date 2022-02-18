@@ -1,5 +1,7 @@
 import { MENU_ITEMS } from './index';
 
+import type { FilterSingular } from '../types';
+
 export function parseMenuPlaylists(
   data: Record<string, any> | null,
   result: Record<string, any>
@@ -9,6 +11,7 @@ export function parseMenuPlaylists(
   //   nav(data, MENU_ITEMS),
   //   'menuNavigationItemRenderer'
   // );
+  //@ts-expect-error: @codyduong fix by typing correctly...
   const watchMenu: Record<string, any> = nav(data, MENU_ITEMS)?.[
     'menuNavigationItemRenderer'
   ];
@@ -56,7 +59,7 @@ export function getItemText(
   index: number,
   run_index = 0,
   none_if_absent = false
-): string | null {
+): Uppercase<FilterSingular> | null {
   const column = getFlexColumnItem(item, index);
   if (!column) {
     return null;
@@ -204,12 +207,57 @@ function getContinuationContents<T extends any[]>(
 //     # response is invalid, if it has less items then minimal expected count
 //     return len(response['parsed']) >= expected_items_count
 
-// function validate_playlist_id(playlistId):
-//     return playlistId if not playlistId.startswith("VL") else playlistId[2:]
+export function validatePlaylistId(playlistId: string): string {
+  return !playlistId.startsWith('VL') ? playlistId : playlistId.slice(2);
+}
 
-export function nav<T extends Record<string, any>>(
+// Good enough recursive type... Correctly places all keys at correct depth,
+// but is still possible to call keys on the wrong values.
+// This is a limitation of the keyof T, which unions all the properties at that depth.
+type navNode<T> = T extends Array<infer Item>
+  ? //@ts-expect-error: This works
+    [number?, ...isNavNodeable<Item>]
+  : T extends Record<string, any>
+  ? //@ts-expect-error: Ditto
+    [(keyof T)?, ...isNavNodeable<T[keyof T]>]
+  : [];
+type isNavNodeable<T> = T extends Array<any>
+  ? navNode<T>
+  : T extends Record<string, any>
+  ? navNode<T>
+  : unknown;
+
+type navNodeTestObj = {
+  matrix: [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
+  nestedObj: {
+    nestedObj2a: 'a';
+    nestedObj2b: 'b';
+  };
+  objectInArray: Array<{ object: { objectChild: 'deep!' } }>;
+  unknown: unknown;
+  arrayUnknown: [unknown];
+};
+type navNodeTest = navNode<navNodeTestObj>;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const navNodeTest1: navNodeTest = ['matrix', 1, 2];
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const navNodeTest2: navNodeTest = ['nestedObj', 'nestedObj2a'];
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const navNodeTest3: navNodeTest = ['objectInArray', 1, 'object', 'objectChild'];
+
+export function nav<U = any, T = any>(
+  root: T,
+  items: navNode<T>,
+  nullIfAbsent?: boolean
+): U;
+export function nav<T>(
   root: T | null,
   items: (string | number)[],
+  nullIfAbsent?: boolean
+): null | any;
+export function nav<T extends Record<string, any>>(
+  root: T | null,
+  items: (string | number)[] | navNode<T>,
   nullIfAbsent = false
 ): null | any {
   // """Access a nested object in root by item sequence."""

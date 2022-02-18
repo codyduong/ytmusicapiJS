@@ -157,11 +157,11 @@ export class YTMusic {
     }
   }
 
-  _sendRequest(
+  _sendRequest<T extends Record<string, any>>(
     endpoint: string,
     body: Record<string, any>,
     ...additionalParams: string[]
-  ): Record<string, any> {
+  ): T {
     body = Object.create(body, this.context);
     if (this.auth) {
       const origin = this.headers['origin'] ?? this.headers['x-origin'];

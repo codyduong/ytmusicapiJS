@@ -32,14 +32,8 @@ import {
   parseMenuPlaylists,
 } from './utils';
 
-import type {
-  Album,
-  FilterSingular,
-  Playlist,
-  RelatedArtist,
-  Single,
-  Video,
-} from '../types';
+import type { Album, Playlist, RelatedArtist, Single, Video } from '../types';
+import * as bT from '../mixins/browsing.types';
 
 export class Parser {
   lang: string;
@@ -48,8 +42,11 @@ export class Parser {
   }
 
   parseSearchResults(
-    results: Array<Record<string, any>>,
-    resultType: FilterSingular | string | null,
+    results: bT.parseResults,
+    resultType:
+      | bT.resultType
+      | bT.parseSearchResultsAdditionalResultTypes
+      | null,
     category: null
   ): Array<any> {
     const searchResults: Array<any> = [];
@@ -58,8 +55,15 @@ export class Parser {
       const data = result[MRLIR];
       const searchResult: Record<string, any> = { category: category };
       if (!resultType) {
-        resultType = getItemText(data, 1)?.toLowerCase() ?? null;
-        const resultTypes = ['artist', 'playlist', 'song', 'video', 'station'];
+        resultType =
+          (getItemText(data, 1)?.toLowerCase() as bT.resultType) ?? null;
+        const resultTypes: bT.resultTypes = [
+          'artist',
+          'playlist',
+          'song',
+          'video',
+          'station',
+        ];
         // This is where we mock translation engine @codyduong TODO
         // resultTypesLocal = [
         //     _('artist'), _('playlist'),
@@ -97,15 +101,16 @@ export class Parser {
         const hasAuthor = flexItem?.length == defaultOffset + 3;
         searchResult['itemCount'] =
           flexItem &&
-          nav(flexItem, [defaultOffset + (hasAuthor ? 2 : 0), 'text']).split(
-            ' '
-          )[0];
+          nav<string>(flexItem, [
+            defaultOffset + (hasAuthor ? 2 : 0),
+            'text',
+          ]).split(' ')[0];
         searchResult['author'] = !hasAuthor
           ? null
           : nav(flexItem, [defaultOffset, 'text']);
       } else if (resultType == 'station') {
-        searchResult['videoId'] = nav(data, NAVIGATION_VIDEO_ID);
-        searchResult['playlistId'] = nav(data, NAVIGATION_PLAYLIST_ID);
+        searchResult['videoId'] = nav<string>(data, NAVIGATION_VIDEO_ID);
+        searchResult['playlistId'] = nav<string>(data, NAVIGATION_PLAYLIST_ID);
       } else if (resultType == 'song') {
         searchResult['album'] = null;
         if ('menu' in data) {
