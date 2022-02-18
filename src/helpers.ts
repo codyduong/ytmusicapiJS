@@ -13,6 +13,8 @@ import * as utf8 from 'utf8';
 import * as constants from './constants';
 import * as crypto from 'crypto';
 
+import type { Headers } from './types';
+
 // @CODYDUONG TODO type better
 export function prepareLikeEndpoint(rating: any): string | null {
   if (rating === 'LIKE') {
@@ -45,7 +47,7 @@ export function prepareOrderParams(order: any): string | undefined {
 }
 
 // @CODYDUONG TODO type better
-export function initializeHeaders(): any {
+export function initializeHeaders(): Headers {
   return {
     'user-agent': constants.USER_AGENT,
     accept: '*/*',
@@ -70,7 +72,9 @@ export function initializeContext(): any {
 }
 
 // @CODYDUONG TODO type better
-export function getVisitorId(requestFunc: (value: string) => any): any {
+export function getVisitorId(
+  requestFunc: (this: any, url: string, params?: Record<string, any>) => string
+): { 'X-Goog-Visitor-Id': string } {
   const response = requestFunc(constants.YTM_DOMAIN);
   const matches = re.findall(/ytcfg\.set\s*\(\s*({.+?})\s*\)\s*;/, response);
   let visitorId = '';
@@ -99,7 +103,7 @@ export function sapisidFromCookie(_rawCookie: any): any {
 
 // // SAPISID Hash reverse engineered by
 // // https://stackoverflow.com/a/32065323/5726546
-export function getAuthorization(auth: any): any {
+export function getAuthorization(auth: any): string {
   const sha_1 = crypto.createHash('sha1');
   const unix_timestamp = Math.round(time.time()).toString();
   sha_1.update(utf8.encode(unix_timestamp + ' ' + auth));

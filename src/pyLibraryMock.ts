@@ -1,4 +1,5 @@
 //This library mocks some python libraries, using JS replacements.
+//It is not a complete substitute of these libraries, but instead mocks the necessary features only.
 //For ease of reading code from the original library and vice/versa
 
 export const re = {
@@ -15,10 +16,34 @@ export const re = {
     return hits;
   },
   split: (regex: RegExp, string: string): string[] => string.split(regex),
+  search: (regex: RegExp, string: string): RegExpMatchArray | null =>
+    string.match(regex),
 };
 
+const convertToAsciiSafe = (string: string): string =>
+  string.replace(/[\u007F-\uFFFF]/g, function (chr) {
+    return '\\u' + ('0000' + chr.charCodeAt(0).toString(16)).substr(-4);
+  });
+
 export const json = {
-  loads: (text: string): Record<string, any> => JSON.parse(text),
+  loads: <T>(text: string): T | any => JSON.parse(text),
+  //Handles buffer input
+  load: <T>(text: string | Buffer): T | any => JSON.parse(text.toString()),
+  dumps: (value: any): string => JSON.stringify(value),
+  //Handles file output
+  dump: (
+    value: any,
+    {
+      ensureAscii = false,
+      indent = 4,
+    }: { ensureAscii?: boolean; indent?: number }
+  ): string => {
+    if (ensureAscii) {
+      return convertToAsciiSafe(JSON.stringify(value, null, indent));
+    } else {
+      return JSON.stringify(value, null, indent);
+    }
+  },
 };
 
 export const time = {
@@ -32,3 +57,17 @@ export const locale = {
     throw new Error('Function not implemented.');
   },
 };
+
+export const CaseInsensitiveObject = <T extends Record<string, any>>(
+  object: T
+): T => ({
+  ...(Object.fromEntries(
+    Object.entries(object).map(([k, v]) => [k.toLowerCase(), v])
+  ) as T),
+  ...(Object.fromEntries(
+    Object.entries(object).map(([k, v]) => [
+      `${k.slice(0, 1).toUpperCase}${k.slice(1)}`,
+      v,
+    ])
+  ) as T),
+});

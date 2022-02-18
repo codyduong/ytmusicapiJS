@@ -15,19 +15,27 @@
 // from ytmusicapi.mixins.playlists import PlaylistsMixin
 // from ytmusicapi.mixins.uploads import UploadsMixin
 
-import { json } from './pyLibraryMock';
+import { CaseInsensitiveObject, json } from './pyLibraryMock';
+import { YTM_BASE_API, YTM_PARAMS } from './constants';
+import * as fs from 'fs';
+
 import * as helpers from './helpers';
+import { Parser } from './parsers/browsing';
+import { setup } from './setup';
+import { BrowsingMixin } from './mixins/browsing';
+
+import type { Headers } from './types';
 
 // BrowsingMixin, WatchMixin, ExploreMixin, LibraryMixin, PlaylistsMixin, UploadsMixin
-class _YTMusic {
+export class YTMusic {
   auth: string;
   _session: any;
   proxies: any;
-  headers: any;
+  headers: Headers;
   context: any;
   language: string;
   lang: any;
-  parser: any;
+  parser: Parser;
   sapisid: any;
   /**
     Allows automated interactions with YouTube Music by emulating the YouTube web client's requests.
@@ -37,8 +45,8 @@ class _YTMusic {
   constructor(
     auth: string,
     user: string,
-    _requests_session: any,
-    proxies: any,
+    requests_session: boolean,
+    proxies: Record<string, any>,
     language: string
   ) {
     /** 
@@ -83,28 +91,32 @@ class _YTMusic {
     this.proxies = proxies;
 
     // prepare headers
-    if (auth) {
-      try {
-        // if os.path.isfile(auth) {
-        if (true) {
-          // const file = auth;
-          // with open(file) as json_file:
-          //     this.headers = CaseInsensitiveDict(json.load(json_file))
-        } else {
-          this.headers = CaseInsensitiveDict(json.loads(auth));
+
+    //We put this before in this logic loop, since TS gets mad otherwise... Control flow inference is messed up?
+    this.headers = helpers.initializeHeaders();
+    if (auth && fs.existsSync(auth)) {
+      const file = auth;
+      fs.readFile(file, (err, data) => {
+        if (err) {
+          console.log(
+            'Failed loading provided credentials. Make sure to provide a string or a file path.\nReason: ',
+            String(err)
+          );
         }
-      } catch (e) {
-        console.log(
-          'Failed loading provided credentials. Make sure to provide a string or a file path.\nReason: ',
-          String(e)
-        );
-      }
+        this.headers = CaseInsensitiveObject<Headers>(json.load(data));
+      });
     } else {
-      // no authentication
-      this.headers = helpers.initializeHeaders();
+      this.headers = CaseInsensitiveObject<Headers>(json.loads(auth));
     }
-    // if 'x-goog-visitor-id' not in this.headers:
-    //     this.headers.update(get_visitor_id(this._send_get_request))
+
+    //@CODYDUONG TODO the CaseInsensitiveObject might have to be checked for proper implementation,
+    //as we set/access a lot of keys with varying consistency in casing... god damnit.
+    if (!this.headers['x-goog-visitor-id']) {
+      this.headers = {
+        ...this.headers,
+        ...helpers.getVisitorId(this._sendGetRequest),
+      };
+    }
 
     // prepare context
     this.context = helpers.initializeContext();
@@ -126,7 +138,7 @@ class _YTMusic {
     // this.lang = gettext.translation('base',
     //                                 localedir=locale_dir,
     //                                 languages=[language])
-    // this.parser = browsing.Parser(this.lang)
+    this.parser = new Parser(this.lang);
 
     if (user) {
       this.context['context']['user']['onBehalfOfUser'] = user;
@@ -144,42 +156,68 @@ class _YTMusic {
       }
     }
   }
-  // #sendRequest(this, endpoint: str, body: Dict, additionalParams: str = "") -> Dict:
-  //     body.update(this.context)
-  //     if this.auth:
-  //         origin = this.headers.get('origin', this.headers.get('x-origin'))
-  //         this.headers["Authorization"] = get_authorization(this.sapisid + ' ' + origin)
-  //     response = this._session.post(YTM_BASE_API + endpoint + YTM_PARAMS + additionalParams,
-  //                                   json=body,
-  //                                   headers=this.headers,
-  //                                   proxies=this.proxies)
-  //     response_text = json.loads(response.text)
-  //     if response.status_code >= 400:
-  //         message = "Server returned HTTP " + str(
-  //             response.status_code) + ": " + response.reason + ".\n"
-  //         error = response_text.get('error', {}).get('message')
-  //         raise Exception(message + error)
-  //     return response_text
 
-  // #sendGetRequest(this, url: str, params: Dict = None):
-  //     response = this._session.get(url, params=params, headers=this.headers, proxies=this.proxies)
-  //     return response.text
+  _sendRequest(
+    endpoint: string,
+    body: Record<string, any>,
+    ...additionalParams: string[]
+  ): Record<string, any> {
+    body = Object.create(body, this.context);
+    if (this.auth) {
+      const origin = this.headers['origin'] ?? this.headers['x-origin'];
+      this.headers['authorization'] = helpers.getAuthorization(
+        this.sapisid + ' ' + origin
+      );
+    }
+    const response = this._session.post(
+      YTM_BASE_API + endpoint + YTM_PARAMS + additionalParams,
+      body,
+      this.headers,
+      this.proxies
+    );
+    const response_text = json.loads(response.text);
+    if (response.status_code >= 400) {
+      const message =
+        'Server returned HTTP ' +
+        String(response.status_code) +
+        ': ' +
+        response.reason +
+        '.\n';
+      const error = response_text.get('error', {}).get('message');
+      throw new Error(message + error);
+    }
+    return response_text;
+  }
 
-  // #checkAuth(this):
-  //     if not this.auth:
-  //         raise Exception("Please provide authentication before using this function")
+  _sendGetRequest(url: string, params?: Record<string, any>): string {
+    const response = this._session.get(url, params, this.headers, this.proxies);
+    return response.text;
+  }
+
+  _checkAuth(): void {
+    if (!this.auth) {
+      throw new Error(
+        'Please provide authentication before using this function'
+      );
+    }
+  }
 
   // @classmethod
-  // setup(cls, filepath: str = None, headers_raw: str = None) -> Dict:
-  //     /**
-  //     Requests browser headers from the user via command line
-  //     and returns a string that can be passed to YTMusic()
-  //     :param filepath: Optional filepath to store headers to.
-  //     :param headers_raw: Optional request headers copied from browser.
-  //         Otherwise requested from terminal
-  //     :return: configuration headers string
-  //     */
-  //     return setup(filepath, headers_raw)
+  static setup(
+    // cls,
+    filepath: string,
+    headers_raw: string
+  ): string {
+    /**
+      Requests browser headers from the user via command line
+      and returns a string that can be passed to YTMusic()
+      :param filepath: Optional filepath to store headers to.
+      :param headers_raw: Optional request headers copied from browser.
+          Otherwise requested from terminal
+      :return: configuration headers string
+      */
+    return setup(filepath, headers_raw);
+  }
 
   // def __enter__(this):
   //     return this
@@ -188,8 +226,4 @@ class _YTMusic {
   //     pass
 }
 
-function CaseInsensitiveDict(_arg0: Record<string, any>): any {
-  throw new Error('Function not implemented.');
-}
-
-export class YTMusic extends _YTMusic {}
+Object.assign(YTMusic, BrowsingMixin);

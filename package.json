@@ -4,7 +4,11 @@
   "description": "unofficial API for YouTube Music",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "postinstall": "git rev-parse --git-dir && git config core.hooksPath ./.git-hooks || exit 0",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "ci": "yarn install --frozen-lockfile",
+    "lint": "prettier \"./src/**/*{ts, tsx}\" && eslint \"./src/**/*{ts,tsx}\" -c \".eslintrc.js\"",
+    "lint:fix": "prettier --write \"./src/**/*{ts, tsx}\" && eslint \"./src/**/*{ts,tsx}\" --fix -c \".eslintrc.js\""
   },
   "author": "Cody Duong",
   "license": "MIT",
@@ -19,11 +23,13 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-promise": "^5.2.0",
+    "jest": "^27.5.1",
     "prettier": "^2.4.1",
     "prettier-eslint-cli": "^5.0.1",
     "typescript": "^4.6.1-rc"
   },
   "dependencies": {
+    "prompt-sync": "^4.2.0",
     "utf8": "^3.0.0"
   }
 }

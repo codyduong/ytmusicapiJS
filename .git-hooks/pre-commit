@@ -1,0 +1,43 @@
+#!/bin/sh
+RED="\033[1;31m"
+linter_exit_code=1
+git_exit_code=1
+files_to_lint=$(git diff --cached --diff-filter=d --name-only | grep '.ts$\|.tsx$')
+yarn prettier-eslint $files_to_lint --write
+linter_exit_code=$?
+if [ $linter_exit_code -ne 0 ]
+then
+  echo "${RED} ❌ prettier-eslint failed)${NC}"
+  exit 1
+else
+  echo "${GREEN} ✔ prettier-eslint succeeded${NC}"
+fi
+yarn tsc --noEmit
+tsc_exit_code=$?
+if [ $tsc_exit_code -ne 0 ]
+then
+  echo "${RED} ❌ tsc failed)${NC}"
+  exit 1
+else
+  echo "${GREEN} ✔ tsc succeeded${NC}"
+fi
+git update-index $files_to_lint --verbose
+git_exit_code=$?
+if [ $git_exit_code -ne 0 ]
+then
+  echo "${RED} ❌ git add failed)${NC}"
+  exit 1
+else
+  echo "${GREEN} ✔ git add succeeded${NC}"
+fi
+yarn ci
+ci_exit_code=$?
+if [ $ci_exit_code -ne 0 ]
+then
+  echo "${RED} ❌ yarn ci failed)${NC}"
+  exit 1
+else
+  echo "${GREEN} ✔ yarn ci succeeded${NC}"
+fi
+
+exit 0
