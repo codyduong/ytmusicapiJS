@@ -10,11 +10,12 @@ import { WatchMixin } from './mixins/watch';
 import { ExploreMixin } from './mixins/explore';
 
 import type { Headers } from './types';
+import axios from 'axios';
 
 // BrowsingMixin, WatchMixin, ExploreMixin, LibraryMixin, PlaylistsMixin, UploadsMixin
 export class _YTMusic {
-  auth: string;
-  _session: any;
+  auth: string | null;
+  // _agent: https.Agent;
   proxies: any;
   headers: Headers;
   context: any;
@@ -22,84 +23,82 @@ export class _YTMusic {
   lang: any;
   parser: Parser;
   sapisid: any;
-  /**
-    Allows automated interactions with YouTube Music by emulating the YouTube web client's requests.
-    Permits both authenticated and non-authenticated requests.
-    Authentication header data must be provided on initialization.
-     */
-  constructor(
-    auth: string,
-    user: string,
-    requests_session: boolean,
-    proxies: Record<string, any>,
-    language: string
-  ) {
-    /** 
-        Create a new instance to interact with YouTube Music.
-        :param auth: Optional. Provide a string or path to file.
-          Authentication credentials are needed to manage your library.
-          Should be an adjusted version of `headers_auth.json.example` in the project root.
-          See :py:func:`setup` for how to fill in the correct credentials.
-          Default: A default header is used without authentication.
-        :param user: Optional. Specify a user ID string to use in requests.
-          This is needed if you want to send requests on behalf of a brand account.
-          Otherwise the default account is used. You can retrieve the user ID
-          by going to https://myaccount.google.com/brandaccounts and selecting your brand account.
-          The user ID will be in the URL: https://myaccount.google.com/b/user_id/
-        :param requests_session: A Requests session object or a truthy value to create one.
-          Default sessions have a request timeout of 30s, which produces a requests.exceptions.ReadTimeout.
-          The timeout can be changed by passing your own Session object::
-            s = requests.Session()
-            s.request = functools.partial(s.request, timeout=3)
-            ytm = YTMusic(session=s)
-          A falsy value disables sessions.
-          It is generally a good idea to keep sessions enabled for
-          performance reasons (connection pooling).
-        :param proxies: Optional. Proxy configuration in requests_ format_.
-            .. _requests: https://requests.readthedocs.io/
-            .. _format: https://requests.readthedocs.io/en/master/user/advanced/#proxies
-        :param language: Optional. Can be used to change the language of returned data.
-            English will be used by default. Available languages can be checked in
-            the ytmusicapi/locales directory.
-        */
-    this.auth = auth;
 
-    // if isinstance(requests_session, requests.Session):
-    //     this._session = requests_session
-    // else:
-    //     if requests_session:  # Build a new session.
-    //         this._session = requests.Session()
-    //         this._session.request = partial(this._session.request, timeout=30)
-    //     else:  # Use the Requests API module as a "session".
-    //         this._session = requests.api
+  /**
+   * Create a new instance to interact with YouTube Music.
+   * @param {string} [auth=]  Provide a string or path to file.
+Authentication credentials are needed to manage your library.
+Should be an adjusted version of `headers_auth.json.example` in the project root.
+See :py:func:`setup` for how to fill in the correct credentials.
+Default: A default header is used without authentication.
+   * @param {string} [user=]  Specify a user ID string to use in requests.
+This is needed if you want to send requests on behalf of a brand account.
+Otherwise the default account is used. You can retrieve the user ID
+by going to https://myaccount.google.com/brandaccounts and selecting your brand account.
+The user ID will be in the URL: https://myaccount.google.com/b/user_id/
+   * @param proxies Optional. Proxy configuration in requests_ format_.
+
+_requests: https://requests.readthedocs.io/ 
+
+_format: https://requests.readthedocs.io/en/master/user/advanced/#proxies
+   * @param {string} [language] Optional. Can be used to change the language of returned data.
+English will be used by default. Available languages can be checked in
+the ytmusicapi/locales directory.
+   * @returns 
+   */
+  constructor(
+    auth?: string,
+    user?: string,
+    // https_agent?: boolean | https.Agent,
+    proxies?: Record<string, any>,
+    language?: string
+  ) {
+    this.auth = auth ?? null;
+
+    // if (https_agent instanceof https.Agent) {
+    //   this._https = https_agent;
+    // } else {
+    //   if (https_agent) {
+    //     // Build a new session.
+    //     this._https = new https.Agent({
+    //       timeout: 30000,
+    //     });
+    //   } else {
+    //     // Use the Requests API module as a "session".
+    //     this._https = https.api;
+    //   }
+    // }
 
     this.proxies = proxies;
 
     // prepare headers
 
-    //We put this before in this logic loop, since TS gets mad otherwise... Control flow inference is messed up?
     this.headers = helpers.initializeHeaders();
     if (auth && fs.existsSync(auth)) {
       const file = auth;
       fs.readFile(file, (err, data) => {
         if (err) {
-          console.log(
+          console.warn(
             'Failed loading provided credentials. Make sure to provide a string or a file path.\nReason: ',
             String(err)
           );
         }
         this.headers = CaseInsensitiveObject<Headers>(json.load(data));
       });
-    } else {
+    } else if (auth) {
       this.headers = CaseInsensitiveObject<Headers>(json.loads(auth));
     }
 
-    //@CODYDUONG TODO the CaseInsensitiveObject might have to be checked for proper implementation,
-    //as we set/access a lot of keys with varying consistency in casing... god damnit.
+    //TODO check if the IIAFE breaks this or not...
     if (!this.headers['x-goog-visitor-id']) {
+      let helpersGetVisitorId: Record<string, any> = {};
+      (async (): Promise<void> => {
+        helpersGetVisitorId = await helpers.getVisitorId(this._sendGetRequest);
+      })();
+
       this.headers = {
         ...this.headers,
-        ...helpers.getVisitorId(this._sendGetRequest),
+        ...helpersGetVisitorId,
       };
     }
 
@@ -112,7 +111,7 @@ export class _YTMusic {
     //     raise Exception("Language not supported. Supported languages are "
     //                     ', '.join(supported_languages))
     //                   }
-    this.language = language;
+    this.language = language ?? ''; //todo @codyduong
     try {
       // locale.setlocale(locale.LC_ALL, this.language);
     } catch (e) {
@@ -142,41 +141,55 @@ export class _YTMusic {
     }
   }
 
-  _sendRequest<T extends Record<string, any>>(
+  async _sendRequest<T extends Record<string, any>>(
     endpoint: string,
     body: Record<string, any>,
     ...additionalParams: string[]
-  ): T {
-    body = Object.create(body, this.context);
+  ): Promise<T> {
+    body = { ...body, ...this.context };
     if (this.auth) {
       const origin = this.headers['origin'] ?? this.headers['x-origin'];
       this.headers['authorization'] = helpers.getAuthorization(
         this.sapisid + ' ' + origin
       );
     }
-    const response = this._session.post(
+
+    // console.log(YTM_BASE_API + endpoint + YTM_PARAMS + additionalParams, body, {
+    //   headers: this.headers,
+    //   proxy: this.proxies,
+    // });
+    const response = await axios.post(
       YTM_BASE_API + endpoint + YTM_PARAMS + additionalParams,
-      body,
-      this.headers,
-      this.proxies
+      JSON.stringify(body),
+      {
+        headers: this.headers,
+        proxy: this.proxies,
+      }
     );
-    const response_text = json.loads(response.text);
-    if (response.status_code >= 400) {
+    const responseText = response.data;
+    if (response.status >= 400) {
       const message =
         'Server returned HTTP ' +
-        String(response.status_code) +
+        String(response.status) +
         ': ' +
-        response.reason +
+        response.statusText +
         '.\n';
-      const error = response_text.get('error', {}).get('message');
+      const error = responseText.error?.message;
       throw new Error(message + error);
     }
-    return response_text;
+    return responseText;
   }
 
-  _sendGetRequest(url: string, params?: Record<string, any>): string {
-    const response = this._session.get(url, params, this.headers, this.proxies);
-    return response.text;
+  async _sendGetRequest(
+    url: string,
+    params?: Record<string, any>
+  ): Promise<string> {
+    const response = await axios.get(url, {
+      params: params,
+      headers: this?.headers,
+      proxy: this?.proxies,
+    });
+    return response.data;
   }
 
   _checkAuth(): void {
@@ -211,4 +224,5 @@ export class _YTMusic {
   //     pass
 }
 
-export const YTMusic = ExploreMixin(WatchMixin(BrowsingMixin(_YTMusic)));
+const YTMusic = ExploreMixin(WatchMixin(BrowsingMixin(_YTMusic)));
+export default YTMusic;

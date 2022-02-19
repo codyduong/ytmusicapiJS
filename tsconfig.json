@@ -4,6 +4,8 @@
     "allowJs": false,
     "incremental": true,
     "target": "ES2021",
-    "moduleResolution": "Node"
+    "moduleResolution": "Node",
+    "types": ["jest", "node"],
+    "esModuleInterop": true
   }
 }

@@ -118,7 +118,7 @@ export class Parser {
         searchResult['album'] = null;
         if ('menu' in data) {
           const toggleMenu = findObjectByKey(
-            nav(data, MENU_ITEMS),
+            nav(data, MENU_ITEMS, true), //@codyduong this isn't nullable in the py library? todo discovery why...
             TOGGLE_MENU
           );
           if (toggleMenu) {
@@ -212,7 +212,7 @@ export class Parser {
         searchResult['isExplicit'] = nav(data, BADGE_LABEL, true) != null;
 
       searchResult['thumbnails'] = nav(data, THUMBNAILS, true);
-      searchResults.push(searchResults);
+      searchResults.push(searchResult);
     }
     return searchResults;
   }
@@ -286,7 +286,7 @@ export function parseContentList<T>(
 
 export function parseAlbum(result: any): Album {
   return {
-    title: nav(result, TITLE_TEXT),
+    title: nav(result, TITLE_TEXT, true), //@codyduong this isn't nullable in the py library? todo discovery why...
     year: nav(result, SUBTITLE2, true),
     browseId: nav(result, [...TITLE, ...NAVIGATION_BROWSE_ID]),
     thumbnails: nav(result, THUMBNAIL_RENDERER),

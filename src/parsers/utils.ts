@@ -9,7 +9,7 @@ export function parseMenuPlaylists(
   //   nav(data, MENU_ITEMS),
   //   'menuNavigationItemRenderer'
   // );
-  const watchMenu: Record<string, any> = nav(data, MENU_ITEMS)?.[
+  const watchMenu: Record<string, any> = nav(data, MENU_ITEMS, true)?.[ //this isn't nullable in pylib todo @codyduong discovery
     'menuNavigationItemRenderer'
   ];
   if (watchMenu) {
@@ -102,18 +102,18 @@ export function getFlexColumnItem(item: any, index: number): FlexItem | null {
 //     else:
 //         return nav(item['text']['runs'][index], NAVIGATION_BROWSE_ID)
 
-export function getContinuations(
+export async function getContinuations(
   results: any,
   continuation_type: string | number,
   limit: number,
-  request_func: (arg1: any) => Record<string, any>,
+  request_func: (arg1: any) => Promise<Record<string, any>>,
   parse_func: any,
   ctoken_path = ''
-): Array<any> {
+): Promise<Array<any>> {
   let items: any[] = [];
   while ('continuations' in results && items.length < limit) {
     const additionalParams = getContinuationParams(results, ctoken_path);
-    const response = request_func(additionalParams);
+    const response = await request_func(additionalParams);
     if ('continuationContents' in response) {
       results = response['continuationContents'][continuation_type];
     } else {
@@ -123,7 +123,7 @@ export function getContinuations(
     if (contents?.length == 0) {
       break;
     }
-    items = [...items, ...contents];
+    items = items.concat(contents);
   }
   return items;
 }
@@ -291,7 +291,10 @@ export function nav<T extends Record<string, any> | Array<any> | never, U>(
       return root as any;
     }
   } catch (e) {
-    if (nullIfAbsent && e instanceof ReferenceError) {
+    if (
+      nullIfAbsent &&
+      (e instanceof ReferenceError || e instanceof TypeError)
+    ) {
       return null;
     } else {
       throw e;

@@ -75,9 +75,9 @@ export const ExploreMixin = <TBase extends YTMusicBase>(Base: TBase) => {
   ],
 }
      */
-    getMoodCategories(): Record<string, any> {
+    async getMoodCategories(): Promise<Record<string, any>> {
       const sections: Record<string, any> = {};
-      const response = this._sendRequest<et.getMoodCategoriesResponse>(
+      const response = await this._sendRequest<et.getMoodCategoriesResponse>(
         'browse',
         { browseId: 'FEmusic_moods_and_genres' }
       );
@@ -112,9 +112,9 @@ export const ExploreMixin = <TBase extends YTMusicBase>(Base: TBase) => {
      * @param params params obtained by :py:func:`get_mood_categories`
      * @returns List of playlists in the format of :py:func:`get_library_playlists`
      */
-    getMoodPlaylists(params: string): Record<string, any> {
+    async getMoodPlaylists(params: string): Promise<Record<string, any>> {
       const playlists: Array<any> = [];
-      const response = this._sendRequest<et.getMoodPlaylists>('browse', {
+      const response = await this._sendRequest<et.getMoodPlaylists>('browse', {
         browseId: 'FEmusic_moods_and_genres_category',
         params: params,
       });

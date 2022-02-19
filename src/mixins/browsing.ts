@@ -134,13 +134,18 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
               }
             ]
    */
-    search(
+    async search(
       query: string,
-      filter: Filter,
-      scope: Scope,
-      limit = 20,
-      ignore_spelling: boolean
-    ): Array<any> {
+      options?: {
+        filter?: Filter;
+        scope?: Scope;
+        limit?: number;
+        ignoreSpelling?: boolean;
+      }
+    ): Promise<Array<any>> {
+      const _options = options ?? {};
+      let { filter } = _options;
+      const { scope, limit = 20, ignoreSpelling } = _options;
       const body: Record<string, any> = { query: query };
       const endpoint = 'search';
       let searchResults: Array<any> = [];
@@ -153,7 +158,7 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
         'songs',
         'videos',
       ];
-      if (filter && !(filter in filters)) {
+      if (filter && !filters.includes(filter)) {
         throw new Error(
           `Invalid filter provided. Please use one of the following filters or leave out the parameter: ${filters.join(
             ', '
@@ -162,19 +167,22 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
       }
 
       const scopes: Scope[] = ['library', 'uploads'];
-      if (scope && !(scope in scopes)) {
+      if (scope && !scopes.includes(scope)) {
         throw new Error(
           `Invalid scope provided. Please use one of the following scopes or leave out the parameter: ${scopes.join(
             ', '
           )}`
         );
       }
-      const params = getSearchParams(filter, scope, ignore_spelling);
+      const params = getSearchParams(filter, scope, ignoreSpelling);
       if (params) {
         body['params'] = params;
       }
 
-      const response = this._sendRequest<bT.searchResponse>(endpoint, body);
+      const response = await this._sendRequest<bT.searchResponse>(
+        endpoint,
+        body
+      );
 
       // no results
       if (!response['contents']) {
@@ -213,7 +221,6 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
         filter = 'uploads';
       }
 
-      //@codyduong check this
       for (const res of resultsNav) {
         if ('musicShelfRenderer' in res) {
           const resultsMusicShelfContents =
@@ -238,23 +245,23 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
           filter = original_filter;
 
           if ('continuations' in res['musicShelfRenderer']) {
-            const request_func = (
+            const request_func = async (
               additionalParams: string
-            ): Record<string, any> =>
-              this._sendRequest(endpoint, body, additionalParams);
+            ): Promise<Record<string, any>> =>
+              await this._sendRequest(endpoint, body, additionalParams);
 
             const parse_func = (contents: any): Record<string, any> =>
               this.parser.parseSearchResults(contents, type, category);
 
             searchResults = [
               ...searchResults,
-              ...getContinuations(
+              ...(await getContinuations(
                 res['musicShelfRenderer'],
                 'musicShelfContinuation',
                 limit - searchResults.length,
                 request_func,
                 parse_func
-              ),
+              )),
             ];
           }
         }
@@ -346,13 +353,16 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
             }
         }
     */
-    getArtist(channelId: string): Artist | any {
+    async getArtist(channelId: string): Promise<Artist> {
       if (channelId.startsWith('MPLA')) {
         channelId = channelId.slice(4);
       }
       const body = { browseId: channelId };
       const endpoint = 'browse';
-      const response = this._sendRequest<bT.getArtistResponse>(endpoint, body);
+      const response = await this._sendRequest<bT.getArtistResponse>(
+        endpoint,
+        body
+      );
       const results = nav<typeof response, bT.getArtistResults>(response, [
         ...SINGLE_COLUMN_TAB,
         ...SECTION_LIST,
@@ -537,9 +547,12 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
      * @param audioPlaylistId audioPlaylistId: id of the audio playlist (starting with `OLAK5uy_`)
      * @returns browseId (starting with `MPREb_`)
      */
-    getAlbumBrowseId(audioPlaylistId: string): any {
+    async getAlbumBrowseId(audioPlaylistId: string): Promise<any> {
       const params = { list: audioPlaylistId };
-      const response = this._sendGetRequest(YTM_DOMAIN + '/playlist', params);
+      const response = await this._sendGetRequest(
+        YTM_DOMAIN + '/playlist',
+        params
+      );
       const matches = re.findall(/"MPRE.+?"/, response);
       let browse_id = null;
       if (matches.length > 0) {
@@ -744,7 +757,10 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
           }
       }
      */
-    getSong(videoId: string, signatureTimestamp: number): Record<string, any> {
+    async getSong(
+      videoId: string,
+      signatureTimestamp: number
+    ): Promise<Record<string, any>> {
       const endpoint = 'player';
       if (!signatureTimestamp) {
         signatureTimestamp = helpers.getDatestamp() - 1;
@@ -758,7 +774,7 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
         },
         video_id: videoId,
       };
-      const response = this._sendRequest(endpoint, params);
+      const response = await this._sendRequest(endpoint, params);
       const keys = [
         'videoDetails',
         'playabilityStatus',
@@ -821,8 +837,8 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
      * Extract the URL for the `base.js` script from YouTube Music.
      * @return {string} URL to `base.js`
      */
-    getBaseJSUrl(): string {
-      const response = this._sendGetRequest(YTM_DOMAIN);
+    async getBaseJSUrl(): Promise<string> {
+      const response = await this._sendGetRequest(YTM_DOMAIN);
       const match = re.search(/jsUrl"\s*:\s*"([^"]+)"/, response);
       if (!match) {
         throw new Error('Could not identify the URL for base.js player.');
@@ -839,11 +855,11 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
             isn't specified a call will be made to :py:func:`get_basejs_url`.
      * @returns `signatureTimestamp` string <-- @codyduong this contradicts the actual code? idk
      */
-    getSignatureTimestamp(url: string): number | null {
+    async getSignatureTimestamp(url: string): Promise<number | null> {
       if (!url) {
-        url = this.getBaseJSUrl();
+        url = await this.getBaseJSUrl();
       }
-      const response = this._sendGetRequest(url);
+      const response = await this._sendGetRequest(url);
       const match = re.search(/signatureTimestamp[:=](\d+)/, response);
       if (!match) {
         throw new Error('Unable to identify the signatureTimestamp.');

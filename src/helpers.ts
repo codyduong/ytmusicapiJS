@@ -72,10 +72,14 @@ export function initializeContext(): any {
 }
 
 // @CODYDUONG TODO type better
-export function getVisitorId(
-  requestFunc: (this: any, url: string, params?: Record<string, any>) => string
-): { 'X-Goog-Visitor-Id': string } {
-  const response = requestFunc(constants.YTM_DOMAIN);
+export async function getVisitorId(
+  requestFunc: (
+    this: any,
+    url: string,
+    params?: Record<string, any>
+  ) => Promise<string>
+): Promise<{ 'X-Goog-Visitor-Id': string }> {
+  const response = await requestFunc(constants.YTM_DOMAIN);
   const matches = re.findall(/ytcfg\.set\s*\(\s*({.+?})\s*\)\s*;/, response);
   let visitorId = '';
   if (matches.length > 0) {

@@ -44,12 +44,12 @@ export const WatchMixin = <TBase extends YTMusicBase>(Base: TBase) => {
           "lyrics": "MPLYt_HNNclO0Ddoc-17"
         }
      */
-    getWatchPlaylist(
+    async getWatchPlaylist(
       videoId: string | undefined,
       playlistId: string,
       limit = 25,
       params: string
-    ): wt.getWatchPlaylistReturn {
+    ): Promise<wt.getWatchPlaylistReturn> {
       const body: Record<string, any> = {
         enablePersistentPlaylistPanel: true,
         isAudioOnly: true,
@@ -81,7 +81,7 @@ export const WatchMixin = <TBase extends YTMusicBase>(Base: TBase) => {
         body['params'] = params;
       }
       const endpoint = 'next';
-      const response = this._sendRequest<wt.response>(endpoint, body);
+      const response = await this._sendRequest<wt.response>(endpoint, body);
       const watchNextRenderer = nav<typeof response, wt.watchNextRenderer>(
         response,
         [
@@ -146,11 +146,11 @@ export const WatchMixin = <TBase extends YTMusicBase>(Base: TBase) => {
      * @param limit {number} The number of watch playlist items to return @default 50
      * @returns A list of watch playlist items
      */
-    getWatchPlaylistShuffle(
+    async getWatchPlaylistShuffle(
       videoId: string | undefined,
       playlistId: string,
       limit = 50
-    ): wt.getWatchPlaylistReturn {
+    ): Promise<wt.getWatchPlaylistReturn> {
       return this.getWatchPlaylist(
         videoId,
         playlistId,

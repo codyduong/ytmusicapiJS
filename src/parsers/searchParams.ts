@@ -3,9 +3,9 @@ import type { Filter, Scope } from '../types';
 const FILTERED_PARAM1 = 'EgWKAQI';
 
 export function getSearchParams(
-  filter: Filter,
-  scope: Scope,
-  ignoreSpelling: boolean
+  filter?: Filter,
+  scope?: Scope,
+  ignoreSpelling?: boolean
 ): string | null {
   let params;
   let param1, param2, param3;
@@ -54,6 +54,7 @@ export function getSearchParams(
       }
     }
   }
+
   if (!scope && !filter && ignoreSpelling) {
     params = 'EhGKAQ4IARABGAEgASgAOAFAAUICCAE%3D';
   }
