@@ -208,15 +208,32 @@ export function validatePlaylistId(playlistId: string): string {
   return !playlistId.startsWith('VL') ? playlistId : playlistId.slice(2);
 }
 
+// Need so many goddamn support types
+// God bless: https://stackoverflow.com/questions/61624719/how-to-conditionally-detect-the-any-type-in-typescript
+type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
+  k: infer I
+) => void
+  ? I
+  : never;
+
+// If T is `any` a union of both side of the condition is returned.
+type UnionForAny<T> = T extends never ? 'A' : 'B';
+
+// Returns true if type is any, or false for any other type.
+// type IsStrictlyAny<T> = UnionToIntersection<UnionForAny<T>> extends never
+//   ? true
+//   : false;
+
 // Good enough recursive type... Correctly places all keys at correct depth,
 // but is still possible to call keys on the wrong values.
 // This is a limitation of the keyof T, which unions all the properties at that depth.
-type navNode<T> = T extends Array<infer Item>
+type navNode<T> = UnionToIntersection<UnionForAny<T>> extends never
+  ? any
+  : T extends Array<infer Item>
   ? //@ts-expect-error: This works
     [number?, ...isNavNodeable<Item>]
   : T extends Record<string, any>
-  ? //@ts-expect-error: Ditto
-    [(keyof T)?, ...isNavNodeable<T[keyof T]>]
+  ? [(keyof T)?, ...isNavNodeable<T[keyof T]>]
   : [];
 type isNavNodeable<T> = T extends Array<any>
   ? navNode<T>

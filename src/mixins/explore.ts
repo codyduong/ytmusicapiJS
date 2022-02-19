@@ -131,7 +131,7 @@ export const ExploreMixin = <TBase extends YTMusicBase>(Base: TBase) => {
           path = ['musicImmersiveCarouselShelfRenderer', 'contents'];
         }
         if (path.length) {
-          const results = nav<never>(section, path);
+          const results = nav(section, path);
           playlists.push(parseContentList(results, parsePlaylist));
         }
       }
@@ -238,12 +238,9 @@ export const ExploreMixin = <TBase extends YTMusicBase>(Base: TBase) => {
       }
       const endpoint = 'browse';
       const response = this._sendRequest(endpoint, body);
-      const results = nav<never>(response, [
-        ...SINGLE_COLUMN_TAB,
-        ...SECTION_LIST,
-      ]);
+      const results = nav(response, [...SINGLE_COLUMN_TAB, ...SECTION_LIST]);
       const charts: Record<string, any> = { countries: {} };
-      const menu = nav<never>(results[0], [
+      const menu = nav(results[0], [
         ...MUSIC_SHELF,
         'subheaders',
         0,
@@ -252,14 +249,10 @@ export const ExploreMixin = <TBase extends YTMusicBase>(Base: TBase) => {
         0,
         'musicSortFilterButtonRenderer',
       ]);
-      charts['countries']['selected'] = nav<never>(menu, TITLE);
+      charts['countries']['selected'] = nav(menu, TITLE);
       charts['countries']['options'] = [
         nav<never, Array<any>>(response, FRAMEWORK_MUTATIONS).map((m) =>
-          nav<never>(
-            m,
-            ['payload', 'musicFormBooleanChoice', 'opaqueToken'],
-            true
-          )
+          nav(m, ['payload', 'musicFormBooleanChoice', 'opaqueToken'], true)
         ),
       ];
       const chartsCategories = ['videos', 'artists'];
@@ -280,14 +273,14 @@ export const ExploreMixin = <TBase extends YTMusicBase>(Base: TBase) => {
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       const parseChart = (i: number, parseFunc: any, key: string) => {
         parseContentList(
-          nav<never>(results[i + (hasSongs ? 1 : 0)], CAROUSEL_CONTENTS),
+          nav(results[i + (hasSongs ? 1 : 0)], CAROUSEL_CONTENTS),
           parseFunc,
           key
         );
       };
       for (const [i, c] of chartsCategories.entries()) {
         charts[c] = {
-          playlist: nav<never>(
+          playlist: nav(
             results[1 + i],
             [...CAROUSEL, ...CAROUSEL_TITLE, ...NAVIGATION_BROWSE_ID],
             true

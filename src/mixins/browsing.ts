@@ -219,11 +219,7 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
           const resultsMusicShelfContents =
             res['musicShelfRenderer']['contents'];
           const original_filter = filter;
-          const category = nav<never>(
-            res,
-            [...MUSIC_SHELF, ...TITLE_TEXT],
-            true
-          );
+          const category = nav(res, [...MUSIC_SHELF, ...TITLE_TEXT], true);
           if (!filter && scope == scopes[0]) {
             filter = category;
           }
@@ -381,7 +377,7 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
         true
       );
       if (descriptionShelf) {
-        artist['description'] = nav<never>(descriptionShelf, DESCRIPTION);
+        artist['description'] = nav(descriptionShelf, DESCRIPTION);
         artist['views'] = !('subheader' in descriptionShelf)
           ? null
           : descriptionShelf['subheader']['runs'][0]['text'];
