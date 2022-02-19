@@ -1,7 +1,7 @@
 import * as utf8 from 'utf8';
 
 import { YTM_DOMAIN } from '../constants';
-import type { YTMusicBase } from './mixin.helper';
+import type { YTMusicBase } from './.mixin.helper';
 
 import {
   DESCRIPTION,
@@ -193,8 +193,10 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
         results = response['contents'];
       }
 
-      //@ts-expect-error: too deep! oops.
-      const resultsNav = nav<bT.searchResultsNav>(results, SECTION_LIST);
+      const resultsNav = nav<typeof results, bT.searchResultsNav>(
+        results,
+        SECTION_LIST
+      );
 
       // no results
       if (
@@ -217,7 +219,11 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
           const resultsMusicShelfContents =
             res['musicShelfRenderer']['contents'];
           const original_filter = filter;
-          const category = nav(res, [...MUSIC_SHELF, ...TITLE_TEXT], true);
+          const category = nav<never>(
+            res,
+            [...MUSIC_SHELF, ...TITLE_TEXT],
+            true
+          );
           if (!filter && scope == scopes[0]) {
             filter = category;
           }
@@ -351,7 +357,7 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
       const body = { browseId: channelId };
       const endpoint = 'browse';
       const response = this._sendRequest<bT.getArtistResponse>(endpoint, body);
-      const results = nav<bT.getArtistResults>(response, [
+      const results = nav<typeof response, bT.getArtistResults>(response, [
         ...SINGLE_COLUMN_TAB,
         ...SECTION_LIST,
       ]);
@@ -375,7 +381,7 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
         true
       );
       if (descriptionShelf) {
-        artist['description'] = nav(descriptionShelf, DESCRIPTION);
+        artist['description'] = nav<never>(descriptionShelf, DESCRIPTION);
         artist['views'] = !('subheader' in descriptionShelf)
           ? null
           : descriptionShelf['subheader']['runs'][0]['text'];
@@ -383,29 +389,32 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
       const subscriptionButton =
         header['subscriptionButton']['subscribeButtonRenderer'];
       artist['channelId'] = subscriptionButton['channelId'];
-      artist['shuffleId'] = nav<bT.getArtistShuffleId>(
+      artist['shuffleId'] = nav<typeof header, bT.getArtistShuffleId>(
         header,
         ['playButton', 'buttonRenderer', ...NAVIGATION_WATCH_PLAYLIST_ID],
         true
       );
-      artist['radioId'] = nav<bT.getArtistRadioId>(
+      artist['radioId'] = nav<typeof header, bT.getArtistRadioId>(
         header,
         ['startRadioButton', 'buttonRenderer', ...NAVIGATION_WATCH_PLAYLIST_ID],
         true
       );
-      artist['subscribers'] = nav<bT.getArtistSubscribers>(
-        subscriptionButton,
-        ['subscriberCountText', 'runs', 0, 'text'],
-        true
-      );
+      artist['subscribers'] = nav<
+        typeof subscriptionButton,
+        bT.getArtistSubscribers
+      >(subscriptionButton, ['subscriberCountText', 'runs', 0, 'text'], true);
       artist['subscribed'] = subscriptionButton['subscribed'];
       artist['thumbnails'] = nav(header, THUMBNAILS, true);
       artist['songs'] = { browseId: null };
       if ('musicShelfRenderer' in results[0]) {
         // API sometimes does not return songs
-        const musicShelf = nav<bT.getArtistMusicShelf>(results[0], MUSIC_SHELF);
+        const musicShelf = nav<typeof results[0], bT.getArtistMusicShelf>(
+          results[0],
+          MUSIC_SHELF
+        );
         if (
-          'navigationEndpoint' in nav<bT.getArtistRunTitle>(musicShelf, TITLE)
+          'navigationEndpoint' in
+          nav<typeof musicShelf, bT.getArtistRunTitle>(musicShelf, TITLE)
         ) {
           artist['songs']['browseId'] = nav(musicShelf, [
             ...TITLE,

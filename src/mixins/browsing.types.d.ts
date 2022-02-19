@@ -85,6 +85,9 @@ export type getArtistResponse = {
         subscribeButtonRenderer: {
           channelId: string;
           subscribed: boolean;
+          subscriberCountText: {
+            runs: Array<{ text: string }>;
+          };
         };
       };
       playButton: {
@@ -96,9 +99,6 @@ export type getArtistResponse = {
         buttonRenderer: {
           navigationEndpoint: { watchPlaylistEndpoint: { playlistId: string } };
         };
-      };
-      subscriberCountText: {
-        runs: Array<{ text: string }>;
       };
     };
   };
@@ -115,4 +115,4 @@ export type getArtistShuffleId =
 export type getArtistRadioId =
   getArtistHeader['startRadioButton']['buttonRenderer']['navigationEndpoint']['watchPlaylistEndpoint']['playlistId'];
 export type getArtistSubscribers =
-  getArtistHeader['subscriberCountText']['runs'][0]['text'];
+  getArtistHeader['subscriptionButton']['subscribeButtonRenderer']['subscriberCountText']['runs'][0]['text'];

@@ -61,8 +61,8 @@ More comprehensive list and explanation [here in the original repo](https://gith
         <tr>
             <td colspan=3 align="center">Exploring</td>
         </tr>
-        <tr><td>get moods/genres playlists</td><td>❌</td><td>0.20.0</td></tr>
-        <tr><td>get latest charts</td><td>❌</td><td>0.20.0</td></tr>
+        <tr><td>get moods/genres playlists</td><td>✅</td><td>0.20.0</td></tr>
+        <tr><td>get latest charts</td><td>✅</td><td>0.20.0</td></tr>
         <tr>
             <td colspan=3 align="center">Library Management</td>
         </tr>

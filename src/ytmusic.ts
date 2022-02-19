@@ -1,20 +1,3 @@
-// import requests
-// import gettext
-// import os
-// from requests.structures import CaseInsensitiveDict
-// from functools import partial
-// from contextlib import suppress
-// from typing import Dict
-// from ytmusicapi.helpers import *
-// from ytmusicapi.parsers import browsing
-// from ytmusicapi.setup import setup
-// from ytmusicapi.mixins.browsing import BrowsingMixin
-// from ytmusicapi.mixins.watch import WatchMixin
-// from ytmusicapi.mixins.explore import ExploreMixin
-// from ytmusicapi.mixins.library import LibraryMixin
-// from ytmusicapi.mixins.playlists import PlaylistsMixin
-// from ytmusicapi.mixins.uploads import UploadsMixin
-
 import { CaseInsensitiveObject, json } from './pyLibraryMock';
 import { YTM_BASE_API, YTM_PARAMS } from './constants';
 import * as fs from 'fs';
@@ -23,11 +6,13 @@ import * as helpers from './helpers';
 import { Parser } from './parsers/browsing';
 import { setup } from './setup';
 import { BrowsingMixin } from './mixins/browsing';
+import { WatchMixin } from './mixins/watch';
+import { ExploreMixin } from './mixins/explore';
 
 import type { Headers } from './types';
 
 // BrowsingMixin, WatchMixin, ExploreMixin, LibraryMixin, PlaylistsMixin, UploadsMixin
-export class YTMusic {
+export class _YTMusic {
   auth: string;
   _session: any;
   proxies: any;
@@ -226,4 +211,4 @@ export class YTMusic {
   //     pass
 }
 
-Object.assign(YTMusic, BrowsingMixin);
+export const YTMusic = ExploreMixin(WatchMixin(BrowsingMixin(_YTMusic)));

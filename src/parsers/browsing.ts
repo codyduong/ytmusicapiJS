@@ -101,7 +101,7 @@ export class Parser {
         const hasAuthor = flexItem?.length == defaultOffset + 3;
         searchResult['itemCount'] =
           flexItem &&
-          nav<string>(flexItem, [
+          nav<typeof flexItem, string>(flexItem, [
             defaultOffset + (hasAuthor ? 2 : 0),
             'text',
           ]).split(' ')[0];
@@ -109,8 +109,11 @@ export class Parser {
           ? null
           : nav(flexItem, [defaultOffset, 'text']);
       } else if (resultType == 'station') {
-        searchResult['videoId'] = nav<string>(data, NAVIGATION_VIDEO_ID);
-        searchResult['playlistId'] = nav<string>(data, NAVIGATION_PLAYLIST_ID);
+        searchResult['videoId'] = nav<never, string>(data, NAVIGATION_VIDEO_ID);
+        searchResult['playlistId'] = nav<never, string>(
+          data,
+          NAVIGATION_PLAYLIST_ID
+        );
       } else if (resultType == 'song') {
         searchResult['album'] = null;
         if ('menu' in data) {

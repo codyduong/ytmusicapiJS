@@ -1,4 +1,4 @@
-import { YTMusicBase } from './mixin.helper';
+import { YTMusicBase } from './.mixin.helper';
 
 import { NAVIGATION_PLAYLIST_ID, TAB_CONTENT } from '../parsers';
 import { getContinuations, nav, validatePlaylistId } from '../parsers/utils';
@@ -82,12 +82,15 @@ export const WatchMixin = <TBase extends YTMusicBase>(Base: TBase) => {
       }
       const endpoint = 'next';
       const response = this._sendRequest<wt.response>(endpoint, body);
-      const watchNextRenderer = nav<wt.watchNextRenderer>(response, [
-        'contents',
-        'singleColumnMusicWatchNextResultsRenderer',
-        'tabbedRenderer',
-        'watchNextTabbedResultsRenderer',
-      ]);
+      const watchNextRenderer = nav<typeof response, wt.watchNextRenderer>(
+        response,
+        [
+          'contents',
+          'singleColumnMusicWatchNextResultsRenderer',
+          'tabbedRenderer',
+          'watchNextTabbedResultsRenderer',
+        ]
+      );
 
       let lyrics_browse_id = null;
       if (!('unselectable' in watchNextRenderer['tabs'][1]['tabRenderer'])) {
@@ -97,15 +100,18 @@ export const WatchMixin = <TBase extends YTMusicBase>(Base: TBase) => {
           ]['browseId'];
       }
 
-      const results = nav<wt.results>(watchNextRenderer, [
-        ...TAB_CONTENT,
-        'musicQueueRenderer',
-        'content',
-        'playlistPanelRenderer',
-      ]);
+      const results = nav<typeof watchNextRenderer, wt.results>(
+        watchNextRenderer,
+        [
+          ...TAB_CONTENT,
+          'musicQueueRenderer',
+          'content',
+          'playlistPanelRenderer',
+        ]
+      );
       const playlist = results['contents']
         .map((x) =>
-          nav<string | null>(
+          nav<never, string | null>(
             x,
             ['playlistPanelVideoRenderer', ...NAVIGATION_PLAYLIST_ID],
             true

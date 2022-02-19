@@ -1,7 +1,5 @@
 import { MENU_ITEMS } from './index';
 
-import type { FilterSingular } from '../types';
-
 export function parseMenuPlaylists(
   data: Record<string, any> | null,
   result: Record<string, any>
@@ -11,7 +9,6 @@ export function parseMenuPlaylists(
   //   nav(data, MENU_ITEMS),
   //   'menuNavigationItemRenderer'
   // );
-  //@ts-expect-error: @codyduong fix by typing correctly...
   const watchMenu: Record<string, any> = nav(data, MENU_ITEMS)?.[
     'menuNavigationItemRenderer'
   ];
@@ -19,7 +16,7 @@ export function parseMenuPlaylists(
     for (const item of watchMenu.map(
       (x: Record<string, any>) => x['menuNavigationItemRenderer']
     )) {
-      const icon = nav(item, ['icon', 'iconType']);
+      const icon = nav<never, any>(item, ['icon', 'iconType']);
       let watchKey;
       if (icon == 'MUSIC_SHUFFLE') {
         watchKey = 'shuffleId';
@@ -29,13 +26,13 @@ export function parseMenuPlaylists(
         continue;
       }
 
-      let watchId = nav(
+      let watchId = nav<never, any>(
         item,
         ['navigationEndpoint', 'watchPlaylistEndpoint', 'playlistId'],
         true
       );
       if (!watchId) {
-        watchId = nav(
+        watchId = nav<never, any>(
           item,
           ['navigationEndpoint', 'watchEndpoint', 'playlistId'],
           true
@@ -50,7 +47,7 @@ export function parseMenuPlaylists(
 
 type FlexItem = {
   text: {
-    runs: { text: any }[];
+    runs: { text: string }[];
   };
 };
 
@@ -59,7 +56,7 @@ export function getItemText(
   index: number,
   run_index = 0,
   none_if_absent = false
-): Uppercase<FilterSingular> | null {
+): string | null {
   const column = getFlexColumnItem(item, index);
   if (!column) {
     return null;
@@ -158,7 +155,7 @@ export function getContinuations(
 //     return {'results': results, 'parsed': get_continuation_contents(results, parse_func)}
 
 function getContinuationParams(results: any, ctoken_path: string): string {
-  const ctoken = nav(results, [
+  const ctoken = nav<never, any>(results, [
     'continuations',
     0,
     'next' + ctoken_path + 'ContinuationData',
@@ -245,28 +242,36 @@ const navNodeTest2: navNodeTest = ['nestedObj', 'nestedObj2a'];
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const navNodeTest3: navNodeTest = ['objectInArray', 1, 'object', 'objectChild'];
 
-export function nav<U = any, T = any>(
+export function nav<T extends Record<string, any> | Array<any>, U = any>(
   root: T,
   items: navNode<T>,
   nullIfAbsent?: boolean
 ): U;
-export function nav<T>(
-  root: T | null,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function nav<T extends never, U = any>(
+  root: any | null,
   items: (string | number)[],
   nullIfAbsent?: boolean
-): null | any;
-export function nav<T extends Record<string, any>>(
+): U;
+export function nav(
+  root: any | null,
+  items: (string | number)[],
+  nullIfAbsent?: boolean
+): any;
+export function nav<T extends Record<string, any> | Array<any> | never, U>(
   root: T | null,
   items: (string | number)[] | navNode<T>,
   nullIfAbsent = false
-): null | any {
+): U | null {
   // """Access a nested object in root by item sequence."""
   try {
     if (root) {
       for (const k of items) {
+        //@ts-expect-error: There's no real good way to type this function
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         root = root![k];
       }
-      return root;
+      return root as any;
     }
   } catch (e) {
     if (nullIfAbsent && e instanceof ReferenceError) {
