@@ -208,14 +208,14 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
 
       // no results
       if (
-        Object.keys(resultsNav).length == 1 &&
-        'itemSectionRenderer' in results
+        !resultsNav ||
+        (resultsNav.length == 1 && 'itemSectionRenderer' in resultsNav)
       ) {
         return searchResults;
       }
 
       //set filter for parser
-      if (filter && 'playlists' in filter.split('_')) {
+      if (filter && filter.split('_').includes('playlists')) {
         filter = 'playlists';
       } else if (scope == 'uploads') {
         filter = 'uploads';
@@ -370,11 +370,11 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
       if (results.length == 1) {
         // not a YouTube Music Channel, a standard YouTube Channel ID with no music content was given
         throw new ReferenceError(
-          'The YouTube Channel {channelId} has no music content.'
+          `The YouTube Channel ${channelId} has no music content.`
         );
       }
 
-      let artist: Artist = {
+      let artist: Partial<Artist> = {
         description: null,
         views: null,
       };
@@ -432,7 +432,7 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
         );
       }
       artist = { ...artist, ...this.parser.parseArtistContents(results) };
-      return artist;
+      return artist as Artist;
     }
 
     /**
@@ -759,7 +759,7 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
      */
     async getSong(
       videoId: string,
-      signatureTimestamp: number
+      signatureTimestamp?: number
     ): Promise<Record<string, any>> {
       const endpoint = 'player';
       if (!signatureTimestamp) {
@@ -799,8 +799,10 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
             "source": "Source: LyricFind"
         }
      */
-    getLyrics(browseId: string): Record<string, any> {
+    getLyrics(browseId: string | null | undefined): Record<string, any> {
       const lyrics: Record<string, any> = {};
+
+      // Is this inherited behavior good for typescript users? @codyduong
       if (!browseId) {
         throw new Error(
           'Invalid browseId provided. This song might not have lyrics.'
@@ -855,7 +857,7 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
             isn't specified a call will be made to :py:func:`get_basejs_url`.
      * @returns `signatureTimestamp` string <-- @codyduong this contradicts the actual code? idk
      */
-    async getSignatureTimestamp(url: string): Promise<number | null> {
+    async getSignatureTimestamp(url?: string): Promise<number | null> {
       if (!url) {
         url = await this.getBaseJSUrl();
       }

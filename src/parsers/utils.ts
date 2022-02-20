@@ -204,8 +204,12 @@ function getContinuationContents<T extends any[]>(
 //     # response is invalid, if it has less items then minimal expected count
 //     return len(response['parsed']) >= expected_items_count
 
-export function validatePlaylistId(playlistId: string): string {
-  return !playlistId.startsWith('VL') ? playlistId : playlistId.slice(2);
+export function validatePlaylistId(
+  playlistId: string | null | undefined
+): string | null {
+  return !playlistId?.startsWith('VL')
+    ? playlistId ?? null
+    : playlistId.slice(2);
 }
 
 // Need so many goddamn support types

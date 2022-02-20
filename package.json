@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "axios": "^0.26.0",
-    "dotenv": "^16.0.0",
+    "configparser": "^0.3.9",
     "prompt-sync": "^4.2.0",
     "utf8": "^3.0.0"
   }

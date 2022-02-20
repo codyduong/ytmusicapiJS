@@ -67,6 +67,11 @@ export type getArtistResponse = {
                   };
                   contents: unknown;
                 };
+                musicCarouselShelfRenderer: Array<{
+                  contents: {
+                    test: unknown;
+                  };
+                }>;
               }>;
             };
           };

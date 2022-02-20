@@ -14,7 +14,7 @@ import axios from 'axios';
 
 // BrowsingMixin, WatchMixin, ExploreMixin, LibraryMixin, PlaylistsMixin, UploadsMixin
 export class _YTMusic {
-  auth: string | null;
+  #auth: string | null;
   // _agent: https.Agent;
   proxies: any;
   headers: Headers;
@@ -53,7 +53,7 @@ the ytmusicapi/locales directory.
     proxies?: Record<string, any>,
     language?: string
   ) {
-    this.auth = auth ?? null;
+    this.#auth = auth ?? null;
 
     // if (https_agent instanceof https.Agent) {
     //   this._https = https_agent;
@@ -76,21 +76,14 @@ the ytmusicapi/locales directory.
     this.headers = helpers.initializeHeaders();
     if (auth && fs.existsSync(auth)) {
       const file = auth;
-      fs.readFile(file, (err, data) => {
-        if (err) {
-          console.warn(
-            'Failed loading provided credentials. Make sure to provide a string or a file path.\nReason: ',
-            String(err)
-          );
-        }
-        this.headers = CaseInsensitiveObject<Headers>(json.load(data));
-      });
+      const data = fs.readFileSync(file);
+      this.headers = CaseInsensitiveObject<Headers>(json.load(data));
     } else if (auth) {
       this.headers = CaseInsensitiveObject<Headers>(json.loads(auth));
     }
 
     //TODO check if the IIAFE breaks this or not...
-    if (!this.headers['x-goog-visitor-id']) {
+    if (!this.headers?.['x-goog-visitor-id']) {
       let helpersGetVisitorId: Record<string, any> = {};
       (async (): Promise<void> => {
         helpersGetVisitorId = await helpers.getVisitorId(this._sendGetRequest);
@@ -147,7 +140,8 @@ the ytmusicapi/locales directory.
     ...additionalParams: string[]
   ): Promise<T> {
     body = { ...body, ...this.context };
-    if (this.auth) {
+
+    if (this.#auth) {
       const origin = this.headers['origin'] ?? this.headers['x-origin'];
       this.headers['authorization'] = helpers.getAuthorization(
         this.sapisid + ' ' + origin
@@ -193,11 +187,15 @@ the ytmusicapi/locales directory.
   }
 
   _checkAuth(): void {
-    if (!this.auth) {
+    if (!this.#auth) {
       throw new Error(
         'Please provide authentication before using this function'
       );
     }
+  }
+
+  getAuth(): string | null {
+    return this.#auth;
   }
 
   // @classmethod

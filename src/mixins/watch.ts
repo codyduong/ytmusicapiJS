@@ -45,11 +45,10 @@ export const WatchMixin = <TBase extends YTMusicBase>(Base: TBase) => {
         }
      */
     async getWatchPlaylist(
-      videoId: string | undefined,
-      playlistId: string,
-      limit = 25,
-      params: string
+      watchPlaylist: wt.getWatchPlaylistOptions
     ): Promise<wt.getWatchPlaylistReturn> {
+      let { playlistId } = watchPlaylist;
+      const { videoId, limit = 25, params } = watchPlaylist;
       const body: Record<string, any> = {
         enablePersistentPlaylistPanel: true,
         isAudioOnly: true,
@@ -147,16 +146,12 @@ export const WatchMixin = <TBase extends YTMusicBase>(Base: TBase) => {
      * @returns A list of watch playlist items
      */
     async getWatchPlaylistShuffle(
-      videoId: string | undefined,
-      playlistId: string,
-      limit = 50
+      options: wt.getWatchPlaylistShuffleOptions
     ): Promise<wt.getWatchPlaylistReturn> {
-      return this.getWatchPlaylist(
-        videoId,
-        playlistId,
-        limit,
-        'wAEB8gECKAE%3D'
-      );
+      return this.getWatchPlaylist({
+        ...options,
+        params: 'wAEB8gECKAE%3D',
+      });
     }
   };
 };

@@ -8,7 +8,7 @@
 // import locale
 // from ytmusicapi.constants import *
 
-import { re, json, time, locale } from './pyLibraryMock';
+import { re, json, time, locale, SimpleCookie } from './pyLibraryMock';
 import * as utf8 from 'utf8';
 import * as constants from './constants';
 import * as crypto from 'crypto';
@@ -98,18 +98,17 @@ export function htmlToText(htmlText: string): any {
   return htmlText;
 }
 
-// TODO
 export function sapisidFromCookie(_rawCookie: any): any {
-  // cookie = SimpleCookie()
-  // cookie.load(raw_cookie)
-  // return cookie['__Secure-3PAPISID'].value
+  const cookie = new SimpleCookie();
+  cookie.load(_rawCookie);
+  return cookie['__Secure-3PAPISID'];
 }
 
 // // SAPISID Hash reverse engineered by
 // // https://stackoverflow.com/a/32065323/5726546
 export function getAuthorization(auth: any): string {
   const sha_1 = crypto.createHash('sha1');
-  const unix_timestamp = Math.round(time.time()).toString();
+  const unix_timestamp = Math.trunc(time.time()).toString();
   sha_1.update(utf8.encode(unix_timestamp + ' ' + auth));
   return 'SAPISIDHASH ' + unix_timestamp + '_' + sha_1.digest('hex');
 }

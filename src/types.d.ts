@@ -73,4 +73,8 @@ export type Artist = {
   subscribed?: boolean;
   thumbnails?: string;
   songs?: Record<string, any>;
+  albums: {
+    browseId: string;
+    params: string;
+  };
 };

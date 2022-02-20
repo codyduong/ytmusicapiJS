@@ -32,7 +32,14 @@ import {
   parseMenuPlaylists,
 } from './utils';
 
-import type { Album, Playlist, RelatedArtist, Single, Video } from '../types';
+import type {
+  Album,
+  Artist,
+  Playlist,
+  RelatedArtist,
+  Single,
+  Video,
+} from '../types';
 import * as bT from '../mixins/browsing.types';
 
 export class Parser {
@@ -217,10 +224,9 @@ export class Parser {
     return searchResults;
   }
 
-  parseArtistContents(
-    results: Array<Record<string, any>>
-  ): Record<string, any> {
-    const categories = ['albums', 'singles', 'videos', 'playlists', 'related'];
+  parseArtistContents(results: bT.getArtistResults): Artist {
+    const categories: ['albums', 'singles', 'videos', 'playlists', 'related'] =
+      ['albums', 'singles', 'videos', 'playlists', 'related'];
     const categories_local = [
       'albums',
       'singles',
@@ -246,7 +252,7 @@ export class Parser {
         )
           return r['musicCarouselShelfRenderer'];
       });
-      if (data.length > 0) {
+      if (data[0]) {
         artist[category] = { browseId: null, results: [] };
         if ('navigationEndpoint' in nav(data[0], CAROUSEL_TITLE)) {
           artist[category]['browseId'] = nav(data[0], [
@@ -261,13 +267,14 @@ export class Parser {
         }
 
         artist[category]['results'] = parseContentList(
+          //@ts-expect-error: TODO
           data[0]['contents'],
           categories_parser[i]
         );
       }
     });
 
-    return artist;
+    return artist as Artist;
   }
 }
 

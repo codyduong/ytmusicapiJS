@@ -64,10 +64,25 @@ export const CaseInsensitiveObject = <T extends Record<string, any>>(
   ...(Object.fromEntries(
     Object.entries(object).map(([k, v]) => [k.toLowerCase(), v])
   ) as T),
-  ...(Object.fromEntries(
-    Object.entries(object).map(([k, v]) => [
-      `${k.slice(0, 1).toUpperCase}${k.slice(1)}`,
-      v,
-    ])
-  ) as T),
+  // ...(Object.fromEntries(
+  //   Object.entries(object).map(([k, v]) => [
+  //     `${k.slice(0, 1).toUpperCase()}${k.slice(1)}`,
+  //     v,
+  //   ])
+  // ) as T),
 });
+
+export class SimpleCookie {
+  '__Secure-3PAPISID': any;
+
+  load(cookie: string): void {
+    const cookieArrayed = cookie.split('; ');
+    for (const keyedPair of cookieArrayed) {
+      const splitPair = keyedPair.split('=');
+      if (splitPair[0] === '__Secure-3PAPISID') {
+        this['__Secure-3PAPISID'] = splitPair[1];
+        break;
+      }
+    }
+  }
+}

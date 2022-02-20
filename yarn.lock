@@ -1332,6 +1332,13 @@ concat-map@0.0.1:
   resolved "https://registry.npmjs.org/concat-map/-/concat-map-0.0.1.tgz"
   integrity sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=
 
+configparser@^0.3.9:
+  version "0.3.9"
+  resolved "https://registry.yarnpkg.com/configparser/-/configparser-0.3.9.tgz#9c8219dd8682b3908a2a2069ae11d85635ab4d68"
+  integrity sha512-ZlHt4SyiCfcQmFkt+2OfUQG6PC4GLyXthfBHvCH9I4ZtDxqMaAkfeEP+bkgePWgO3869+dRMVIcjklwfZmPDjg==
+  dependencies:
+    mkdirp "^0.5.1"
+
 convert-source-map@^1.4.0, convert-source-map@^1.6.0, convert-source-map@^1.7.0:
   version "1.8.0"
   resolved "https://registry.npmjs.org/convert-source-map/-/convert-source-map-1.8.0.tgz"
@@ -1500,11 +1507,6 @@ domexception@^2.0.1:
   integrity sha512-yxJ2mFy/sibVQlu5qHjOkf9J3K6zgmCxgJ94u2EdvDOV09H+32LtRswEcUsmUWN72pVLOEnTSRaIVVzVQgS0dg==
   dependencies:
     webidl-conversions "^5.0.0"
-
-dotenv@^16.0.0:
-  version "16.0.0"
-  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.0.0.tgz#c619001253be89ebb638d027b609c75c26e47411"
-  integrity sha512-qD9WU0MPM4SWLPJy/r2Be+2WgQj8plChsyrCNQzW/0WjvcJQiKQJ9mH3ZgB3fxbUUxgc/11ZJ0Fi5KiimWGz2Q==
 
 electron-to-chromium@^1.4.71:
   version "1.4.71"

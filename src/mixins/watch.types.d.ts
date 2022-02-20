@@ -67,3 +67,38 @@ export type parseWatchPlaylistTrack = Omit<
   feedbackTokens: Array<any> | null;
   likeStatus: string | null;
 };
+export type getWatchPlaylistOptions =
+  | {
+      videoId: string;
+      playlistId: string;
+      limit?: number;
+      params?: string;
+    }
+  | {
+      videoId?: string;
+      playlistId: string;
+      limit?: number;
+      params?: string;
+    }
+  | {
+      videoId: string;
+      playlistId?: string;
+      limit?: number;
+      params?: string;
+    };
+export type getWatchPlaylistShuffleOptions =
+  | {
+      videoId: string;
+      playlistId: string;
+      limit?: number;
+    }
+  | {
+      videoId?: string;
+      playlistId: string;
+      limit?: number;
+    }
+  | {
+      videoId: string;
+      playlistId?: string;
+      limit?: number;
+    };

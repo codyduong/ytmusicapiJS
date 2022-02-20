@@ -257,7 +257,7 @@ export const ExploreMixin = <TBase extends YTMusicBase>(Base: TBase) => {
       ];
       const chartsCategories = ['videos', 'artists'];
 
-      const hasSongs = !!this.auth;
+      const hasSongs = !!this.getAuth();
       const hasGenres = country == 'US';
       const hasTrending = country != 'ZZ';
       if (hasSongs) {
