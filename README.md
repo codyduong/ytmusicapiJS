@@ -56,7 +56,7 @@ More comprehensive list and explanation [here in the original repo](https://gith
         <tr><td>get user info</td><td>✅</td><td>0.20.0</td></tr>
         <tr><td>get albums</td><td>✅</td><td>0.20.0</td></tr>
         <tr><td>get song metadata</td><td>✅</td><td>0.20.0</td></tr>
-        <tr><td>get watch playlists</td><td>❌</td><td>0.20.0</td></tr>
+        <tr><td>get watch playlists</td><td>🐣</td><td>0.20.0</td></tr>
         <tr><td>get song lyrics</td><td>✅</td><td>0.20.0</td></tr>
         <tr>
             <td colspan=3 align="center">Exploring</td>
@@ -66,8 +66,8 @@ More comprehensive list and explanation [here in the original repo](https://gith
         <tr>
             <td colspan=3 align="center">Library Management</td>
         </tr>
-        <tr><td>get library contents</td><td>❌</td><td>0.20.0</td></tr>
-        <tr><td>add/remove library content</td><td>❌</td><td>0.20.0</td></tr>
+        <tr><td>get library contents</td><td>🐣</td><td>0.20.0</td></tr>
+        <tr><td>add/remove library content</td><td>🐣</td><td>0.20.0</td></tr>
         <tr>
             <td colspan=3 align="center">Playlists</td>
         </tr>
