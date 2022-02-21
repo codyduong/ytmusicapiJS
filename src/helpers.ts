@@ -151,8 +151,8 @@ export function parseDuration(duration: string | undefined): any {
 export function sumTotalDuration(item: any): any {
   return sum(
     item.tracks.map(
-      ({ track }: { track: { duration_seconds?: number } }) =>
-        track.duration_seconds ?? 0
+      ({ track }: { track?: { duration_seconds?: number } }) =>
+        track?.duration_seconds ?? 0
     )
   );
 }

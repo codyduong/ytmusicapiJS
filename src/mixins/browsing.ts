@@ -20,7 +20,7 @@ import {
 import * as helpers from '../helpers';
 import { re } from '../pyLibraryMock';
 
-import { parse_album_header } from '../parsers/albums';
+import { parseAlbumHeader } from '../parsers/albums';
 import { parseContentList, parsePlaylist } from '../parsers/browsing';
 import { parseAlbums } from '../parsers/library';
 import { parsePlaylistItems } from '../parsers/playlists';
@@ -606,7 +606,7 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
       const body = { browseId: browseId };
       const endpoint = 'browse';
       const response = await this._sendRequest(endpoint, body);
-      const album = parse_album_header(response);
+      const album = parseAlbumHeader(response);
       const results = nav(response, [
         ...SINGLE_COLUMN_TAB,
         ...SECTION_LIST_ITEM,

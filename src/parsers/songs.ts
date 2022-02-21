@@ -1,4 +1,4 @@
-import { NAVIGATION_BROWSE_ID } from '.';
+import { FEEDBACK_TOKEN, NAVIGATION_BROWSE_ID, TOGGLE_MENU } from '.';
 import { parseDuration } from '../helpers';
 import { re } from '../pyLibraryMock';
 import { getBrowseId, getFlexColumnItem, getItemText, nav } from './utils';
@@ -69,10 +69,32 @@ export function parseSongAlbum(
       };
 }
 
-export function parseSongMenuTokens(_arg0: any): any {
-  throw new Error('Not implemented parseSongMenuTokens @codyduong');
+export function parseSongMenuTokens(item: any): any {
+  const toggleMenu = item[TOGGLE_MENU];
+  const serviceType = toggleMenu['defaultIcon']['iconType'];
+  let libraryAddToken = nav(
+    toggleMenu,
+    ['defaultServiceEndpoint', ...FEEDBACK_TOKEN],
+    true
+  );
+  let libraryRemoveToken = nav(
+    toggleMenu,
+    ['toggledServiceEndpoint', ...FEEDBACK_TOKEN],
+    true
+  );
+
+  if (serviceType == 'LIBRARY_REMOVE') {
+    // swap if already in library
+    [libraryAddToken, libraryRemoveToken] = [
+      libraryRemoveToken,
+      libraryAddToken,
+    ];
+  }
+
+  return { add: libraryAddToken, remove: libraryRemoveToken };
 }
 
-export function parseLikeStatus(_arg0: any): any {
-  throw new Error('Not implemented parseLikeStatus @codyduong');
+export function parseLikeStatus(service: any): any {
+  const status = ['LIKE', 'INDIFFERENT'];
+  return status[status.indexOf(service['likeEndpoint']['status']) - 1];
 }

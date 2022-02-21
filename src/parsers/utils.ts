@@ -395,11 +395,3 @@ export function findObjectsByKey<T extends Array<Record<string, any>>>(
   }
   return objects;
 }
-
-// function get_dot_separator_index(runs):
-//     index = len(runs)
-//     try:
-//         index = runs.index({'text': ' • '})
-//     except ValueError:
-//         len(runs)
-//     return index

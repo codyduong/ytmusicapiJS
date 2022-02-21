@@ -21,7 +21,7 @@ export const MUSIC_SHELF: ['musicShelfRenderer'] = ['musicShelfRenderer'];
 export const GRID: ['gridRenderer'] = ['gridRenderer'];
 export const GRID_ITEMS: [...typeof GRID, 'items'] = [...GRID, 'items'];
 export const MENU = ['menu', 'menuRenderer'];
-export const MENU_ITEMS = [...GRID, 'items'];
+export const MENU_ITEMS = [...MENU, 'items'];
 export const MENU_LIKE_STATUS = [
   ...MENU,
   ...['topLevelButtons', 0, 'likeButtonRenderer', 'likeStatus'],
