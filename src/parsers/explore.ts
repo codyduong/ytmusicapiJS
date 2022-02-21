@@ -33,6 +33,7 @@ export function parseChartSong(data: any): Record<string, any> {
     };
   } else {
     const flex_1 = getFlexColumnItem(data, 1);
+    //const _ = nav(flex_1, ['text', 'runs']);
     parsed['views'] = nav(flex_1, ['text', 'runs', -1, 'text']).split(' ')[0];
   }
   parsed = { ...parsed, ...parseRanking(data) };

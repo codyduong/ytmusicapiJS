@@ -22,8 +22,8 @@ import { re } from '../pyLibraryMock';
 
 import { parse_album_header } from '../parsers/albums';
 import { parseContentList, parsePlaylist } from '../parsers/browsing';
-import { parse_albums } from '../parsers/library';
-import { parse_playlist_items } from '../parsers/playlists';
+import { parseAlbums } from '../parsers/library';
+import { parsePlaylistItems } from '../parsers/playlists';
 import { getSearchParams } from '../parsers/searchParams';
 import { findObjectByKey, getContinuations, nav } from '../parsers/utils';
 
@@ -34,19 +34,20 @@ import * as bT from './browsing.types';
 export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
   return class BrowsingMixin extends Base {
     /**
-   * Search YouTube music        
-   * Returns results within the provided category.
-   * @param query {string} Query string, i.e. 'Oasis Wonderwall'
-   * @param filter {string} Filter for item types. Allowed values: ``songs``, ``videos``, ``albums``, ``artists``, ``playlists``, ``community_playlists``, ``featured_playlists``, ``uploads``.
-   *    @default: Default search, including all types of items.
-   * @param scope {string} Search scope. Allowed values: ``library``, ``uploads``.
-   *    @default: Search the public YouTube Music catalogue.
-   * @param limit {number} Number of search results to return @default 20
-   * @param ignore_spelling {boolean} Whether to ignore YTM spelling suggestions.
-          If True, the exact search term will be searched for, and will not be corrected.
-          This does not have any effect when the filter is set to ``uploads``.
-          Default: False, will use YTM's default behavior of autocorrecting the search.
-   * @return List of results depending on filter.
+     * Search YouTube music.
+     * Returns results within the provided category.
+     * @param {string} query Query string, i.e. 'Oasis Wonderwall'
+     * @param {options} [options=]
+     * @param {string} [options.filter=] Filter for item types. Allowed values: ``songs``, ``videos``, ``albums``, ``artists``, ``playlists``, ``community_playlists``, ``featured_playlists``, ``uploads``.
+     *    @default: Default search, including all types of items.
+     * @param {string} [options.scope=] Search scope. Allowed values: ``library``, ``uploads``.
+     *    @default: Search the public YouTube Music catalogue.
+     * @param {number} [options.scope=20] Number of search results to return
+     * @param {boolean} [ignoreSpelling=false] Whether to ignore YTM spelling suggestions.
+     * If true, the exact search term will be searched for, and will not be corrected.
+     * This does not have any effect when the filter is set to ``uploads``.
+     * Default: false, will use YTM's default behavior of autocorrecting the search.
+     * @return List of results depending on filter.
           resultType specifies the type of item (important for default search).
           albums, artists and playlists additionally contain a browseId, corresponding to
           albumId, channelId and playlistId (browseId=``VL``+playlistId)
@@ -133,7 +134,7 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
                 "radioId": "RDEMkjHYJjL1a3xspEyVkhHAsg"
               }
             ]
-   */
+    */
     async search(
       query: string,
       options?: {
@@ -271,15 +272,15 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
     }
 
     /**
-    Get information about an artist and their top releases (songs,
-    albums, singles, videos, and related artists). The top lists
-    contain pointers for getting the full list of releases. For
-    songs/videos, pass the browseId to :py:func:`get_playlist`.
-    For albums/singles, pass browseId and params to :py:func:
-    `get_artist_albums`.
-    @param channelId {string}: channel id of the artist
-    @return Object with requested information.
-    @example
+     * Get information about an artist and their top releases (songs,
+     * albums, singles, videos, and related artists). The top lists
+     * contain pointers for getting the full list of releases. For
+     * songs/videos, pass the browseId to :py:func:`get_playlist`.
+     * For albums/singles, pass browseId and params to :py:func:
+     * `get_artist_albums`.
+     * @param {string} channelId channel id of the artist
+     * @return Object with requested information.
+     * @example
         {
             "description": "Oasis were ...",
             "views": "1838795605",
@@ -386,6 +387,7 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
         undefined,
         true
       );
+
       if (descriptionShelf) {
         artist['description'] = nav(descriptionShelf, DESCRIPTION);
         artist['views'] = !('subheader' in descriptionShelf)
@@ -427,9 +429,7 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
             ...NAVIGATION_BROWSE_ID,
           ]);
         }
-        artist['songs']['results'] = parse_playlist_items(
-          musicShelf['contents']
-        );
+        artist['songs']['results'] = parsePlaylistItems(musicShelf['contents']);
       }
       artist = { ...artist, ...this.parser.parseArtistContents(results) };
       return artist as Artist;
@@ -437,75 +437,75 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
 
     /**
      * Get the full list of an artist's albums or singles
-     * @param channelId {string} channel Id of the artist
-     * @param params {string} params obtained by :py:func:`get_artist` <-- TODO @codyduong
-     * @returns List of albums in the format of :py:func:`get_library_albums`, except artists key is missing.
+     * @param {string} channelId channel Id of the artist
+     * @param {string} params params obtained by `getArtist`
+     * @returns List of albums in the format of `getLibraryAlbums`, except artists key is missing.
      */
-    getArtistAlbums(
+    async getArtistAlbums(
       channelId: string,
       params: string
-    ): Array<Record<string, any>> {
+    ): Promise<Record<string, any>[]> {
       const body = { browseId: channelId, params: params };
       const endpoint = 'browse';
-      const response = this._sendRequest(endpoint, body);
+      const response = await this._sendRequest(endpoint, body);
       const results = nav(response, [
         ...SINGLE_COLUMN_TAB,
         ...SECTION_LIST_ITEM,
         ...GRID_ITEMS,
       ]);
-      const albums = parse_albums(results);
+      const albums = parseAlbums(results);
 
       return albums;
     }
 
     /**
      *  Retrieve a user's page. A user may own videos or playlists.
-     * @param channelId {string} channelId of the user
+     * @param {string} channelId channelId of the user
      * @returns Object with information about a user.
      * @example
      * {
-              "name": "4Tune – No Copyright Music",
-              "videos": {
-                "browseId": "UC44hbeRoCZVVMVg5z0FfIww",
-                "results": [
-                  {
-                    "title": "Epic Music Soundtracks 2019",
-                    "videoId": "bJonJjgS2mM",
-                    "playlistId": "RDAMVMbJonJjgS2mM",
-                    "thumbnails": [
-                      {
-                        "url": "https://i.ytimg.com/vi/bJon...",
-                        "width": 800,
-                        "height": 450
-                      }
-                    ],
-                    "views": "19K"
-                  }
-                ]
-              },
-              "playlists": {
-                "browseId": "UC44hbeRoCZVVMVg5z0FfIww",
-                "results": [
-                  {
-                    "title": "♚ Machinimasound | Playlist",
-                    "playlistId": "PLRm766YvPiO9ZqkBuEzSTt6Bk4eWIr3gB",
-                    "thumbnails": [
-                      {
-                        "url": "https://i.ytimg.com/vi/...",
-                        "width": 400,
-                        "height": 225
-                      }
-                    ]
-                  }
-                ],
-                "params": "6gO3AUNvWU..."
-              }
-            }
+     *   "name": "4Tune – No Copyright Music",
+     *   "videos": {
+     *   "browseId": "UC44hbeRoCZVVMVg5z0FfIww",
+     *   "results": [
+     *     {
+     *       "title": "Epic Music Soundtracks 2019",
+     *       "videoId": "bJonJjgS2mM",
+     *       "playlistId": "RDAMVMbJonJjgS2mM",
+     *       "thumbnails": [
+     *         {
+     *           "url": "https://i.ytimg.com/vi/bJon...",
+     *           "width": 800,
+     *           "height": 450
+     *         }
+     *       ],
+     *       "views": "19K"
+     *       }
+     *     ]
+     *   },
+     *   "playlists": {
+     *   "browseId": "UC44hbeRoCZVVMVg5z0FfIww",
+     *   "results": [
+     *     {
+     *     "title": "♚ Machinimasound | Playlist",
+     *     "playlistId": "PLRm766YvPiO9ZqkBuEzSTt6Bk4eWIr3gB",
+     *     "thumbnails": [
+     *           {
+     *           "url": "https://i.ytimg.com/vi/...",
+     *           "width": 400,
+     *           "height": 225
+     *           }
+     *         ]
+     *       }
+     *     ],
+     *     "params": "6gO3AUNvWU..."
+     *   }
+     * }
      */
-    getUser(channelId: string): Record<string, any> {
+    async getUser(channelId: string): Promise<Record<string, any>> {
       const endpoint = 'browse';
       const body = { browseId: channelId };
-      const response = this._sendRequest(endpoint, body);
+      const response = await this._sendRequest(endpoint, body);
       let user = {
         name: nav(response, [
           'header',
@@ -522,16 +522,16 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
      * Retrieve a list of playlists for a given user.
      * Call this function again with the returned ``params`` to get the full list.
      * @param channelId {string} channelId of the user.
-     * @param params {string} params obtained by :py:func:`get_artist` <-- TODO @codyduong
-     * @returns List of user playlists in the format of :py:func:`get_library_playlists`
+     * @param params {string} params obtained by `getArtist`
+     * @returns List of user playlists in the format of `getLibraryPlaylists`
      */
-    getUserPlaylists(
+    async getUserPlaylists(
       channelId: string,
       params: string
-    ): Array<Record<string, any>> {
+    ): Promise<Record<string, any>[]> {
       const endpoint = 'browse';
       const body = { browseId: channelId, params: params };
-      const response = this._sendRequest(endpoint, body);
+      const response = await this._sendRequest(endpoint, body);
       const results = nav(response, [
         ...SINGLE_COLUMN_TAB,
         ...SECTION_LIST_ITEM,
@@ -544,7 +544,7 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
 
     /**
      * Get an album's browseId based on its audioPlaylistId
-     * @param audioPlaylistId audioPlaylistId: id of the audio playlist (starting with `OLAK5uy_`)
+     * @param {string} [audioPlaylistId] id of the audio playlist (starting with `OLAK5uy_`)
      * @returns browseId (starting with `MPREb_`)
      */
     async getAlbumBrowseId(audioPlaylistId: string): Promise<any> {
@@ -602,17 +602,17 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
                 ]
             }
      */
-    getAlbum(browseId: string): Record<string, any> {
+    async getAlbum(browseId: string): Promise<Record<string, any>> {
       const body = { browseId: browseId };
       const endpoint = 'browse';
-      const response = this._sendRequest(endpoint, body);
+      const response = await this._sendRequest(endpoint, body);
       const album = parse_album_header(response);
       const results = nav(response, [
         ...SINGLE_COLUMN_TAB,
         ...SECTION_LIST_ITEM,
         ...MUSIC_SHELF,
       ]);
-      album['tracks'] = parse_playlist_items(results['contents']);
+      album['tracks'] = parsePlaylistItems(results['contents']);
       album['duration_seconds'] = helpers.sumTotalDuration(album);
 
       return album;
@@ -781,8 +781,8 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
         'streamingData',
         'microformat',
       ];
-      for (const k in response.keys()) {
-        if (!(k in keys)) {
+      for (const k of Object.keys(response)) {
+        if (!keys.includes(k)) {
           delete response[k];
         }
       }
@@ -799,7 +799,9 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
             "source": "Source: LyricFind"
         }
      */
-    getLyrics(browseId: string | null | undefined): Record<string, any> {
+    async getLyrics(
+      browseId: string | null | undefined
+    ): Promise<Record<string, any>> {
       const lyrics: Record<string, any> = {};
 
       // Is this inherited behavior good for typescript users? @codyduong
@@ -809,7 +811,9 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
         );
       }
 
-      const response = this._sendRequest('browse', { browseId: browseId });
+      const response = await this._sendRequest('browse', {
+        browseId: browseId,
+      });
       lyrics['lyrics'] = nav(
         response,
         [

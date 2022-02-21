@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import ConfigParser from 'configparser';
+import path from 'path';
 import YTMusic from '../src/ytmusic';
 
 const sampleAlbum = 'MPREb_4pL8gzRtw1p'; // Eminem - Revival
@@ -11,7 +12,6 @@ const config = new ConfigParser();
 config.read(`${__dirname}/test.cfg`);
 
 const ytmusic = new YTMusic();
-//Most tests involving user auth also require specific tests. So those are disabled for now.
 const ytmusicAuth = new YTMusic(config.get('auth', 'headers_file'));
 // const ytmusicBrand = new YTMusic(
 //   config.get('auth', 'headers'),
@@ -150,8 +150,7 @@ describe('Browsing', () => {
     });
   });
   describe('Get Artist Albums', () => {
-    // @codyduong discovery
-    test.skip('#1', async () => {
+    test('#1', async () => {
       const artist = await ytmusic.getArtist('UCAeLFBCQS7FvI8PvBrWvSBg');
       const results = await ytmusic.getArtistAlbums(
         artist.albums.browseId,
@@ -162,10 +161,10 @@ describe('Browsing', () => {
   });
   describe('Get Artist Singles', () => {});
   describe('Get User', () => {
-    test.skip('#1', async () => {
+    test('#1', async () => {
       // @codyduong nav error here
       const results = await ytmusic.getUser('UC44hbeRoCZVVMVg5z0FfIww');
-      expect(results).toBe(3);
+      expect(Object.keys(results).length).toBe(3);
     });
   });
   // describe('Get User Playlists', () => {});
@@ -178,7 +177,7 @@ describe('Browsing', () => {
       expect(browseId).toBe(sampleAlbum);
     });
   });
-  describe.skip('Get Album', () => {
+  describe('Get Album', () => {
     test('#1', async () => {
       const results = await ytmusic.getAlbum(sampleAlbum);
       expect(results.length).toBeGreaterThan(9);
@@ -190,7 +189,7 @@ describe('Browsing', () => {
       expect(results.tracks.length).toBe(7);
     });
   });
-  describe.skip('Get Song', () => {
+  describe('Get Song', () => {
     // relies on auth @codyduong
     test.skip('#1', async () => {
       //const song = ytmusic.yt_auth.getSong("AjXQiKP5kMs")
@@ -201,7 +200,7 @@ describe('Browsing', () => {
       expect(song.streamingData.adaptiveFormats.length).toBeGreaterThan(10);
     });
   });
-  describe.skip('Get Lyrics', () => {
+  describe('Get Lyrics', () => {
     test('#1', async () => {
       const playlist = await ytmusic.getWatchPlaylist({ videoId: sampleVideo });
       const lyricsSong = await ytmusic.getLyrics(playlist['lyrics']);
@@ -220,7 +219,7 @@ describe('Browsing', () => {
       }
     });
   });
-  describe.skip('Get Signature Timestamp', () => {
+  describe('Get Signature Timestamp', () => {
     test('#1', async () => {
       const signatureTimestamp = await ytmusic.getSignatureTimestamp();
       expect(signatureTimestamp).toBeTruthy;
@@ -232,7 +231,7 @@ describe('Browsing', () => {
  * EXPLORE
  */
 describe('Explore', () => {
-  describe.skip('Get Mood Playlists', () => {
+  describe('Get Mood Playlists', () => {
     test('#1', async () => {
       const categories = await ytmusic.getMoodCategories();
       const catListed = Object.keys(categories);
@@ -245,15 +244,15 @@ describe('Explore', () => {
     });
   });
   describe('Get Charts', () => {
-    test.skip('#1', async () => {
-      const charts = await ytmusic.getCharts();
-      expect(charts.length).toBe(4);
+    test('#1', async () => {
+      const charts = await ytmusicAuth.getCharts();
+      expect(Object.keys(charts).length).toBe(4);
     });
-    test.skip('#2', async () => {
-      const charts = await ytmusic.getCharts('US');
+    test('#2', async () => {
+      const charts = await ytmusicAuth.getCharts('US');
       expect(charts.length).toBe(6);
     });
-    test.skip('#3', async () => {
+    test('#3', async () => {
       const charts = await ytmusic.getCharts('BE');
       expect(charts.length).toBe(4);
     });
@@ -277,7 +276,7 @@ describe('Watch', () => {
     test('#3', async () => {});
   });
   describe('Get Watch Playlist Shuffle', () => {
-    test.skip('#1', async () => {
+    test('#1', async () => {
       const playlist = await ytmusic.getWatchPlaylistShuffle({
         playlistId: 'OLAK5uy_lKgoGvlrWhX0EIPavQUXxyPed8Cj38AWc',
       });

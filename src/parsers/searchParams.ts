@@ -32,7 +32,7 @@ export function getSearchParams(
       params = 'Eg-KAQwIABAAGAAgACgB';
       if (!ignoreSpelling) params += 'MABqChAEEAMQCRAFEAo%3D';
       else params += 'MABCAggBagoQBBADEAkQBRAK';
-    } else if ('playlists' in filter.split('_')) {
+    } else if (filter.split('_').includes('playlists')) {
       param1 = 'EgeKAQQoA';
       if (filter == 'featured_playlists') {
         param2 = 'Dg';

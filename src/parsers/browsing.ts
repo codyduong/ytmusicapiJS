@@ -60,7 +60,7 @@ export class Parser {
     const defaultOffset = !resultType ? 2 : 0;
     for (const result of results) {
       const data = result[MRLIR];
-      const searchResult: Record<string, any> = { category: category };
+      let searchResult: Record<string, any> = { category: category };
       if (!resultType) {
         resultType =
           (getItemText(data, 1)?.toLowerCase() as bT.resultType) ?? null;
@@ -85,7 +85,7 @@ export class Parser {
           'station',
         ];
         // default to album since it's labeled with multiple values ('Single', 'EP', etc.)
-        if (resultType && !(resultType in resultTypesLocal)) {
+        if (resultType && !resultTypesLocal.includes(resultType)) {
           resultType = 'album';
         } else {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -155,7 +155,7 @@ export class Parser {
             );
           }
           if (flexItems[1]) {
-            searchResult.update(parseSongRuns(flexItems[1]));
+            searchResult = { ...searchResult, ...parseSongRuns(flexItems[1]) };
           }
           searchResult['resultType'] = 'song';
         } else {
@@ -186,7 +186,7 @@ export class Parser {
         }
       }
 
-      if (resultType in ['song', 'video']) {
+      if (['song', 'video'].includes(resultType)) {
         searchResult['videoId'] = nav(
           data,
           [
@@ -199,23 +199,23 @@ export class Parser {
         );
       }
 
-      if (resultType in ['song', 'video', 'album']) {
+      if (['song', 'video', 'album'].includes(resultType)) {
         searchResult['duration'] = null;
         searchResult['year'] = null;
         const hasOffset =
           resultType == 'album' || (defaultOffset && !!searchResult['videoId']);
         const flexItem = getFlexColumnItem(data, 1);
         const runs = flexItem?.['text']['runs'].slice(hasOffset ? 2 : 0);
-        const songInfo = parseSongRuns(runs);
-        searchResult.update(songInfo);
+        const songInfo = parseSongRuns(runs!);
+        searchResult = { ...searchResult, ...songInfo };
       }
 
-      if (resultType in ['artist', 'album', 'playlist']) {
+      if (['artist', 'album', 'playlist'].includes(resultType)) {
         searchResult['browseId'] = nav(data, NAVIGATION_BROWSE_ID, true);
         if (!searchResult['browseId']) continue;
       }
 
-      if (resultType in ['song', 'album'])
+      if (['song', 'album'].includes(resultType))
         searchResult['isExplicit'] = nav(data, BADGE_LABEL, true) != null;
 
       searchResult['thumbnails'] = nav(data, THUMBNAILS, true);
@@ -244,14 +244,18 @@ export class Parser {
     ];
     const artist: Record<string, any> = {};
     categories.forEach((category, i) => {
-      const data = results.map((r) => {
-        if (
-          r['musicCarouselShelfRenderer'] &&
-          nav(r, [...CAROUSEL, ...CAROUSEL_TITLE])['text'].lower() ==
-            categories_local[i]
-        )
-          return r['musicCarouselShelfRenderer'];
-      });
+      const data = results
+        .map((r) => {
+          if (
+            r['musicCarouselShelfRenderer'] &&
+            nav<typeof r, { text: string }>(r, [
+              ...CAROUSEL,
+              ...CAROUSEL_TITLE,
+            ])['text'].toLowerCase() == categories_local[i]
+          )
+            return r['musicCarouselShelfRenderer'];
+        })
+        .filter((x) => x);
       if (data[0]) {
         artist[category] = { browseId: null, results: [] };
         if ('navigationEndpoint' in nav(data[0], CAROUSEL_TITLE)) {
@@ -259,7 +263,7 @@ export class Parser {
             ...CAROUSEL_TITLE,
             ...NAVIGATION_BROWSE_ID,
           ]);
-          if (category in ['albums', 'singles', 'playlists']) {
+          if (['albums', 'singles', 'playlists'].includes(category)) {
             artist[category]['params'] = nav(data[0], CAROUSEL_TITLE)[
               'navigationEndpoint'
             ]['browseEndpoint']['params'];
@@ -267,7 +271,6 @@ export class Parser {
         }
 
         artist[category]['results'] = parseContentList(
-          //@ts-expect-error: TODO
           data[0]['contents'],
           categories_parser[i]
         );
@@ -320,7 +323,7 @@ export function parseVideo(result: {
     playlistId: nav(result, NAVIGATION_PLAYLIST_ID, true),
     thumbnails: nav(result, THUMBNAIL_RENDERER, true),
   };
-  video['views'] = runs[-1]['text'].split(' ')[0];
+  video['views'] = runs[runs.length - 1]['text'].split(' ')[0];
   return video;
 }
 

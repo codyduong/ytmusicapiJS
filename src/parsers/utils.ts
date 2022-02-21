@@ -1,4 +1,4 @@
-import { MENU_ITEMS } from './index';
+import { MENU_ITEMS, NAVIGATION_BROWSE_ID } from './index';
 
 export function parseMenuPlaylists(
   data: Record<string, any> | null,
@@ -89,31 +89,48 @@ export function getFlexColumnItem(item: any, index: number): FlexItem | null {
   ];
 }
 
-// function get_fixed_column_item(item, index):
-//     if 'text' not in item['fixedColumns'][index]['musicResponsiveListItemFixedColumnRenderer'] or \
-//             'runs' not in item['fixedColumns'][index]['musicResponsiveListItemFixedColumnRenderer']['text']:
-//         return None
+export function getFixedColumnItem(
+  item: { [x: string]: { [x: string]: { [x: string]: any } } },
+  index: number
+): any {
+  if (
+    !item['fixedColumns'][index]['musicResponsiveListItemFixedColumnRenderer'][
+      'text'
+    ] ||
+    !item['fixedColumns'][index]['musicResponsiveListItemFixedColumnRenderer'][
+      'text'
+    ]['runs']
+  )
+    return null;
 
-//     return item['fixedColumns'][index]['musicResponsiveListItemFixedColumnRenderer']
+  return item['fixedColumns'][index][
+    'musicResponsiveListItemFixedColumnRenderer'
+  ];
+}
 
-// function get_browse_id(item, index):
-//     if 'navigationEndpoint' not in item['text']['runs'][index]:
-//         return None
-//     else:
-//         return nav(item['text']['runs'][index], NAVIGATION_BROWSE_ID)
+export function getBrowseId(
+  item: Record<string, any>,
+  index: string | number
+): null | any {
+  if (!item['text']['runs'][index]['navigationEndpoint']) {
+    return null;
+  } else {
+    return nav(item['text']['runs'][index], NAVIGATION_BROWSE_ID);
+  }
+}
 
 export async function getContinuations(
   results: any,
   continuation_type: string | number,
   limit: number,
-  request_func: (arg1: any) => Promise<Record<string, any>>,
+  requestFunc: (arg1: any) => Promise<Record<string, any>>,
   parse_func: any,
-  ctoken_path = ''
+  ctokenPath = ''
 ): Promise<Array<any>> {
   let items: any[] = [];
   while ('continuations' in results && items.length < limit) {
-    const additionalParams = getContinuationParams(results, ctoken_path);
-    const response = await request_func(additionalParams);
+    const additionalParams = getContinuationParams(results, ctokenPath);
+    const response = await requestFunc(additionalParams);
     if ('continuationContents' in response) {
       results = response['continuationContents'][continuation_type];
     } else {
@@ -128,31 +145,47 @@ export async function getContinuations(
   return items;
 }
 
-// function get_validated_continuations(results,
-//                                 continuation_type,
-//                                 limit,
-//                                 per_page,
-//                                 request_func,
-//                                 parse_func,
-//                                 ctoken_path=""):
-//     items = []
-//     while 'continuations' in results and len(items) < limit:
-//         additionalParams = get_continuation_params(results, ctoken_path)
-//         wrapped_parse_func = lambda raw_response: get_parsed_continuation_items(
-//             raw_response, parse_func, continuation_type)
-//         validate_func = lambda parsed: validate_response(parsed, per_page, limit, len(items))
+export function getValidatedContinuations(
+  results: any,
+  continuation_type: any,
+  limit: number,
+  per_page: number,
+  request_func: any,
+  parse_func: any,
+  ctoken_path = ''
+): any {
+  let items: string | any[] = [];
+  while ('continuations' in results && items.length < limit) {
+    const additionalParams = getContinuationParams(results, ctoken_path);
+    const wrapped_parse_func = (rawResponse: any): any =>
+      getParsedContinuationItems(rawResponse, parse_func, continuation_type);
+    const validateFunc = (parsed: Record<string, any>): any =>
+      validateResponse(parsed, per_page, limit, items.length);
 
-//         response = resend_request_until_parsed_response_is_valid(request_func, additionalParams,
-//                                                                  wrapped_parse_func, validate_func,
-//                                                                  3)
-//         results = response['results']
-//         items.extend(response['parsed'])
+    const response = resendRequestUntilParsedResponseIsValid(
+      request_func,
+      additionalParams,
+      wrapped_parse_func,
+      validateFunc,
+      3
+    );
+    results = response['results'];
+    items = [...items, ...response['parsed']];
+  }
+  return items;
+}
 
-//     return items
-
-// function get_parsed_continuation_items(response, parse_func, continuation_type):
-//     results = response['continuationContents'][continuation_type]
-//     return {'results': results, 'parsed': get_continuation_contents(results, parse_func)}
+export function getParsedContinuationItems(
+  response: Record<string, any>,
+  parseFunc: (arg0: any) => any,
+  continuationType: string | number
+): any {
+  const results = response['continuationContents'][continuationType];
+  return {
+    results: results,
+    parsed: getContinuationContents(results, parseFunc),
+  };
+}
 
 function getContinuationParams(results: any, ctoken_path: string): string {
   const ctoken = nav<never, any>(results, [
@@ -169,40 +202,52 @@ function getContinuationString(ctoken: string): string {
   return `&ctoken=${ctoken}&continuation=ctoken`;
 }
 
-function getContinuationContents<T extends any[]>(
+function getContinuationContents<T extends Record<string, any>>(
   continuation: T,
-  parse_func: (arg0: any) => T
+  parseFunc: (arg0: any) => T
 ): T | null {
-  for (const term in ['contents', 'items']) {
+  for (const term of ['contents', 'items']) {
     if (term in continuation) {
-      return parse_func(continuation[term]);
+      return parseFunc(continuation[term]);
     }
   }
-  return null;
+  return [] as any;
 }
 
-//     return []
+export function resendRequestUntilParsedResponseIsValid(
+  request_func: any,
+  request_additional_params: string | null,
+  parse_func: (rawResponse: any) => any,
+  validateFunc: (parsed: Record<string, any>) => boolean,
+  max_retries: number
+): any {
+  const response = request_func(request_additional_params);
+  let parsedObject = parse_func(response);
+  let retryCounter = 0;
+  while (!validateFunc(parsedObject) && retryCounter < max_retries) {
+    const response = request_func(request_additional_params);
+    const attempt = parse_func(response);
+    if (attempt['parsed'].length > parsedObject['parsed'].length) {
+      parsedObject = attempt;
+      retryCounter += 1;
+    }
+  }
 
-// function resend_request_until_parsed_response_is_valid(request_func, request_additional_params,
-//                                                   parse_func, validate_func, max_retries):
-//     response = request_func(request_additional_params)
-//     parsed_object = parse_func(response)
-//     retry_counter = 0
-//     while not validate_func(parsed_object) and retry_counter < max_retries:
-//         response = request_func(request_additional_params)
-//         attempt = parse_func(response)
-//         if len(attempt['parsed']) > len(parsed_object['parsed']):
-//             parsed_object = attempt
-//         retry_counter += 1
+  return parsedObject;
+}
 
-//     return parsed_object
+export function validateResponse(
+  response: Record<string, any>,
+  perPage: number,
+  limit: number,
+  currentCount: number
+): boolean {
+  const remaining_items_count = limit - currentCount;
+  const expected_items_count = Math.min(perPage, remaining_items_count);
 
-// function validate_response(response, per_page, limit, current_count):
-//     remaining_items_count = limit - current_count
-//     expected_items_count = min(per_page, remaining_items_count)
-
-//     # response is invalid, if it has less items then minimal expected count
-//     return len(response['parsed']) >= expected_items_count
+  // response is invalid, if it has less items then minimal expected count
+  return response['parsed'].length >= expected_items_count;
+}
 
 export function validatePlaylistId(
   playlistId: string | null | undefined
@@ -288,9 +333,14 @@ export function nav<T extends Record<string, any> | Array<any> | never, U>(
   try {
     if (root) {
       for (const k of items) {
+        //Handle if a user accesses negative numbers
+        const accessor: typeof k =
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          typeof k == 'number' ? (k < 0 ? root!.length + k : k) : k;
+
         //@ts-expect-error: There's no real good way to type this function
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        root = root![k];
+        root = root![accessor];
       }
       return root as any;
     }
@@ -309,15 +359,14 @@ export function nav<T extends Record<string, any> | Array<any> | never, U>(
 }
 
 //These implementations are sketch...
-export function findObjectByKey<T extends Record<string, any>>(
+export function findObjectByKey<T extends Array<Record<string, any>>>(
   objectList: T | null,
   key: string,
   nested?: string,
   isKey = false
 ): any {
   if (objectList) {
-    // eslint-disable-next-line prefer-const
-    for (let [, item] of Object.entries(objectList)) {
+    for (let item of objectList) {
       if (nested) {
         item = item[nested];
       }
@@ -330,13 +379,13 @@ export function findObjectByKey<T extends Record<string, any>>(
 }
 
 //Ditto
-export function findObjectsByKey<T extends Record<string, any>>(
+export function findObjectsByKey<T extends Array<Record<string, any>>>(
   objectList: T,
   key: string,
   nested: null
 ): any {
   const objects = [];
-  for (let [, item] of Object.entries(objectList)) {
+  for (let item of objectList) {
     if (nested) {
       item = item[nested];
     }

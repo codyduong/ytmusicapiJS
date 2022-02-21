@@ -9,9 +9,9 @@ import * as fs from 'fs';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const _path = __filename;
 
-export function setup(filepath: any, headers_raw: string): string {
+export function setup(filepath: any, headersRaw: string): string {
   let contents = [];
-  if (!headers_raw) {
+  if (!headersRaw) {
     const eof =
       // eslint-disable-next-line prettier/prettier
       process.platform != 'win32' ? 'Ctrl-D' : '\'Enter, Ctrl-Z, Enter\'';
@@ -31,12 +31,12 @@ export function setup(filepath: any, headers_raw: string): string {
       contents.push(line);
     }
   } else {
-    contents = headers_raw.split('\n');
+    contents = headersRaw.split('\n');
   }
   let userHeaders: Record<string, any> = {};
   try {
-    for (const content in contents) {
-      const header = content.split(': ');
+    for (const content of contents) {
+      const header = content?.split(': ') ?? [];
       if (header.length == 1 || header[0] == ':') {
         // nothing was split or chromium headers
         continue;
@@ -51,7 +51,7 @@ export function setup(filepath: any, headers_raw: string): string {
 
   //let missing_headers = {"cookie", "x-goog-authuser"} - set(k.lower() for const k in user_headers.keys())
   const missing_headers = ['cookie', 'x-goog-authuser'].filter(
-    (reqKey) => !(reqKey in Object.keys(userHeaders))
+    (reqKey) => !(reqKey in userHeaders)
   );
   if (missing_headers) {
     throw new Error(
@@ -62,7 +62,7 @@ export function setup(filepath: any, headers_raw: string): string {
     );
   }
   const ignore_headers = ['host', 'content-length', 'accept-encoding'];
-  for (const i in ignore_headers) {
+  for (const i of ignore_headers) {
     userHeaders.delete(i);
   }
 

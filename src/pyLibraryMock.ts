@@ -18,6 +18,8 @@ export const re = {
   split: (regex: RegExp, string: string): string[] => string.split(regex),
   search: (regex: RegExp, string: string): RegExpMatchArray | null =>
     string.match(regex),
+  match: (regex: RegExp, string: string): RegExpMatchArray | null =>
+    string.match(regex),
 };
 
 const convertToAsciiSafe = (string: string): string =>

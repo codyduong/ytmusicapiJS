@@ -59,15 +59,17 @@ export const DESCRIPTION: ['description', ...typeof RUN_TEXT] = [
   'description',
   ...RUN_TEXT,
 ];
-export const CAROUSEL = ['musicCarouselShelfRenderer'];
+export const CAROUSEL: ['musicCarouselShelfRenderer'] = [
+  'musicCarouselShelfRenderer',
+];
 export const CAROUSEL_CONTENTS = [...CAROUSEL, 'contents'];
-export const CAROUSEL_TITLE = [
+export const CAROUSEL_TITLE: [
   'header',
   'musicCarouselShelfBasicHeaderRenderer',
   'title',
   'runs',
-  0,
-];
+  number
+] = ['header', 'musicCarouselShelfBasicHeaderRenderer', 'title', 'runs', 0];
 export const FRAMEWORK_MUTATIONS = [
   'frameworkUpdates',
   'entityBatchUpdate',

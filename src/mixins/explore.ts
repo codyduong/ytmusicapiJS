@@ -93,7 +93,7 @@ export const ExploreMixin = <TBase extends YTMusicBase>(Base: TBase) => {
           ...TITLE_TEXT,
         ]);
         sections[title] = [];
-        for (const category in nav<typeof section, et.getMoodGridItems>(
+        for (const category of nav<typeof section, et.getMoodGridItems>(
           section,
           GRID_ITEMS
         )) {
@@ -139,9 +139,10 @@ export const ExploreMixin = <TBase extends YTMusicBase>(Base: TBase) => {
     }
 
     /**
-     * 
-     * @param country 
-     * @returns 
+     * Get latest charts data from YouTube Music: Top songs, top videos, top artists and top trending videos.
+     * Global charts have no Trending section, US charts have an extra Genres section with some Genre charts.
+     * @param {string} [country = 'ZZ'] ISO 3166-1 Alpha-2 country code.
+     * @returns Dictionary containing chart songs (only if authenticated), chart videos, chart artists and trending videos.
      * @example
 {
   "countries": {
@@ -231,13 +232,13 @@ export const ExploreMixin = <TBase extends YTMusicBase>(Base: TBase) => {
   }
   }
      */
-    getCharts(country = 'ZZ'): Record<string, any> {
+    async getCharts(country = 'ZZ'): Promise<Record<string, any>> {
       const body: Record<string, any> = { browseId: 'FEmusic_charts' };
       if (country) {
         body['formData'] = { selectedValues: [country] };
       }
       const endpoint = 'browse';
-      const response = this._sendRequest(endpoint, body);
+      const response = await this._sendRequest(endpoint, body);
       const results = nav(response, [...SINGLE_COLUMN_TAB, ...SECTION_LIST]);
       const charts: Record<string, any> = { countries: {} };
       const menu = nav(results[0], [
@@ -250,11 +251,14 @@ export const ExploreMixin = <TBase extends YTMusicBase>(Base: TBase) => {
         'musicSortFilterButtonRenderer',
       ]);
       charts['countries']['selected'] = nav(menu, TITLE);
-      charts['countries']['options'] = [
-        nav<never, Array<any>>(response, FRAMEWORK_MUTATIONS).map((m) =>
+      charts['countries']['options'] = nav<never, Array<any>>(
+        response,
+        FRAMEWORK_MUTATIONS
+      )
+        .map((m) =>
           nav(m, ['payload', 'musicFormBooleanChoice', 'opaqueToken'], true)
-        ),
-      ];
+        )
+        .filter((x) => x);
       const chartsCategories = ['videos', 'artists'];
 
       const hasSongs = !!this.getAuth();
@@ -289,9 +293,12 @@ export const ExploreMixin = <TBase extends YTMusicBase>(Base: TBase) => {
       }
 
       if (hasSongs) {
-        charts['songs'].update({
-          items: parseChart(0, parseChartSong, MRLIR),
-        });
+        charts['songs'] = {
+          ...charts['songs'],
+          ...{
+            items: parseChart(0, parseChartSong, MRLIR),
+          },
+        };
       }
 
       charts['videos']['items'] = parseChart(1, parseVideo, MTRIR);

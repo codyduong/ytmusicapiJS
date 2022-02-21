@@ -28,13 +28,16 @@ export function prepareLikeEndpoint(rating: any): string | null {
   }
 }
 
-// This validation function is not needed in TypeScript
-// function validate_order_parameter(order):
-//     const orders = ['a_to_z', 'z_to_a', 'recently_added']
-//     if order and order not in orders:
-//         raise Exception(
-//             "Invalid order provided. Please use one of the following orders or leave out the parameter: "
-//             + ', '.join(orders))
+// This validation function is not needed in TypeScript?
+export function validateOrderParameters(order: string | undefined): void {
+  const orders = ['a_to_z', 'z_to_a', 'recently_added'];
+  if (order && !orders.includes(order)) {
+    throw Error(
+      'Invalid order provided. Please use one of the following orders or leave out the parameter: ' +
+        orders.join(', ')
+    );
+  }
+}
 
 // @CODYDUONG TODO type better
 export function prepareOrderParams(order: any): string | undefined {
@@ -134,7 +137,7 @@ function sum(arr: Array<number>): number {
   return arr.reduce((a, b) => a + b, 0);
 }
 
-export function parse_duration(duration: string | undefined): any {
+export function parseDuration(duration: string | undefined): any {
   if (!duration) {
     return duration;
   }
