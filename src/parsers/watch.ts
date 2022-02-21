@@ -9,7 +9,7 @@ export function parseWatchPlaylist(results: Array<Record<string, any>>): any {
     if ('playlistPanelVideoWrapperRenderer' in result) {
       result = result['playlistPanelVideoWrapperRenderer']['primaryRenderer'];
     }
-    if (!('playlistPanelVideoRenderer' in result)) {
+    if (!result['playlistPanelVideoRenderer']) {
       continue;
     }
     const data = result['playlistPanelVideoRenderer'];
@@ -18,14 +18,17 @@ export function parseWatchPlaylist(results: Array<Record<string, any>>): any {
     }
 
     let [feedbackTokens, likeStatus] = [null, null];
-    for (const item of nav(data, MENU_ITEMS)) {
-      if (TOGGLE_MENU in item) {
-        const service = item[TOGGLE_MENU]['defaultServiceEndpoint'];
-        if ('feedbackEndpoint' in service) {
-          feedbackTokens = parseSongMenuTokens(item);
-        }
-        if ('likeEndpoint' in service) {
-          likeStatus = parseLikeStatus(service);
+    const _ = nav(data, MENU_ITEMS, true); //@codyduong this is not present in pyLib, discover why.
+    if (_) {
+      for (const item of _) {
+        if (TOGGLE_MENU in item) {
+          const service = item[TOGGLE_MENU]['defaultServiceEndpoint'];
+          if ('feedbackEndpoint' in service) {
+            feedbackTokens = parseSongMenuTokens(item);
+          }
+          if ('likeEndpoint' in service) {
+            likeStatus = parseLikeStatus(service);
+          }
         }
       }
     }

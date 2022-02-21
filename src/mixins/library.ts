@@ -184,7 +184,7 @@ export const LibraryMixin = <TBase extends YTMusicBase>(Base: TBase) => {
 
       const endpoint = 'browse';
       const response = await this._sendRequest(endpoint, body);
-      return parseLibraryAlbums(
+      return await parseLibraryAlbums(
         response,
         async (additionalParams: string) =>
           await this._sendRequest(endpoint, body, additionalParams),

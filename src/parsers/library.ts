@@ -47,11 +47,11 @@ export function parseArtists(results: any, uploaded = false): Array<any> {
   return artists;
 }
 
-export function parseLibraryAlbums(
+export async function parseLibraryAlbums(
   response: any,
   requestFunc: any,
   limit: number
-): any {
+): Promise<any> {
   let results = findObjectByKey(
     nav(response, [...SINGLE_COLUMN_TAB, ...SECTION_LIST]),
     'itemSectionRenderer'
@@ -66,7 +66,7 @@ export function parseLibraryAlbums(
   if (results['continuations']) {
     const parseFunc = (contents: any): any => parseAlbums(contents);
     albums.extend(
-      getContinuations(
+      await getContinuations(
         results,
         'gridContinuation',
         limit - albums.length,

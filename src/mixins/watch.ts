@@ -125,14 +125,14 @@ export const WatchMixin = <TBase extends YTMusicBase>(Base: TBase) => {
         const parse_func = (contents: any): any => parseWatchPlaylist(contents);
         tracks = {
           ...tracks,
-          ...getContinuations(
+          ...(await getContinuations(
             results,
             'playlistPanelContinuation',
             limit - tracks.length,
             request_func,
             parse_func,
             isPlaylist ? '' : 'Radio'
-          ),
+          )),
         };
       }
       return { tracks: tracks, playlistId: playlist, lyrics: lyrics_browse_id };
