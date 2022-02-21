@@ -145,7 +145,7 @@ export async function getContinuations(
   return items;
 }
 
-export function getValidatedContinuations(
+export async function getValidatedContinuations(
   results: any,
   continuation_type: any,
   limit: number,
@@ -153,7 +153,7 @@ export function getValidatedContinuations(
   request_func: any,
   parse_func: any,
   ctoken_path = ''
-): any {
+): Promise<any> {
   let items: string | any[] = [];
   while ('continuations' in results && items.length < limit) {
     const additionalParams = getContinuationParams(results, ctoken_path);
@@ -162,7 +162,7 @@ export function getValidatedContinuations(
     const validateFunc = (parsed: Record<string, any>): any =>
       validateResponse(parsed, per_page, limit, items.length);
 
-    const response = resendRequestUntilParsedResponseIsValid(
+    const response = await resendRequestUntilParsedResponseIsValid(
       request_func,
       additionalParams,
       wrapped_parse_func,
@@ -214,18 +214,18 @@ function getContinuationContents<T extends Record<string, any>>(
   return [] as any;
 }
 
-export function resendRequestUntilParsedResponseIsValid(
-  request_func: any,
+export async function resendRequestUntilParsedResponseIsValid(
+  requestFunc: (additionalParams: any) => Promise<any>,
   request_additional_params: string | null,
   parse_func: (rawResponse: any) => any,
   validateFunc: (parsed: Record<string, any>) => boolean,
   max_retries: number
-): any {
-  const response = request_func(request_additional_params);
+): Promise<any> {
+  const response = await requestFunc(request_additional_params);
   let parsedObject = parse_func(response);
   let retryCounter = 0;
   while (!validateFunc(parsedObject) && retryCounter < max_retries) {
-    const response = request_func(request_additional_params);
+    const response = requestFunc(request_additional_params);
     const attempt = parse_func(response);
     if (attempt['parsed'].length > parsedObject['parsed'].length) {
       parsedObject = attempt;

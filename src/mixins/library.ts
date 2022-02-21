@@ -103,7 +103,7 @@ export const LibraryMixin = <TBase extends YTMusicBase>(Base: TBase) => {
       if (validateResponse) {
         const validateFunc = (parsed: any): any =>
           utils.validateResponse(parsed, perPage, limit, 0);
-        response = utils.resendRequestUntilParsedResponseIsValid(
+        response = await utils.resendRequestUntilParsedResponseIsValid(
           requestFunc,
           null,
           parseFunc,
@@ -126,16 +126,17 @@ export const LibraryMixin = <TBase extends YTMusicBase>(Base: TBase) => {
           parsePlaylistItems(contents);
 
         if (validateResponse) {
-          songs.extend(
-            utils.getValidatedContinuations(
+          songs = {
+            ...songs,
+            ...(await utils.getValidatedContinuations(
               results,
               'musicShelfContinuation',
               limit - songs.length,
               perPage,
               requestContinuationsFunc,
               parseContinuationsFunc
-            )
-          );
+            )),
+          };
         } else {
           songs = [
             ...songs,
