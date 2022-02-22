@@ -53,8 +53,8 @@ export type Video = {
 export type Playlist = {
   title: string;
   playlistId: string; //number?
-  thumbnails: string;
-  count?: string; //number?
+  thumbnails: any;
+  count?: any; //string; //number?
 };
 export type RelatedArtist = {
   title: string;

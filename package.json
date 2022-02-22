@@ -1,14 +1,16 @@
 {
   "name": "ytmusicapijs",
-  "version": "0.20.0-prerelease.1",
+  "version": "0.1.0-alpha.0",
   "description": "unofficial API for YouTube Music",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "yarn jest",
     "test:code": "yarn lint && yarn tsc --noEmit",
     "ci": "yarn install --frozen-lockfile",
     "lint": "prettier \"./src/**/*{ts, tsx}\" && eslint \"./src/**/*{ts,tsx}\" -c \".eslintrc.js\"",
-    "lint:fix": "prettier --write \"./src/**/*{ts, tsx}\" && eslint \"./src/**/*{ts,tsx}\" --fix -c \".eslintrc.js\""
+    "lint:fix": "prettier --write \"./src/**/*{ts, tsx}\" && eslint \"./src/**/*{ts,tsx}\" --fix -c \".eslintrc.js\"",
+    "prepublish": "tsc"
   },
   "author": "Cody Duong",
   "license": "MIT",

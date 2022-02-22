@@ -137,13 +137,13 @@ describe('Browsing', () => {
       expect(Object.keys(results).length).toBe(14);
 
       // test corectness of related artists
-      const related = results['related']['results'];
+      const related = results['related']?.['results'];
       expect(
-        related.filter(
+        related?.filter(
           (x) =>
             Object.keys(x) == ['browseId', 'subscribers', 'title', 'thumbnails']
         ).length
-      ).toBe(related.length);
+      ).toBe(related?.length ?? 0);
     });
     test('#2', async () => {
       const results = ytmusic.getArtist('UCLZ7tlKC06ResyDmEStSrOw');
@@ -160,20 +160,25 @@ describe('Browsing', () => {
   describe('Get Artist Albums', () => {
     test('#1', async () => {
       const artist = await ytmusic.getArtist('UCAeLFBCQS7FvI8PvBrWvSBg');
+      const results =
+        artist.albums?.browseId &&
+        artist.albums?.params &&
+        (await ytmusic.getArtistAlbums(
+          artist.albums?.browseId,
+          artist.albums?.params
+        ));
+      expect(results?.length).toBeGreaterThan(0);
+    });
+  });
+  describe.skip('Get Artist Singles', () => {
+    test('#1', async () => {
+      const artist = (await ytmusicAuth.getArtist('')) as any;
       const results = await ytmusic.getArtistAlbums(
-        artist.albums.browseId,
-        artist.albums.params
+        artist['singles']['browseId'],
+        artist['singles']['params']
       );
       expect(results.length).toBeGreaterThan(0);
     });
-  });
-  describe.skip('Get Artist Singles', async () => {
-    const artist = (await ytmusicAuth.getArtist('')) as any;
-    const results = await ytmusic.getArtistAlbums(
-      artist['singles']['browseId'],
-      artist['singles']['params']
-    );
-    expect(results.length).toBeGreaterThan(0);
   });
   describe('Get User', () => {
     test('#1', async () => {
@@ -183,12 +188,12 @@ describe('Browsing', () => {
   });
   describe('Get User Playlists', () => {
     test('#1', async () => {
-      let results = await ytmusic.getUser('UCPVhZsC2od1xjGhgEc2NEPQ');
-      results = ytmusic.getUserPlaylists(
+      const results = await ytmusic.getUser('UCPVhZsC2od1xjGhgEc2NEPQ');
+      const results2 = await ytmusic.getUserPlaylists(
         'UCPVhZsC2od1xjGhgEc2NEPQ',
-        results['playlists']['params']
+        results['playlists']?.['params'] ?? ''
       );
-      expect(results.length).toBeGreaterThan(100);
+      expect(results2.length).toBeGreaterThan(100);
     });
   });
   describe('Get Album Browse Id', () => {

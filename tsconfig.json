@@ -6,6 +6,9 @@
     "target": "ES2021",
     "moduleResolution": "Node",
     "types": ["jest", "node"],
-    "esModuleInterop": true
-  }
+    "esModuleInterop": true,
+    "outDir": "dist",
+    "declaration": true
+  },
+  "include": ["src/**/*"]
 }

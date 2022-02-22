@@ -1,3 +1,4 @@
 /node_modules
 tests/test.cfg
 headers_auth.json
+dist

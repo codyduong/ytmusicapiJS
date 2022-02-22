@@ -28,7 +28,7 @@ import { getSearchParams } from '../parsers/searchParams';
 import { findObjectByKey, getContinuations, nav } from '../parsers/utils';
 
 import type { Artist, Filter, FilterSingular, Scope } from '../types';
-import * as bT from './browsing.types';
+import * as bt from './browsing.types';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
@@ -48,108 +48,108 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
      * This does not have any effect when the filter is set to ``uploads``.
      * Default: false, will use YTM's default behavior of autocorrecting the search.
      * @return List of results depending on filter.
-          resultType specifies the type of item (important for default search).
-          albums, artists and playlists additionally contain a browseId, corresponding to
-          albumId, channelId and playlistId (browseId=``VL``+playlistId)
-          @example list for default search with one result per resultType for brevity. Normally
-          there are 3 results per resultType and an additional ``thumbnails`` key::
-            [
-              {
-                "category": "Top result",
-                "resultType": "video",
-                "videoId": "vU05Eksc_iM",
-                "title": "Wonderwall",
-                "artists": [
-                  {
-                    "name": "Oasis",
-                    "id": "UCmMUZbaYdNH0bEd1PAlAqsA"
-                  }
-                ],
-                "views": "1.4M",
-                "duration": "4:38",
-                "duration_seconds": 278
-              },
-              {
-                "category": "Songs",
-                "resultType": "song",
-                "videoId": "ZrOKjDZOtkA",
-                "title": "Wonderwall",
-                "artists": [
-                  {
-                    "name": "Oasis",
-                    "id": "UCmMUZbaYdNH0bEd1PAlAqsA"
-                  }
-                ],
-                "album": {
-                  "name": "(What's The Story) Morning Glory? (Remastered)",
-                  "id": "MPREb_9nqEki4ZDpp"
-                },
-                "duration": "4:19",
-                "duration_seconds": 259
-                "isExplicit": false,
-                "feedbackTokens": {
-                  "add": null,
-                  "remove": null
-                }
-              },
-              {
-                "category": "Albums",
-                "resultType": "album",
-                "browseId": "MPREb_9nqEki4ZDpp",
-                "title": "(What's The Story) Morning Glory? (Remastered)",
-                "type": "Album",
-                "artist": "Oasis",
-                "year": "1995",
-                "isExplicit": false
-              },
-              {
-                "category": "Community playlists",
-                "resultType": "playlist",
-                "browseId": "VLPLK1PkWQlWtnNfovRdGWpKffO1Wdi2kvDx",
-                "title": "Wonderwall - Oasis",
-                "author": "Tate Henderson",
-                "itemCount": "174"
-              },
-              {
-                "category": "Videos",
-                "resultType": "video",
-                "videoId": "bx1Bh8ZvH84",
-                "title": "Wonderwall",
-                "artists": [
-                  {
-                    "name": "Oasis",
-                    "id": "UCmMUZbaYdNH0bEd1PAlAqsA"
-                  }
-                ],
-                "views": "386M",
-                "duration": "4:38",
-                "duration_seconds": 278
-              },
-              {
-                "category": "Artists",
-                "resultType": "artist",
-                "browseId": "UCmMUZbaYdNH0bEd1PAlAqsA",
-                "artist": "Oasis",
-                "shuffleId": "RDAOkjHYJjL1a3xspEyVkhHAsg",
-                "radioId": "RDEMkjHYJjL1a3xspEyVkhHAsg"
-              }
-            ]
-    */
-    async search(
+     * resultType specifies the type of item (important for default search).
+     * albums, artists and playlists additionally contain a browseId, corresponding to
+     * albumId, channelId and playlistId (browseId=``VL``+playlistId)
+     * @example list for default search with one result per resultType for brevity. Normally
+     * there are 3 results per resultType and an additional ``thumbnails`` key::
+     * [
+     *   {
+     *     "category": "Top result",
+     *     "resultType": "video",
+     *     "videoId": "vU05Eksc_iM",
+     *     "title": "Wonderwall",
+     *     "artists": [
+     *       {
+     *         "name": "Oasis",
+     *         "id": "UCmMUZbaYdNH0bEd1PAlAqsA"
+     *       }
+     *     ],
+     *     "views": "1.4M",
+     *     "duration": "4:38",
+     *     "duration_seconds": 278
+     *   },
+     *   {
+     *     "category": "Songs",
+     *     "resultType": "song",
+     *     "videoId": "ZrOKjDZOtkA",
+     *     "title": "Wonderwall",
+     *     "artists": [
+     *       {
+     *         "name": "Oasis",
+     *         "id": "UCmMUZbaYdNH0bEd1PAlAqsA"
+     *       }
+     *     ],
+     *     "album": {
+     *       "name": "(What's The Story) Morning Glory? (Remastered)",
+     *       "id": "MPREb_9nqEki4ZDpp"
+     *     },
+     *     "duration": "4:19",
+     *     "duration_seconds": 259
+     *     "isExplicit": false,
+     *     "feedbackTokens": {
+     *       "add": null,
+     *       "remove": null
+     *     }
+     *   },
+     *   {
+     *     "category": "Albums",
+     *     "resultType": "album",
+     *     "browseId": "MPREb_9nqEki4ZDpp",
+     *     "title": "(What's The Story) Morning Glory? (Remastered)",
+     *     "type": "Album",
+     *     "artist": "Oasis",
+     *     "year": "1995",
+     *     "isExplicit": false
+     *   },
+     *   {
+     *     "category": "Community playlists",
+     *     "resultType": "playlist",
+     *     "browseId": "VLPLK1PkWQlWtnNfovRdGWpKffO1Wdi2kvDx",
+     *     "title": "Wonderwall - Oasis",
+     *     "author": "Tate Henderson",
+     *     "itemCount": "174"
+     *   },
+     *   {
+     *     "category": "Videos",
+     *     "resultType": "video",
+     *     "videoId": "bx1Bh8ZvH84",
+     *     "title": "Wonderwall",
+     *     "artists": [
+     *       {
+     *         "name": "Oasis",
+     *         "id": "UCmMUZbaYdNH0bEd1PAlAqsA"
+     *       }
+     *     ],
+     *     "views": "386M",
+     *     "duration": "4:38",
+     *     "duration_seconds": 278
+     *   },
+     *   {
+     *     "category": "Artists",
+     *     "resultType": "artist",
+     *     "browseId": "UCmMUZbaYdNH0bEd1PAlAqsA",
+     *     "artist": "Oasis",
+     *     "shuffleId": "RDAOkjHYJjL1a3xspEyVkhHAsg",
+     *     "radioId": "RDEMkjHYJjL1a3xspEyVkhHAsg"
+     *   }
+     * ]
+     */
+    async search<T extends Filter | 'null'>(
       query: string,
       options?: {
-        filter?: Filter;
+        filter?: Exclude<Filter, 'null'>;
         scope?: Scope;
         limit?: number;
         ignoreSpelling?: boolean;
       }
-    ): Promise<Array<any>> {
+    ): Promise<bt.searchReturn<T>> {
       const _options = options ?? {};
       let { filter } = _options;
       const { scope, limit = 20, ignoreSpelling } = _options;
       const body: Record<string, any> = { query: query };
       const endpoint = 'search';
-      let searchResults: Array<any> = [];
+      let searchResults: bt.searchReturn<T> = [];
       const filters = [
         'albums',
         'artists',
@@ -180,7 +180,7 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
         body['params'] = params;
       }
 
-      const response = await this._sendRequest<bT.searchResponse>(
+      const response = await this._sendRequest<bt.searchResponse>(
         endpoint,
         body
       );
@@ -190,7 +190,7 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
         return searchResults;
       }
 
-      let results: bT.searchResults;
+      let results: bt.searchResults;
       if ('tabbedSearchResultsRenderer' in response.contents) {
         //0 if not scope or filter else scopes.index(scope) + 1
         const tab_index = !scope || filter ? 0 : scopes.indexOf(scope) + 1;
@@ -202,7 +202,7 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
         results = response['contents'];
       }
 
-      const resultsNav = nav<typeof results, bT.searchResultsNav>(
+      const resultsNav = nav<typeof results, bt.searchResultsNav>(
         results,
         SECTION_LIST
       );
@@ -246,12 +246,12 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
           filter = original_filter;
 
           if ('continuations' in res['musicShelfRenderer']) {
-            const request_func = async (
+            const requestFunc = async (
               additionalParams: string
             ): Promise<Record<string, any>> =>
               await this._sendRequest(endpoint, body, additionalParams);
 
-            const parse_func = (contents: any): Record<string, any> =>
+            const parseFunc = (contents: any): Record<string, any> =>
               this.parser.parseSearchResults(contents, type, category);
 
             searchResults = [
@@ -260,8 +260,8 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
                 res['musicShelfRenderer'],
                 'musicShelfContinuation',
                 limit - searchResults.length,
-                request_func,
-                parse_func
+                requestFunc,
+                parseFunc
               )),
             ];
           }
@@ -277,94 +277,94 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
      * contain pointers for getting the full list of releases. For
      * songs/videos, pass the browseId to `getPlaylist`.
      * For albums/singles, pass browseId and params to `getArtistAlbums`.
-     * 
+     *
      * @param {string} channelId channel id of the artist
      * @return Object with requested information.
      * @example
-        {
-            "description": "Oasis were ...",
-            "views": "1838795605",
-            "name": "Oasis",
-            "channelId": "UCUDVBtnOQi4c7E8jebpjc9Q",
-            "subscribers": "2.3M",
-            "subscribed": false,
-            "thumbnails": [...],
-            "songs": {
-                "browseId": "VLPLMpM3Z0118S42R1npOhcjoakLIv1aqnS1",
-                "results": [
-                    {
-                        "videoId": "ZrOKjDZOtkA",
-                        "title": "Wonderwall (Remastered)",
-                        "thumbnails": [...],
-                        "artist": "Oasis",
-                        "album": "(What's The Story) Morning Glory? (Remastered)"
-                    }
-                ]
-            },
-            "albums": {
-                "results": [
-                    {
-                        "title": "Familiar To Millions",
-                        "thumbnails": [...],
-                        "year": "2018",
-                        "browseId": "MPREb_AYetWMZunqA"
-                    }
-                ],
-                "browseId": "UCmMUZbaYdNH0bEd1PAlAqsA",
-                "params": "6gPTAUNwc0JDbndLYlFBQV..."
-            },
-            "singles": {
-                "results": [
-                    {
-                        "title": "Stand By Me (Mustique Demo)",
-                        "thumbnails": [...],
-                        "year": "2016",
-                        "browseId": "MPREb_7MPKLhibN5G"
-                    }
-                ],
-                "browseId": "UCmMUZbaYdNH0bEd1PAlAqsA",
-                "params": "6gPTAUNwc0JDbndLYlFBQV..."
-            },
-            "videos": {
-                "results": [
-                    {
-                        "title": "Wonderwall",
-                        "thumbnails": [...],
-                        "views": "358M",
-                        "videoId": "bx1Bh8ZvH84",
-                        "playlistId": "PLMpM3Z0118S5xuNckw1HUcj1D021AnMEB"
-                    }
-                ],
-                "browseId": "VLPLMpM3Z0118S5xuNckw1HUcj1D021AnMEB"
-            },
-            "related": {
-                "results": [
-                    {
-                        "browseId": "UCt2KxZpY5D__kapeQ8cauQw",
-                        "subscribers": "450K",
-                        "title": "The Verve"
-                    },
-                    {
-                        "browseId": "UCwK2Grm574W1u-sBzLikldQ",
-                        "subscribers": "341K",
-                        "title": "Liam Gallagher"
-                    },
-                    ...
-                ]
-            }
-        }
-    */
-    async getArtist(channelId: string): Promise<Artist> {
+     * {
+     *   "description": "Oasis were ...",
+     *   "views": "1838795605",
+     *   "name": "Oasis",
+     *   "channelId": "UCUDVBtnOQi4c7E8jebpjc9Q",
+     *   "subscribers": "2.3M",
+     *   "subscribed": false,
+     *   "thumbnails": [...],
+     *   "songs": {
+     *     "browseId": "VLPLMpM3Z0118S42R1npOhcjoakLIv1aqnS1",
+     *     "results": [
+     *       {
+     *         "videoId": "ZrOKjDZOtkA",
+     *         "title": "Wonderwall (Remastered)",
+     *         "thumbnails": [...],
+     *         "artist": "Oasis",
+     *         "album": "(What's The Story) Morning Glory? (Remastered)"
+     *       }
+     *     ]
+     *   },
+     *   "albums": {
+     *     "results": [
+     *       {
+     *         "title": "Familiar To Millions",
+     *         "thumbnails": [...],
+     *         "year": "2018",
+     *         "browseId": "MPREb_AYetWMZunqA"
+     *       }
+     *     ],
+     *     "browseId": "UCmMUZbaYdNH0bEd1PAlAqsA",
+     *     "params": "6gPTAUNwc0JDbndLYlFBQV..."
+     *   },
+     *   "singles": {
+     *     "results": [
+     *       {
+     *         "title": "Stand By Me (Mustique Demo)",
+     *         "thumbnails": [...],
+     *         "year": "2016",
+     *         "browseId": "MPREb_7MPKLhibN5G"
+     *       }
+     *     ],
+     *     "browseId": "UCmMUZbaYdNH0bEd1PAlAqsA",
+     *     "params": "6gPTAUNwc0JDbndLYlFBQV..."
+     *   },
+     *   "videos": {
+     *     "results": [
+     *       {
+     *         "title": "Wonderwall",
+     *         "thumbnails": [...],
+     *         "views": "358M",
+     *         "videoId": "bx1Bh8ZvH84",
+     *         "playlistId": "PLMpM3Z0118S5xuNckw1HUcj1D021AnMEB"
+     *       }
+     *     ],
+     *     "browseId": "VLPLMpM3Z0118S5xuNckw1HUcj1D021AnMEB"
+     *   },
+     *   "related": {
+     *     "results": [
+     *       {
+     *         "browseId": "UCt2KxZpY5D__kapeQ8cauQw",
+     *         "subscribers": "450K",
+     *         "title": "The Verve"
+     *       },
+     *       {
+     *         "browseId": "UCwK2Grm574W1u-sBzLikldQ",
+     *         "subscribers": "341K",
+     *         "title": "Liam Gallagher"
+     *       },
+     *       ...
+     *     ]
+     *   }
+     * }
+     */
+    async getArtist(channelId: string): Promise<bt.getArtistReturn> {
       if (channelId.startsWith('MPLA')) {
         channelId = channelId.slice(4);
       }
       const body = { browseId: channelId };
       const endpoint = 'browse';
-      const response = await this._sendRequest<bT.getArtistResponse>(
+      const response = await this._sendRequest<bt.getArtistResponse>(
         endpoint,
         body
       );
-      const results = nav<typeof response, bT.getArtistResults>(response, [
+      const results = nav<typeof response, bt.getArtistResults>(response, [
         ...SINGLE_COLUMN_TAB,
         ...SECTION_LIST,
       ]);
@@ -397,32 +397,32 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
       const subscriptionButton =
         header['subscriptionButton']['subscribeButtonRenderer'];
       artist['channelId'] = subscriptionButton['channelId'];
-      artist['shuffleId'] = nav<typeof header, bT.getArtistShuffleId>(
+      artist['shuffleId'] = nav<typeof header, bt.getArtistShuffleId>(
         header,
         ['playButton', 'buttonRenderer', ...NAVIGATION_WATCH_PLAYLIST_ID],
         true
       );
-      artist['radioId'] = nav<typeof header, bT.getArtistRadioId>(
+      artist['radioId'] = nav<typeof header, bt.getArtistRadioId>(
         header,
         ['startRadioButton', 'buttonRenderer', ...NAVIGATION_WATCH_PLAYLIST_ID],
         true
       );
       artist['subscribers'] = nav<
         typeof subscriptionButton,
-        bT.getArtistSubscribers
+        bt.getArtistSubscribers
       >(subscriptionButton, ['subscriberCountText', 'runs', 0, 'text'], true);
       artist['subscribed'] = subscriptionButton['subscribed'];
       artist['thumbnails'] = nav(header, THUMBNAILS, true);
       artist['songs'] = { browseId: null };
       if ('musicShelfRenderer' in results[0]) {
         // API sometimes does not return songs
-        const musicShelf = nav<typeof results[0], bT.getArtistMusicShelf>(
+        const musicShelf = nav<typeof results[0], bt.getArtistMusicShelf>(
           results[0],
           MUSIC_SHELF
         );
         if (
           'navigationEndpoint' in
-          nav<typeof musicShelf, bT.getArtistRunTitle>(musicShelf, TITLE)
+          nav<typeof musicShelf, bt.getArtistRunTitle>(musicShelf, TITLE)
         ) {
           artist['songs']['browseId'] = nav(musicShelf, [
             ...TITLE,
@@ -432,7 +432,7 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
         artist['songs']['results'] = parsePlaylistItems(musicShelf['contents']);
       }
       artist = { ...artist, ...this.parser.parseArtistContents(results) };
-      return artist as Artist;
+      return artist as any;
     }
 
     /**
@@ -444,7 +444,7 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
     async getArtistAlbums(
       channelId: string,
       params: string
-    ): Promise<Record<string, any>[]> {
+    ): Promise<bt.getArtistAlbumsReturn> {
       const body = { browseId: channelId, params: params };
       const endpoint = 'browse';
       const response = await this._sendRequest(endpoint, body);
@@ -502,7 +502,7 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
      *   }
      * }
      */
-    async getUser(channelId: string): Promise<Record<string, any>> {
+    async getUser(channelId: string): Promise<bt.getUserReturn> {
       const endpoint = 'browse';
       const body = { browseId: channelId };
       const response = await this._sendRequest(endpoint, body);
@@ -521,14 +521,14 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
     /**
      * Retrieve a list of playlists for a given user.
      * Call this function again with the returned ``params`` to get the full list.
-     * @param channelId {string} channelId of the user.
-     * @param params {string} params obtained by `getArtist`
+     * @param {string} [channelId] channelId of the user.
+     * @param {string} [params] params obtained by `getArtist`
      * @returns List of user playlists in the format of `getLibraryPlaylists`
      */
     async getUserPlaylists(
       channelId: string,
       params: string
-    ): Promise<Record<string, any>[]> {
+    ): Promise<bt.getUserPlaylistsReturn> {
       const endpoint = 'browse';
       const body = { browseId: channelId, params: params };
       const response = await this._sendRequest(endpoint, body);
@@ -537,9 +537,9 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
         ...SECTION_LIST_ITEM,
         ...GRID_ITEMS,
       ]);
-      const user_playlists = parseContentList(results, parsePlaylist);
+      const userPlaylists = parseContentList(results, parsePlaylist);
 
-      return user_playlists;
+      return userPlaylists;
     }
 
     /**
@@ -569,38 +569,38 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
      * @returns Object with album and track metadata.
      * @example
      * {
-                "title": "Revival",
-                "type": "Album",
-                "thumbnails": [],
-                "description": "Revival is the ninth studio album by American rapper Eminem. ...",
-                "artists": [{
-                        "name": "Eminem",
-                        "id": "UCedvOgsKFzcK3hA5taf3KoQ"
-                }],
-                "year": "2017",
-                "trackCount": 19,
-                "duration": "1 hour, 17 minutes",
-                "duration_seconds": 4657,
-                "audioPlaylistId": "OLAK5uy_nMr9h2VlS-2PULNz3M3XVXQj_P3C2bqaY",
-                "tracks": [
-                    {
-                        "videoId": "iKLU7z_xdYQ",
-                        "title": "Walk On Water (feat. Beyoncé)",
-                        "artists": None,
-                        "album": None,
-                        "likeStatus": "INDIFFERENT",
-                        "thumbnails": None,
-                        "isAvailable": True,
-                        "isExplicit": True,
-                        "duration": "5:03",
-                        "feedbackTokens":
-                        {
-                            "add": "AB9zfpJww...",
-                            "remove": "AB9zfpI807..."
-                        }
-                    }
-                ]
-            }
+     *   "title": "Revival",
+     *   "type": "Album",
+     *   "thumbnails": [],
+     *   "description": "Revival is the ninth studio album by American rapper Eminem. ...",
+     *   "artists": [{
+     *     "name": "Eminem",
+     *     "id": "UCedvOgsKFzcK3hA5taf3KoQ"
+     *   }],
+     *   "year": "2017",
+     *   "trackCount": 19,
+     *   "duration": "1 hour, 17 minutes",
+     *   "duration_seconds": 4657,
+     *   "audioPlaylistId": "OLAK5uy_nMr9h2VlS-2PULNz3M3XVXQj_P3C2bqaY",
+     *   "tracks": [
+     *     {
+     *       "videoId": "iKLU7z_xdYQ",
+     *       "title": "Walk On Water (feat. Beyoncé)",
+     *       "artists": None,
+     *       "album": None,
+     *       "likeStatus": "INDIFFERENT",
+     *       "thumbnails": None,
+     *       "isAvailable": True,
+     *       "isExplicit": True,
+     *       "duration": "5:03",
+     *       "feedbackTokens":
+     *       {
+     *         "add": "AB9zfpJww...",
+     *         "remove": "AB9zfpI807..."
+     *       }
+     *     }
+     *   ]
+     * }
      */
     async getAlbum(browseId: string): Promise<Record<string, any>> {
       const body = { browseId: browseId };
@@ -626,136 +626,136 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
      * @return Object with song metadata
      * @example
      * {
-          "playabilityStatus": {
-              "status": "OK",
-              "playableInEmbed": true,
-              "audioOnlyPlayability": {
-                  "audioOnlyPlayabilityRenderer": {
-                      "trackingParams": "CAEQx2kiEwiuv9X5i5H1AhWBvlUKHRoZAHk=",
-                      "audioOnlyAvailability": "FEATURE_AVAILABILITY_ALLOWED"
-                  }
-              },
-              "miniplayer": {
-                  "miniplayerRenderer": {
-                      "playbackMode": "PLAYBACK_MODE_ALLOW"
-                  }
-              },
-              "contextParams": "Q0FBU0FnZ0M="
-          },
-          "streamingData": {
-              "expiresInSeconds": "21540",
-              "adaptiveFormats": [
-                  {
-                      "itag": 140,
-                      "url": "https://rr1---sn-h0jelnez.c.youtube.com/videoplayback?expire=1641080272...",
-                      "mimeType": "audio/mp4; codecs=\"mp4a.40.2\"",
-                      "bitrate": 131007,
-                      "initRange": {
-                          "start": "0",
-                          "end": "667"
-                      },
-                      "indexRange": {
-                          "start": "668",
-                          "end": "999"
-                      },
-                      "lastModified": "1620321966927796",
-                      "contentLength": "3967382",
-                      "quality": "tiny",
-                      "projectionType": "RECTANGULAR",
-                      "averageBitrate": 129547,
-                      "highReplication": true,
-                      "audioQuality": "AUDIO_QUALITY_MEDIUM",
-                      "approxDurationMs": "245000",
-                      "audioSampleRate": "44100",
-                      "audioChannels": 2,
-                      "loudnessDb": -1.3000002
-                  }
-              ]
-          },
-          "videoDetails": {
-              "videoId": "AjXQiKP5kMs",
-              "title": "Sparks",
-              "lengthSeconds": "245",
-              "channelId": "UCvCk2zFqkCYzpnSgWfx0qOg",
-              "isOwnerViewing": false,
-              "isCrawlable": false,
-              "thumbnail": {
-                  "thumbnails": []
-              },
-              "allowRatings": true,
-              "viewCount": "12",
-              "author": "Thomas Bergersen",
-              "isPrivate": true,
-              "isUnpluggedCorpus": false,
-              "musicVideoType": "MUSIC_VIDEO_TYPE_PRIVATELY_OWNED_TRACK",
-              "isLiveContent": false
-          },
-          "microformat": {
-              "microformatDataRenderer": {
-                  "urlCanonical": "https://music.youtube.com/watch?v=AjXQiKP5kMs",
-                  "title": "Sparks - YouTube Music",
-                  "description": "Uploaded to YouTube via YouTube Music Sparks",
-                  "thumbnail": {
-                      "thumbnails": [
-                          {
-                              "url": "https://i.ytimg.com/vi/AjXQiKP5kMs/hqdefault.jpg",
-                              "width": 480,
-                              "height": 360
-                          }
-                      ]
-                  },
-                  "siteName": "YouTube Music",
-                  "appName": "YouTube Music",
-                  "androidPackage": "com.google.android.apps.youtube.music",
-                  "iosAppStoreId": "1017492454",
-                  "iosAppArguments": "https://music.youtube.com/watch?v=AjXQiKP5kMs",
-                  "ogType": "video.other",
-                  "urlApplinksIos": "vnd.youtube.music://music.youtube.com/watch?v=AjXQiKP5kMs&feature=applinks",
-                  "urlApplinksAndroid": "vnd.youtube.music://music.youtube.com/watch?v=AjXQiKP5kMs&feature=applinks",
-                  "urlTwitterIos": "vnd.youtube.music://music.youtube.com/watch?v=AjXQiKP5kMs&feature=twitter-deep-link",
-                  "urlTwitterAndroid": "vnd.youtube.music://music.youtube.com/watch?v=AjXQiKP5kMs&feature=twitter-deep-link",
-                  "twitterCardType": "player",
-                  "twitterSiteHandle": "@YouTubeMusic",
-                  "schemaDotOrgType": "http://schema.org/VideoObject",
-                  "noindex": true,
-                  "unlisted": true,
-                  "paid": false,
-                  "familySafe": true,
-                  "pageOwnerDetails": {
-                      "name": "Music Library Uploads",
-                      "externalChannelId": "UCvCk2zFqkCYzpnSgWfx0qOg",
-                      "youtubeProfileUrl": "http://www.youtube.com/channel/UCvCk2zFqkCYzpnSgWfx0qOg"
-                  },
-                  "videoDetails": {
-                      "externalVideoId": "AjXQiKP5kMs",
-                      "durationSeconds": "246",
-                      "durationIso8601": "PT4M6S"
-                  },
-                  "linkAlternates": [
-                      {
-                          "hrefUrl": "android-app://com.google.android.youtube/http/youtube.com/watch?v=AjXQiKP5kMs"
-                      },
-                      {
-                          "hrefUrl": "ios-app://544007664/http/youtube.com/watch?v=AjXQiKP5kMs"
-                      },
-                      {
-                          "hrefUrl": "https://www.youtube.com/oembed?format=json&url=https%3A%2F%2Fmusic.youtube.com%2Fwatch%3Fv%3DAjXQiKP5kMs",
-                          "title": "Sparks",
-                          "alternateType": "application/json+oembed"
-                      },
-                      {
-                          "hrefUrl": "https://www.youtube.com/oembed?format=xml&url=https%3A%2F%2Fmusic.youtube.com%2Fwatch%3Fv%3DAjXQiKP5kMs",
-                          "title": "Sparks",
-                          "alternateType": "text/xml+oembed"
-                      }
-                  ],
-                  "viewCount": "12",
-                  "publishDate": "1969-12-31",
-                  "category": "Music",
-                  "uploadDate": "1969-12-31"
-              }
-          }
-      }
+     *   "playabilityStatus": {
+     *     "status": "OK",
+     *     "playableInEmbed": true,
+     *     "audioOnlyPlayability": {
+     *       "audioOnlyPlayabilityRenderer": {
+     *         "trackingParams": "CAEQx2kiEwiuv9X5i5H1AhWBvlUKHRoZAHk=",
+     *         "audioOnlyAvailability": "FEATURE_AVAILABILITY_ALLOWED"
+     *       }
+     *     },
+     *     "miniplayer": {
+     *       "miniplayerRenderer": {
+     *         "playbackMode": "PLAYBACK_MODE_ALLOW"
+     *       }
+     *     },
+     *     "contextParams": "Q0FBU0FnZ0M="
+     *   },
+     *   "streamingData": {
+     *     "expiresInSeconds": "21540",
+     *     "adaptiveFormats": [
+     *       {
+     *         "itag": 140,
+     *         "url": "https://rr1---sn-h0jelnez.c.youtube.com/videoplayback?expire=1641080272...",
+     *         "mimeType": "audio/mp4; codecs=\"mp4a.40.2\"",
+     *         "bitrate": 131007,
+     *         "initRange": {
+     *           "start": "0",
+     *           "end": "667"
+     *         },
+     *         "indexRange": {
+     *           "start": "668",
+     *           "end": "999"
+     *         },
+     *         "lastModified": "1620321966927796",
+     *         "contentLength": "3967382",
+     *         "quality": "tiny",
+     *         "projectionType": "RECTANGULAR",
+     *         "averageBitrate": 129547,
+     *         "highReplication": true,
+     *         "audioQuality": "AUDIO_QUALITY_MEDIUM",
+     *         "approxDurationMs": "245000",
+     *         "audioSampleRate": "44100",
+     *         "audioChannels": 2,
+     *         "loudnessDb": -1.3000002
+     *       }
+     *     ]
+     *   },
+     *   "videoDetails": {
+     *     "videoId": "AjXQiKP5kMs",
+     *     "title": "Sparks",
+     *     "lengthSeconds": "245",
+     *     "channelId": "UCvCk2zFqkCYzpnSgWfx0qOg",
+     *     "isOwnerViewing": false,
+     *     "isCrawlable": false,
+     *     "thumbnail": {
+     *       "thumbnails": []
+     *     },
+     *     "allowRatings": true,
+     *     "viewCount": "12",
+     *     "author": "Thomas Bergersen",
+     *     "isPrivate": true,
+     *     "isUnpluggedCorpus": false,
+     *     "musicVideoType": "MUSIC_VIDEO_TYPE_PRIVATELY_OWNED_TRACK",
+     *     "isLiveContent": false
+     *   },
+     *   "microformat": {
+     *     "microformatDataRenderer": {
+     *       "urlCanonical": "https://music.youtube.com/watch?v=AjXQiKP5kMs",
+     *       "title": "Sparks - YouTube Music",
+     *       "description": "Uploaded to YouTube via YouTube Music Sparks",
+     *       "thumbnail": {
+     *         "thumbnails": [
+     *           {
+     *             "url": "https://i.ytimg.com/vi/AjXQiKP5kMs/hqdefault.jpg",
+     *             "width": 480,
+     *             "height": 360
+     *           }
+     *         ]
+     *       },
+     *       "siteName": "YouTube Music",
+     *       "appName": "YouTube Music",
+     *       "androidPackage": "com.google.android.apps.youtube.music",
+     *       "iosAppStoreId": "1017492454",
+     *       "iosAppArguments": "https://music.youtube.com/watch?v=AjXQiKP5kMs",
+     *       "ogType": "video.other",
+     *       "urlApplinksIos": "vnd.youtube.music://music.youtube.com/watch?v=AjXQiKP5kMs&feature=applinks",
+     *       "urlApplinksAndroid": "vnd.youtube.music://music.youtube.com/watch?v=AjXQiKP5kMs&feature=applinks",
+     *       "urlTwitterIos": "vnd.youtube.music://music.youtube.com/watch?v=AjXQiKP5kMs&feature=twitter-deep-link",
+     *       "urlTwitterAndroid": "vnd.youtube.music://music.youtube.com/watch?v=AjXQiKP5kMs&feature=twitter-deep-link",
+     *       "twitterCardType": "player",
+     *       "twitterSiteHandle": "@YouTubeMusic",
+     *       "schemaDotOrgType": "http://schema.org/VideoObject",
+     *       "noindex": true,
+     *       "unlisted": true,
+     *       "paid": false,
+     *       "familySafe": true,
+     *       "pageOwnerDetails": {
+     *         "name": "Music Library Uploads",
+     *         "externalChannelId": "UCvCk2zFqkCYzpnSgWfx0qOg",
+     *         "youtubeProfileUrl": "http://www.youtube.com/channel/UCvCk2zFqkCYzpnSgWfx0qOg"
+     *       },
+     *       "videoDetails": {
+     *         "externalVideoId": "AjXQiKP5kMs",
+     *         "durationSeconds": "246",
+     *         "durationIso8601": "PT4M6S"
+     *       },
+     *       "linkAlternates": [
+     *         {
+     *           "hrefUrl": "android-app://com.google.android.youtube/http/youtube.com/watch?v=AjXQiKP5kMs"
+     *         },
+     *         {
+     *           "hrefUrl": "ios-app://544007664/http/youtube.com/watch?v=AjXQiKP5kMs"
+     *         },
+     *         {
+     *           "hrefUrl": "https://www.youtube.com/oembed?format=json&url=https%3A%2F%2Fmusic.youtube.com%2Fwatch%3Fv%3DAjXQiKP5kMs",
+     *           "title": "Sparks",
+     *           "alternateType": "application/json+oembed"
+     *         },
+     *         {
+     *           "hrefUrl": "https://www.youtube.com/oembed?format=xml&url=https%3A%2F%2Fmusic.youtube.com%2Fwatch%3Fv%3DAjXQiKP5kMs",
+     *           "title": "Sparks",
+     *           "alternateType": "text/xml+oembed"
+     *         }
+     *       ],
+     *       "viewCount": "12",
+     *       "publishDate": "1969-12-31",
+     *       "category": "Music",
+     *       "uploadDate": "1969-12-31"
+     *     }
+     *   }
+     * }
      */
     async getSong(
       videoId: string,
@@ -791,17 +791,17 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
 
     /**
      * Returns lyrics of a song or video.
-     * @param browseId 
+     * @param browseId
      * @return Object with song lyrics
      * @example
      * {
-            "lyrics": "Today is gonna be the day\\nThat they're gonna throw it back to you\\n",
-            "source": "Source: LyricFind"
-        }
+     *   "lyrics": "Today is gonna be the day\\nThat they're gonna throw it back to you\\n",
+     *   "source": "Source: LyricFind"
+     * }
      */
     async getLyrics(
       browseId: string | null | undefined
-    ): Promise<Record<string, any>> {
+    ): Promise<bt.getLyricsReturn> {
       const lyrics: Record<string, any> = {};
 
       // Is this inherited behavior good for typescript users? @codyduong
@@ -836,7 +836,7 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
         true
       );
 
-      return lyrics;
+      return lyrics as any;
     }
 
     /**
