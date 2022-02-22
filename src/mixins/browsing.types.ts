@@ -135,7 +135,7 @@ type thumbnail = {
   width: number;
   height: number;
 };
-type thumbnails = thumbnail[];
+export type thumbnails = thumbnail[];
 type duration = string | null;
 type artist = {
   name: string;

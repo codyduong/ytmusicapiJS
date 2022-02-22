@@ -1,9 +1,9 @@
 {
   "name": "@codyduong/ytmusicapi",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0-alpha.2",
   "description": "Unofficial API for YouTube Music",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/ytmusic.js",
+  "types": "dist/ytmusic.d.ts",
   "scripts": {
     "test": "yarn jest",
     "test:code": "yarn lint && yarn tsc --noEmit",

@@ -191,7 +191,7 @@ export const LibraryMixin = <TBase extends YTMusicBase>(Base: TBase) => {
     async getLibraryAlbums(options?: {
       limit?: number;
       order?: lt.Order;
-    }): Promise<Array<Record<string, any>>> {
+    }): Promise<lt.getLibraryAlbumsReturn> {
       this._checkAuth();
       const { limit = 25, order } = options ?? {};
       const body: Record<string, any> = { browseId: 'FEmusic_liked_albums' };
@@ -226,7 +226,7 @@ export const LibraryMixin = <TBase extends YTMusicBase>(Base: TBase) => {
     async getLibraryArtists(options?: {
       limit: number;
       order?: lt.Order;
-    }): Promise<Array<Record<string, any>>> {
+    }): Promise<lt.getLibraryArtistsReturn> {
       this._checkAuth();
       const body = { browseId: 'FEmusic_library_corpus_track_artists' };
       const { limit = 25, order } = options ?? {};

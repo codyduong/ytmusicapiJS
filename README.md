@@ -55,8 +55,8 @@ More comprehensive list and explanation [here in the original repo](https://gith
         <tr>
             <td colspan=3 align="center">Uploads</td>
         </tr>
-        <tr><td>upload/remove songs</td><td>❌</td><td>0.20.0</td></tr>
-        <tr><td>list uploaded songs</td><td>❌</td><td>0.20.0</td></tr>
+        <tr><td>upload/remove songs</td><td>✅</td><td>0.20.0</td></tr>
+        <tr><td>list uploaded songs</td><td>✅</td><td>0.20.0</td></tr>
         <tr>
             <td colspan=3 align="center">Other</td>
         </tr>

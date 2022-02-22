@@ -10,6 +10,7 @@ import { WatchMixin } from './mixins/watch';
 import { ExploreMixin } from './mixins/explore';
 import { LibraryMixin } from './mixins/library';
 import { PlaylistsMixin } from './mixins/playlists';
+import { UploadsMixin } from './mixins/uploads';
 
 import type { Headers } from './types';
 import axios from 'axios';
@@ -217,7 +218,9 @@ export class _YTMusic {
   }
 }
 
-const YTMusic = PlaylistsMixin(
-  LibraryMixin(ExploreMixin(WatchMixin(BrowsingMixin(_YTMusic))))
+const YTMusic = UploadsMixin(
+  PlaylistsMixin(
+    LibraryMixin(ExploreMixin(WatchMixin(BrowsingMixin(_YTMusic))))
+  )
 );
 export default YTMusic;
