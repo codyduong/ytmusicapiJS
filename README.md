@@ -15,30 +15,6 @@ More comprehensive list and explanation [here in the original repo](https://gith
 
 ❌ - Not implemented
 
-<!--
-|Feature|Implementation Status|ytmusicapi version parity
-|---|---|---|
-|**Browsing**|🐣|0.20.0|
-|search (w/ filters)|✅|0.20.0|
-|get artist info|✅|0.20.0|
-|get user info|✅|0.20.0|
-|get albums|✅|0.20.0|
-|get song metadata|✅|0.20.0|
-|get watch playlists|❌|0.20.0|
-|get song lyrics|✅|0.20.0|
-|**Exploring**|❌|0.20.0|
-|get moods/genres|❌|0.20.0|
-|get latest charts|❌|0.20.0|
-|**Library Management**|❌|0.20.0|
-|get library contents|❌|0.20.0|
-|add/remove library content|❌|0.20.0|
-|**Playlists**|❌|0.20.0|
-|create/delete playlists|❌|0.20.0|
-|get playlist contents|❌|0.20.0|
-|**Uploads**|❌|0.20.0|
-|upload/remove songs|❌|0.20.0|
-|list uploaded songs|❌|0.20.0|
--->
 <table style="overflow: hidden;">
     <thead>
         <tr>
@@ -56,7 +32,7 @@ More comprehensive list and explanation [here in the original repo](https://gith
         <tr><td>get user info</td><td>✅</td><td>0.20.0</td></tr>
         <tr><td>get albums</td><td>✅</td><td>0.20.0</td></tr>
         <tr><td>get song metadata</td><td>✅</td><td>0.20.0</td></tr>
-        <tr><td>get watch playlists</td><td>🐣</td><td>0.20.0</td></tr>
+        <tr><td>get watch playlists</td><td>✅</td><td>0.20.0</td></tr>
         <tr><td>get song lyrics</td><td>✅</td><td>0.20.0</td></tr>
         <tr>
             <td colspan=3 align="center">Exploring</td>
@@ -66,14 +42,14 @@ More comprehensive list and explanation [here in the original repo](https://gith
         <tr>
             <td colspan=3 align="center">Library Management</td>
         </tr>
-        <tr><td>get library contents</td><td>🐣</td><td>0.20.0</td></tr>
-        <tr><td>add/remove library content</td><td>🐣</td><td>0.20.0</td></tr>
+        <tr><td>get library contents</td><td>✅</td><td>0.20.0</td></tr>
+        <tr><td>add/remove library content</td><td>✅</td><td>0.20.0</td></tr>
         <tr>
             <td colspan=3 align="center">Playlists</td>
         </tr>
-        <tr><td>create/delete playlists</td><td>❌</td><td>0.20.0</td></tr>
-        <tr><td>modify playlists</td><td>❌</td><td>0.20.0</td></tr>
-        <tr><td>get playlist contents</td><td>🐣</td><td>0.20.0</td></tr>
+        <tr><td>create/delete playlists</td><td>✅</td><td>0.20.0</td></tr>
+        <tr><td>modify playlists</td><td>✅</td><td>0.20.0</td></tr>
+        <tr><td>get playlist contents</td><td>✅</td><td>0.20.0</td></tr>
         <tr>
             <td colspan=3 align="center">Uploads</td>
         </tr>
