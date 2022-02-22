@@ -1,6 +1,6 @@
 {
   "name": "@codyduong/ytmusicapi",
-  "version": "0.1.0-alpha.0",
+  "version": "0.1.0-alpha.1",
   "description": "Unofficial API for YouTube Music",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
