@@ -26,7 +26,6 @@ describe('Browsing', () => {
     test('#1', async () => {
       const results = await ytmusic.search(query);
       expect(results.length).toBeGreaterThan(10);
-      // console.log(results)
     });
     test('#2', async () => {
       const results = await ytmusic.search(
@@ -134,14 +133,23 @@ describe('Browsing', () => {
   });
   describe('Get Artist', () => {
     test('#1', async () => {
-      try {
-        const results = await ytmusic.getArtist('MPLAUCmMUZbaYdNH0bEd1PAlAqsA');
-      } catch (e: any) {
-        expect(e.message).toBe('Function not implemented.');
-      }
-      //TODO @codyduong test related artists
+      const results = await ytmusic.getArtist('MPLAUCmMUZbaYdNH0bEd1PAlAqsA');
+      expect(Object.keys(results).length).toBe(14);
+
+      // test corectness of related artists
+      const related = results['related']['results'];
+      expect(
+        related.filter(
+          (x) =>
+            Object.keys(x) == ['browseId', 'subscribers', 'title', 'thumbnails']
+        ).length
+      ).toBe(related.length);
     });
-    test('#2 (non YT Music Channel)', async () => {
+    test('#2', async () => {
+      const results = ytmusic.getArtist('UCLZ7tlKC06ResyDmEStSrOw');
+      expect(Object.keys(results).length).toBeGreaterThanOrEqual(11);
+    });
+    test('#3 (non YT Music Channel)', async () => {
       try {
         const results = await ytmusic.getArtist('UCUcpVoi5KkJmnE3bvEhHR0Q');
       } catch (e: any) {
@@ -159,15 +167,30 @@ describe('Browsing', () => {
       expect(results.length).toBeGreaterThan(0);
     });
   });
-  describe('Get Artist Singles', () => {});
+  describe.skip('Get Artist Singles', async () => {
+    const artist = (await ytmusicAuth.getArtist('')) as any;
+    const results = await ytmusic.getArtistAlbums(
+      artist['singles']['browseId'],
+      artist['singles']['params']
+    );
+    expect(results.length).toBeGreaterThan(0);
+  });
   describe('Get User', () => {
     test('#1', async () => {
-      // @codyduong nav error here
       const results = await ytmusic.getUser('UC44hbeRoCZVVMVg5z0FfIww');
       expect(Object.keys(results).length).toBe(3);
     });
   });
-  // describe('Get User Playlists', () => {});
+  describe('Get User Playlists', () => {
+    test('#1', async () => {
+      let results = await ytmusic.getUser('UCPVhZsC2od1xjGhgEc2NEPQ');
+      results = ytmusic.getUserPlaylists(
+        'UCPVhZsC2od1xjGhgEc2NEPQ',
+        results['playlists']['params']
+      );
+      expect(results.length).toBeGreaterThan(100);
+    });
+  });
   describe('Get Album Browse Id', () => {
     // this test times out and blows up LOL @codyduong
     test.skip('#1', async () => {
@@ -190,10 +213,10 @@ describe('Browsing', () => {
     });
   });
   describe('Get Song', () => {
-    // relies on auth @codyduong
     test.skip('#1', async () => {
-      //const song = ytmusic.yt_auth.getSong("AjXQiKP5kMs")
-      //expect(results.length).toBe(4)
+      // Requires auth
+      const song = ytmusicAuth.getSong('AjXQiKP5kMs');
+      expect(Object.keys(song).length).toBe(4);
     });
     test('#2', async () => {
       const song = await ytmusic.getSong(sampleVideo);
@@ -266,16 +289,27 @@ describe('Explore', () => {
  */
 describe('Watch', () => {
   describe.skip('Get Watch Playlist', () => {
-    //These all require auth @codyduong
+    // Requires authentication & private playlist
     test('#1', async () => {
-      // const playlist = await ytmusic.yt_auth.getWatchPlaylist({
-      //   playlistId: 'OLAK5uy_ln_o1YXFqK4nfiNuTfhJK2XcRNCxml0fY',
-      //   limit: 90,
-      // });
-      // expect(playlist.tracks.length).toBeGreaterThanOrEqual(90);
+      const playlist = await ytmusicAuth.getWatchPlaylist({
+        playlistId: 'OLAK5uy_ln_o1YXFqK4nfiNuTfhJK2XcRNCxml0fY',
+        limit: 90,
+      });
+      expect(playlist.tracks.length).toBeGreaterThanOrEqual(90);
     });
-    test('#2', async () => {});
-    test('#3', async () => {});
+    test('#2', async () => {
+      const playlist = await ytmusicAuth.getWatchPlaylist({
+        videoId: '9mWr4c_ig54',
+        limit: 50,
+      });
+      expect(playlist.tracks.length).toBeGreaterThan(45);
+    });
+    test('#3', async () => {
+      const playlist = await ytmusicAuth.getWatchPlaylist({
+        videoId: 'UoAf_y9Ok4k',
+      });
+      expect(playlist.tracks.length).toBeGreaterThanOrEqual(25);
+    });
   });
   describe('Get Watch Playlist Shuffle', () => {
     test('#1', async () => {
@@ -286,7 +320,8 @@ describe('Watch', () => {
     });
   });
   describe('Get Watch Playlist Shuffle Playlist', () => {
-    test('#1', async () => {
+    test.skip('#1', async () => {
+      // Requires brand account
       // const playlist = await ytmusic.getWatchPlaylistShuffle({
       //   playlistId: config.playlists.own;
       // })

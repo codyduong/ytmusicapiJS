@@ -275,9 +275,9 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
      * Get information about an artist and their top releases (songs,
      * albums, singles, videos, and related artists). The top lists
      * contain pointers for getting the full list of releases. For
-     * songs/videos, pass the browseId to :py:func:`get_playlist`.
-     * For albums/singles, pass browseId and params to :py:func:
-     * `get_artist_albums`.
+     * songs/videos, pass the browseId to `getPlaylist`.
+     * For albums/singles, pass browseId and params to `getArtistAlbums`.
+     * 
      * @param {string} channelId channel id of the artist
      * @return Object with requested information.
      * @example
@@ -850,16 +850,13 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
         throw new Error('Could not identify the URL for base.js player.');
       }
 
-      //@codyduong verify this is the same...
-      return YTM_DOMAIN + match?.groups?.[0];
+      return YTM_DOMAIN + match[0].slice(8, -1);
     }
 
     /**
-     * Fetch the `base.js` script from YouTube Music and parse out the
-        `signatureTimestamp` for use with :py:func:`get_song`. <-- @codyduong todo
-     * @param url Optional. Provide the URL of the `base.js` script. If this
-            isn't specified a call will be made to :py:func:`get_basejs_url`.
-     * @returns `signatureTimestamp` string <-- @codyduong this contradicts the actual code? idk
+     * Fetch the `base.js` script from YouTube Music and parse out the `signatureTimestamp` for use with `getSong`.
+     * @param url Optional. Provide the URL of the `base.js` script. If this isn't specified a call will be made to `getBaseJSUrl`.
+     * @returns `signatureTimestamp` string
      */
     async getSignatureTimestamp(url?: string): Promise<number | null> {
       if (!url) {
@@ -872,7 +869,7 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
       }
 
       if (match && match.groups) {
-        return Math.round(Number(match.groups[0]));
+        return Math.round(Number(match[1]));
       }
       return null;
     }

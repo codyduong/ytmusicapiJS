@@ -197,7 +197,7 @@ function getContinuationParams(results: any, ctoken_path: string): string {
   return getContinuationString(ctoken);
 }
 
-function getContinuationString(ctoken: string): string {
+export function getContinuationString(ctoken: string): string {
   //return "&ctoken=" + ctoken + "&continuation=" + ctoken
   return `&ctoken=${ctoken}&continuation=ctoken`;
 }

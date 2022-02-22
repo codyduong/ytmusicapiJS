@@ -77,4 +77,7 @@ export type Artist = {
     browseId: string;
     params: string;
   };
+  related: {
+    results: Array<any>;
+  };
 };

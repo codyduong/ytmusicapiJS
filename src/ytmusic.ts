@@ -9,6 +9,7 @@ import { BrowsingMixin } from './mixins/browsing';
 import { WatchMixin } from './mixins/watch';
 import { ExploreMixin } from './mixins/explore';
 import { LibraryMixin } from './mixins/library';
+import { PlaylistsMixin } from './mixins/playlists';
 
 import type { Headers } from './types';
 import axios from 'axios';
@@ -214,13 +215,9 @@ export class _YTMusic {
       */
     return setup(filepath, headers_raw);
   }
-
-  // def __enter__(this):
-  //     return this
-
-  // def __exit__(this, execType=None, execValue=None, trackback=None):
-  //     pass
 }
 
-const YTMusic = LibraryMixin(ExploreMixin(WatchMixin(BrowsingMixin(_YTMusic))));
+const YTMusic = PlaylistsMixin(
+  LibraryMixin(ExploreMixin(WatchMixin(BrowsingMixin(_YTMusic))))
+);
 export default YTMusic;

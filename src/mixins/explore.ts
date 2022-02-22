@@ -109,8 +109,8 @@ export const ExploreMixin = <TBase extends YTMusicBase>(Base: TBase) => {
 
     /**
      * Retrieve a list of playlists for a given "Moods & Genres" category.
-     * @param params params obtained by :py:func:`get_mood_categories`
-     * @returns List of playlists in the format of :py:func:`get_library_playlists`
+     * @param params params obtained by `getMoodCategories`
+     * @returns List of playlists in the format of `getLibraryPlaylists`
      */
     async getMoodPlaylists(params: string): Promise<Record<string, any>> {
       const playlists: Array<any> = [];

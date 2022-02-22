@@ -19,7 +19,7 @@ export const WatchMixin = <TBase extends YTMusicBase>(Base: TBase) => {
      * @param videoId {string} videoId of the played video
      * @param playlistId {string} playlistId of the played playlist or album
      * @param limit {number} minimum number of watch playlist items to return
-     * @param params only used internally by :py:func:`get_watch_playlist_shuffle`
+     * @param params only used internally by `getWatchPlaylistShuffle`
      * @return List of playlist items:
      * @example
      * {
