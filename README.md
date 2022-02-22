@@ -67,7 +67,7 @@ More comprehensive list and explanation [here in the original repo](https://gith
 ## Setup and Usage
 | npm  | yarn |
 | ------------- | ------------- |
-| `npm install ytmusicapi`  | `yarn add ytmusicapi` |
+| `npm install @codyduong/ytmusicapi`  | `yarn add @codyduong/ytmusicapi` |
 
 
 
