@@ -206,6 +206,7 @@ export class Parser {
           resultType == 'album' || (defaultOffset && !!searchResult['videoId']);
         const flexItem = getFlexColumnItem(data, 1);
         const runs = flexItem?.['text']['runs'].slice(hasOffset ? 2 : 0);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const songInfo = parseSongRuns(runs!);
         searchResult = { ...searchResult, ...songInfo };
       }

@@ -7,6 +7,8 @@ It emulates YouTube Music web client requests using the user's cookie data for a
 This library is intended to carry the same functionality as the library it is inspired by. As such, unless the need becomes great enough for a specific feature in this library, I recommend all API specific changes be directed to [`ytmusicapi`](https://github.com/sigma67/ytmusicapi) instead. 
 
 ## Features
+This library is a work in progress.
+
 More comprehensive list and explanation [here in the original repo](https://github.com/sigma67/ytmusicapi#features) or check out [the docs for the original repo](ytmusicapi.readthedocs.io/)
 
 ✅ - Implemented
@@ -63,9 +65,11 @@ More comprehensive list and explanation [here in the original repo](https://gith
 </table>
 
 ## Setup and Usage
-This library is not yet available on npm and is still being worked on.
+| npm  | yarn |
+| ------------- | ------------- |
+| `npm install ytmusicapi`  | `yarn add ytmusicapi` |
 
-The pace of work thus far has been relatively fast, and is expected to parity to the original API by March or April
+
 
 See the [Documentation for the Python 3 API](https://ytmusicapi.readthedocs.io/en/latest/usage.html) for reference.
 

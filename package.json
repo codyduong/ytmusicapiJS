@@ -1,5 +1,5 @@
 {
-  "name": "@codyduong/ytmusicapijs",
+  "name": "@codyduong/ytmusicapi",
   "version": "0.1.0-alpha.0",
   "description": "Unofficial API for YouTube Music",
   "main": "dist/index.js",

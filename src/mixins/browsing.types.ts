@@ -265,6 +265,7 @@ export type getArtistAlbumsReturn = {
 /**
  * getUser
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type getUserReturnCategories =
   | 'albums'
   | 'singles'
