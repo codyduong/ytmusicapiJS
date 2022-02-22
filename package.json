@@ -1,7 +1,7 @@
 {
-  "name": "ytmusicapijs",
+  "name": "@codyduong/ytmusicapijs",
   "version": "0.1.0-alpha.0",
-  "description": "unofficial API for YouTube Music",
+  "description": "Unofficial API for YouTube Music",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -38,5 +38,16 @@
     "axios": "^0.26.0",
     "prompt-sync": "^4.2.0",
     "utf8": "^3.0.0"
-  }
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codyduong/ytmusicapiJS.git"
+  },
+  "bugs": {
+    "url": "https://github.com/codyduong/ytmusicapiJS/issues"
+  },
+  "homepage": "https://github.com/codyduong/ytmusicapiJS#readme"
 }
