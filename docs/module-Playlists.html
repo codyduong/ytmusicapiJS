@@ -1,0 +1,1729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Module: Playlists | Module: Playlists</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
+
+    
+        
+            <link type="text/css" rel="stylesheet" href="footer.css">
+        
+    
+</head>
+<body>
+<nav class="lnb" id="lnb">
+    <div class="logo" style="">
+        
+            <img src="img/toast-ui.png" width="100%" height="100%">
+        
+    </div>
+    <div class="title">
+        <h1><a href="index.html" class="link">Module: Playlists</a></h1>
+        
+    </div>
+    <div class="search-container" id="search-container">
+        <input type="text" placeholder="Search">
+        <ul></ul>
+    </div>
+    
+    <div class="lnb-api hidden"><h3>Modules</h3><ul><li><a href="module-Browsing.html">Browsing</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Browsing_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Browsing.html#getAlbum">getAlbum</a></li><li><a href="module-Browsing.html#getAlbumBrowseId">getAlbumBrowseId</a></li><li><a href="module-Browsing.html#getArtist">getArtist</a></li><li><a href="module-Browsing.html#getArtistAlbums">getArtistAlbums</a></li><li><a href="module-Browsing.html#getBaseJSUrl">getBaseJSUrl</a></li><li><a href="module-Browsing.html#getLyrics">getLyrics</a></li><li><a href="module-Browsing.html#getSignatureTimestamp">getSignatureTimestamp</a></li><li><a href="module-Browsing.html#getSong">getSong</a></li><li><a href="module-Browsing.html#getUser">getUser</a></li><li><a href="module-Browsing.html#getUserPlaylists">getUserPlaylists</a></li><li><a href="module-Browsing.html#search">search</a></li></ul></div></li><li><a href="module-Explore.html">Explore</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Explore_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Explore.html#getCharts">getCharts</a></li><li><a href="module-Explore.html#getMoodCategories">getMoodCategories</a></li><li><a href="module-Explore.html#getMoodPlaylists">getMoodPlaylists</a></li></ul></div></li><li><a href="module-Library.html">Library</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Library_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Library.html#editSongLibraryStatus">editSongLibraryStatus</a></li><li><a href="module-Library.html#getHistory">getHistory</a></li><li><a href="module-Library.html#getLibraryAlbums">getLibraryAlbums</a></li><li><a href="module-Library.html#getLibraryArtists">getLibraryArtists</a></li><li><a href="module-Library.html#getLibraryPlaylists">getLibraryPlaylists</a></li><li><a href="module-Library.html#getLibrarySongs">getLibrarySongs</a></li><li><a href="module-Library.html#getLibrarySubscriptions">getLibrarySubscriptions</a></li><li><a href="module-Library.html#getLikedSongs">getLikedSongs</a></li><li><a href="module-Library.html#ratePlaylist">ratePlaylist</a></li><li><a href="module-Library.html#rateSong">rateSong</a></li><li><a href="module-Library.html#removeHistoryItems">removeHistoryItems</a></li><li><a href="module-Library.html#subscribeArtists">subscribeArtists</a></li><li><a href="module-Library.html#unsubscribeArtists">unsubscribeArtists</a></li></ul></div></li><li><a href="module-Playlists.html">Playlists</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Playlists_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Playlists.html#addPlaylistItems">addPlaylistItems</a></li><li><a href="module-Playlists.html#createPlaylist">createPlaylist</a></li><li><a href="module-Playlists.html#deletePlaylist">deletePlaylist</a></li><li><a href="module-Playlists.html#editPlaylist">editPlaylist</a></li><li><a href="module-Playlists.html#getPlaylist">getPlaylist</a></li><li><a href="module-Playlists.html#getPlaylistSuggestions">getPlaylistSuggestions</a></li><li><a href="module-Playlists.html#removePlaylistItems">removePlaylistItems</a></li></ul></div></li><li><a href="module-Uploads.html">Uploads</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Uploads_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Uploads.html#deleteUploadEntity">deleteUploadEntity</a></li><li><a href="module-Uploads.html#getLibraryUploadAlbum">getLibraryUploadAlbum</a></li><li><a href="module-Uploads.html#getLibraryUploadArtist">getLibraryUploadArtist</a></li><li><a href="module-Uploads.html#uploadSong">uploadSong</a></li></ul></div></li><li><a href="module-Watch.html">Watch</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Watch_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Watch.html#getWatchPlaylist">getWatchPlaylist</a></li><li><a href="module-Watch.html#getWatchPlaylistShuffle">getWatchPlaylistShuffle</a></li></ul></div></li></ul></div><div class="lnb-api hidden"><h3>Classes</h3><ul><li><a href="YTMusic.html">YTMusic</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="YTMusic_sub"></div></li></ul></div>
+</nav>
+<div id="resizer"></div>
+
+<div class="main" id="main">
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>Playlists</h2>
+        
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+                
+
+<dt>
+    
+        <h4 class="name" id="addPlaylistItems">
+            
+                <span class="type-signature"><span class="icon green">async</span> </span>addPlaylistItems<span class="signature">(playlistId)</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="mixins_playlists.js.html">mixins/playlists.js</a></code>,
+                <code><a href="mixins_playlists.js.html#line258">line 258</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Add songs to an existing playlist
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>playlistId</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">Playlist id.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options.videoIds</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;string></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">IDs of songs to create the playlist with.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options.sourcePlaylist</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">Another playlist whose songs should be added to the new playlist.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options.duplicates</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last">If true, duplicates will be added. If false, an error will be returned if there are duplicates (no items are added to the playlist)</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+
+- Status String and an object containing the new setVideoId for each videoId or full response.
+
+
+
+
+            
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="createPlaylist">
+            
+                <span class="type-signature"><span class="icon green">async</span> </span>createPlaylist<span class="signature">(title, description, privacyStatus, options)</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="mixins_playlists.js.html">mixins/playlists.js</a></code>,
+                <code><a href="mixins_playlists.js.html#line161">line 161</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Creates a new empty playlist and returns its id.
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>title</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Playlist title.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>description</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Playlist description.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>privacyStatus</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Playlists can be 'PUBLIC', 'PRIVATE', or 'UNLISTED'. Default: 'PRIVATE'.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <h6>Properties</h6>
+                
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>videoIds</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;string></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">IDs of songs to create the playlist with.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>sourcePlaylist</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Another playlist whose songs should be added to the new playlist.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+
+- ID of the YouTube playlist or full response if there was an error.
+
+
+
+
+            
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="deletePlaylist">
+            
+                <span class="type-signature"><span class="icon green">async</span> </span>deletePlaylist<span class="signature">(playlistId<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="mixins_playlists.js.html">mixins/playlists.js</a></code>,
+                <code><a href="mixins_playlists.js.html#line243">line 243</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Delete a playlist.
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>playlistId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Playlist id.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+
+- Status String or full response.
+
+
+
+
+            
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="editPlaylist">
+            
+                <span class="type-signature"><span class="icon green">async</span> </span>editPlaylist<span class="signature">(playlistId, options)</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="mixins_playlists.js.html">mixins/playlists.js</a></code>,
+                <code><a href="mixins_playlists.js.html#line193">line 193</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Edit title, description or privacyStatus of a playlist.You may also move an item within a playlist or append another playlist to this playlist.
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>playlistId</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Playlist id.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <h6>Properties</h6>
+                
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>title=</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">New title for the playlist.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>description=</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">New description for the playlist.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>privacyStatus=</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">pt.PrivacyStatu</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">New privacy status for the playlist.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>moveItem=</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Move one item before another. Items are specified by setVideoId, see `getPlaylist`.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>addPlaylistId=</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Id of another playlist to add to this playlist</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+
+- Status String or full response
+
+
+
+
+            
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="getPlaylist">
+            
+                <span class="type-signature"><span class="icon green">async</span> </span>getPlaylist<span class="signature">(playlistId<span class="signature-attributes">opt</span>, limit<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="mixins_playlists.js.html">mixins/playlists.js</a></code>,
+                <code><a href="mixins_playlists.js.html#line57">line 57</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Return a list of playlist items.
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>playlistId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">Playlist id.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>limit</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    100
+                
+                </td>
+            
+
+            <td class="description last">How many songs to return.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+        <h5>Example</h5>
+        
+        <p class="code-caption">Each item is in the following format</p>
+    
+    <pre class="prettyprint"><code>{  "id": "PLQwVIlKxHM6qv-o99iX9R85og7IzF9YS_",  "privacy": "PUBLIC",  "title": "New EDM This Week 03/13/2020",  "thumbnails": [...]  "description": "Weekly r/EDM new release roundup. Created with github.com/sigma67/spotifyplaylist_to_gmusic",  "author": "sigmatics",  "year": "2020",  "duration": "6+ hours",  "duration_seconds": 52651,  "trackCount": 237,  "tracks": [    {      "videoId": "bjGppZKiuFE",      "title": "Lost",      "artists": [        {          "name": "Guest Who",          "id": "UCkgCRdnnqWnUeIH7EIc3dBg"        },        {          "name": "Kate Wild",          "id": "UCwR2l3JfJbvB6aq0RnnJfWg"        }      ],      "album": {      "name": "Lost",      "id": "MPREb_PxmzvDuqOnC"    },    "duration": "2:58",    "likeStatus": "INDIFFERENT",    "thumbnails": [...],    "isAvailable": True,    "isExplicit": False,    "feedbackTokens": {    "add": "AB9zfpJxtvrU...",    "remove": "AB9zfpKTyZ..."    }  ]}</code></pre>
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="getPlaylistSuggestions">
+            
+                <span class="type-signature"><span class="icon green">async</span> </span>getPlaylistSuggestions<span class="signature">(suggestionsToken)</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="mixins_playlists.js.html">mixins/playlists.js</a></code>,
+                <code><a href="mixins_playlists.js.html#line136">line 136</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Gets suggested tracks to add to a playlist. Suggestions are offered for playlists with less than 100 tracks
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>suggestionsToken</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Token returned by `getPlaylist` or this function</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+
+- Object containing suggested `tracks` and a `refresh_token` to get another set of suggestions.For data format of tracks, check `getPlaylist`
+
+
+
+
+            
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="removePlaylistItems">
+            
+                <span class="type-signature"><span class="icon green">async</span> </span>removePlaylistItems<span class="signature">(playlistId:, videos:)</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="mixins_playlists.js.html">mixins/playlists.js</a></code>,
+                <code><a href="mixins_playlists.js.html#line312">line 312</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Remove songs from an existing playlist.
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>playlistId:</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Playlist id.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>videos:</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">List of PlaylistItems, see `getPlaylist`.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            </dl>
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<footer>
+    <img class="logo" src="img/toast-ui.png" style="">
+    <div class="footer-text">NHN Entertainment. Frontend Development Lab</div>
+</footer>
+<script>prettyPrint();</script>
+<script src="scripts/jquery.min.js"></script>
+<script src="scripts/tui-doc.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+    <script>
+        var id = 'module:Playlists_sub'.replace(/"/g, '_');
+        var selectedApi = document.getElementById(id); // do not use jquery selector
+        var $selectedApi = $(selectedApi);
+
+        $selectedApi.removeClass('hidden');
+        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+        showLnbApi();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Module: Watch | Module: Watch</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
+
+    
+        
+            <link type="text/css" rel="stylesheet" href="footer.css">
+        
+    
+</head>
+<body>
+<nav class="lnb" id="lnb">
+    <div class="logo" style="">
+        
+            <img src="img/toast-ui.png" width="100%" height="100%">
+        
+    </div>
+    <div class="title">
+        <h1><a href="index.html" class="link">Module: Watch</a></h1>
+        
+    </div>
+    <div class="search-container" id="search-container">
+        <input type="text" placeholder="Search">
+        <ul></ul>
+    </div>
+    
+    <div class="lnb-api hidden"><h3>Modules</h3><ul><li><a href="module-Browsing.html">Browsing</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Browsing_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Browsing.html#getAlbum">getAlbum</a></li><li><a href="module-Browsing.html#getAlbumBrowseId">getAlbumBrowseId</a></li><li><a href="module-Browsing.html#getArtist">getArtist</a></li><li><a href="module-Browsing.html#getArtistAlbums">getArtistAlbums</a></li><li><a href="module-Browsing.html#getBaseJSUrl">getBaseJSUrl</a></li><li><a href="module-Browsing.html#getLyrics">getLyrics</a></li><li><a href="module-Browsing.html#getSignatureTimestamp">getSignatureTimestamp</a></li><li><a href="module-Browsing.html#getSong">getSong</a></li><li><a href="module-Browsing.html#getUser">getUser</a></li><li><a href="module-Browsing.html#getUserPlaylists">getUserPlaylists</a></li><li><a href="module-Browsing.html#search">search</a></li></ul></div></li><li><a href="module-Explore.html">Explore</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Explore_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Explore.html#getCharts">getCharts</a></li><li><a href="module-Explore.html#getMoodCategories">getMoodCategories</a></li><li><a href="module-Explore.html#getMoodPlaylists">getMoodPlaylists</a></li></ul></div></li><li><a href="module-Library.html">Library</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Library_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Library.html#editSongLibraryStatus">editSongLibraryStatus</a></li><li><a href="module-Library.html#getHistory">getHistory</a></li><li><a href="module-Library.html#getLibraryAlbums">getLibraryAlbums</a></li><li><a href="module-Library.html#getLibraryArtists">getLibraryArtists</a></li><li><a href="module-Library.html#getLibraryPlaylists">getLibraryPlaylists</a></li><li><a href="module-Library.html#getLibrarySongs">getLibrarySongs</a></li><li><a href="module-Library.html#getLibrarySubscriptions">getLibrarySubscriptions</a></li><li><a href="module-Library.html#getLikedSongs">getLikedSongs</a></li><li><a href="module-Library.html#ratePlaylist">ratePlaylist</a></li><li><a href="module-Library.html#rateSong">rateSong</a></li><li><a href="module-Library.html#removeHistoryItems">removeHistoryItems</a></li><li><a href="module-Library.html#subscribeArtists">subscribeArtists</a></li><li><a href="module-Library.html#unsubscribeArtists">unsubscribeArtists</a></li></ul></div></li><li><a href="module-Playlists.html">Playlists</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Playlists_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Playlists.html#addPlaylistItems">addPlaylistItems</a></li><li><a href="module-Playlists.html#createPlaylist">createPlaylist</a></li><li><a href="module-Playlists.html#deletePlaylist">deletePlaylist</a></li><li><a href="module-Playlists.html#editPlaylist">editPlaylist</a></li><li><a href="module-Playlists.html#getPlaylist">getPlaylist</a></li><li><a href="module-Playlists.html#getPlaylistSuggestions">getPlaylistSuggestions</a></li><li><a href="module-Playlists.html#removePlaylistItems">removePlaylistItems</a></li></ul></div></li><li><a href="module-Uploads.html">Uploads</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Uploads_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Uploads.html#deleteUploadEntity">deleteUploadEntity</a></li><li><a href="module-Uploads.html#getLibraryUploadAlbum">getLibraryUploadAlbum</a></li><li><a href="module-Uploads.html#getLibraryUploadArtist">getLibraryUploadArtist</a></li><li><a href="module-Uploads.html#uploadSong">uploadSong</a></li></ul></div></li><li><a href="module-Watch.html">Watch</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Watch_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Watch.html#getWatchPlaylist">getWatchPlaylist</a></li><li><a href="module-Watch.html#getWatchPlaylistShuffle">getWatchPlaylistShuffle</a></li></ul></div></li></ul></div><div class="lnb-api hidden"><h3>Classes</h3><ul><li><a href="YTMusic.html">YTMusic</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="YTMusic_sub"></div></li></ul></div>
+</nav>
+<div id="resizer"></div>
+
+<div class="main" id="main">
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>Watch</h2>
+        
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+                
+
+<dt>
+    
+        <h4 class="name" id="getWatchPlaylist">
+            
+                <span class="type-signature"><span class="icon green">async</span> </span>getWatchPlaylist<span class="signature">(videoId, playlistId, limit, params)</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="mixins_watch.js.html">mixins/watch.js</a></code>,
+                <code><a href="mixins_watch.js.html#line45">line 45</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Get a watch list of tracks. This watch playlist appears when you press
+            play on a track in YouTube Music.
+            Please note that the `INDIFFERENT` likeStatus of tracks returned by this
+            endpoint may be either `INDIFFERENT` or `DISLIKE`, due to ambiguous data
+            returned by YouTube Music.
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>videoId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">videoId of the played video</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>playlistId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">playlistId of the played playlist or album</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>limit</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">minimum number of watch playlist items to return</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>params</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">only used internally by `getWatchPlaylistShuffle`</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+
+- List of playlist items:
+
+
+
+
+            
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code>{
+              "tracks": [
+                  {
+                    "title": "Interstellar (Main Theme) - Piano Version",
+                    "byline": "Patrik Pietschmann • 47M views",
+                    "length": "4:47",
+                    "videoId": "4y33h81phKU",
+                    "thumbnail": [
+                      {
+                        "url": "https://i.ytimg.com/vi/4y...",
+                        "width": 400,
+                        "height": 225
+                      }
+                    ],
+                    "feedbackTokens": [],
+                    "likeStatus": "LIKE"
+                  },...
+              ],
+              "playlistId": "RDAMVM4y33h81phKU",
+              "lyrics": "MPLYt_HNNclO0Ddoc-17"
+            }</code></pre>
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="getWatchPlaylistShuffle">
+            
+                <span class="type-signature"><span class="icon green">async</span> </span>getWatchPlaylistShuffle<span class="signature">(videoId, playlistId, limit)</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="mixins_watch.js.html">mixins/watch.js</a></code>,
+                <code><a href="mixins_watch.js.html#line115">line 115</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Shuffle any playlist
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>videoId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Optional video id of the first video in the shuffled playlist</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>playlistId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Playlist id</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>limit</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The number of watch playlist items to return @default 50</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+
+- A list of watch playlist items
+
+
+
+
+            
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            </dl>
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<footer>
+    <img class="logo" src="img/toast-ui.png" style="">
+    <div class="footer-text">NHN Entertainment. Frontend Development Lab</div>
+</footer>
+<script>prettyPrint();</script>
+<script src="scripts/jquery.min.js"></script>
+<script src="scripts/tui-doc.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+    <script>
+        var id = 'module:Watch_sub'.replace(/"/g, '_');
+        var selectedApi = document.getElementById(id); // do not use jquery selector
+        var $selectedApi = $(selectedApi);
+
+        $selectedApi.removeClass('hidden');
+        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+        showLnbApi();
+    </script>
+
+</body>
+</html>

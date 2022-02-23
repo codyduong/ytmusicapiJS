@@ -31,6 +31,10 @@ import { YTMusicBase } from './.mixin.helper';
 
 import * as et from './explore.types';
 
+/**
+ * @module Explore
+ */
+
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const ExploreMixin = <TBase extends YTMusicBase>(Base: TBase) => {
   return class ExploreMixin extends Base {

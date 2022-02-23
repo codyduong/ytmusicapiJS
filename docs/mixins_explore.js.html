@@ -1,0 +1,344 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Source: mixins/explore.js | Source: mixins/explore.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
+
+    
+        
+            <link type="text/css" rel="stylesheet" href="footer.css">
+        
+    
+</head>
+<body>
+<nav class="lnb" id="lnb">
+    <div class="logo" style="">
+        
+            <img src="img/toast-ui.png" width="100%" height="100%">
+        
+    </div>
+    <div class="title">
+        <h1><a href="index.html" class="link">Source: mixins/explore.js</a></h1>
+        
+    </div>
+    <div class="search-container" id="search-container">
+        <input type="text" placeholder="Search">
+        <ul></ul>
+    </div>
+    
+    <div class="lnb-api hidden"><h3>Modules</h3><ul><li><a href="module-Browsing.html">Browsing</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Browsing_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Browsing.html#getAlbum">getAlbum</a></li><li><a href="module-Browsing.html#getAlbumBrowseId">getAlbumBrowseId</a></li><li><a href="module-Browsing.html#getArtist">getArtist</a></li><li><a href="module-Browsing.html#getArtistAlbums">getArtistAlbums</a></li><li><a href="module-Browsing.html#getBaseJSUrl">getBaseJSUrl</a></li><li><a href="module-Browsing.html#getLyrics">getLyrics</a></li><li><a href="module-Browsing.html#getSignatureTimestamp">getSignatureTimestamp</a></li><li><a href="module-Browsing.html#getSong">getSong</a></li><li><a href="module-Browsing.html#getUser">getUser</a></li><li><a href="module-Browsing.html#getUserPlaylists">getUserPlaylists</a></li><li><a href="module-Browsing.html#search">search</a></li></ul></div></li><li><a href="module-Explore.html">Explore</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Explore_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Explore.html#getCharts">getCharts</a></li><li><a href="module-Explore.html#getMoodCategories">getMoodCategories</a></li><li><a href="module-Explore.html#getMoodPlaylists">getMoodPlaylists</a></li></ul></div></li><li><a href="module-Library.html">Library</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Library_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Library.html#editSongLibraryStatus">editSongLibraryStatus</a></li><li><a href="module-Library.html#getHistory">getHistory</a></li><li><a href="module-Library.html#getLibraryAlbums">getLibraryAlbums</a></li><li><a href="module-Library.html#getLibraryArtists">getLibraryArtists</a></li><li><a href="module-Library.html#getLibraryPlaylists">getLibraryPlaylists</a></li><li><a href="module-Library.html#getLibrarySongs">getLibrarySongs</a></li><li><a href="module-Library.html#getLibrarySubscriptions">getLibrarySubscriptions</a></li><li><a href="module-Library.html#getLikedSongs">getLikedSongs</a></li><li><a href="module-Library.html#ratePlaylist">ratePlaylist</a></li><li><a href="module-Library.html#rateSong">rateSong</a></li><li><a href="module-Library.html#removeHistoryItems">removeHistoryItems</a></li><li><a href="module-Library.html#subscribeArtists">subscribeArtists</a></li><li><a href="module-Library.html#unsubscribeArtists">unsubscribeArtists</a></li></ul></div></li><li><a href="module-Playlists.html">Playlists</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Playlists_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Playlists.html#addPlaylistItems">addPlaylistItems</a></li><li><a href="module-Playlists.html#createPlaylist">createPlaylist</a></li><li><a href="module-Playlists.html#deletePlaylist">deletePlaylist</a></li><li><a href="module-Playlists.html#editPlaylist">editPlaylist</a></li><li><a href="module-Playlists.html#getPlaylist">getPlaylist</a></li><li><a href="module-Playlists.html#getPlaylistSuggestions">getPlaylistSuggestions</a></li><li><a href="module-Playlists.html#removePlaylistItems">removePlaylistItems</a></li></ul></div></li><li><a href="module-Uploads.html">Uploads</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Uploads_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Uploads.html#deleteUploadEntity">deleteUploadEntity</a></li><li><a href="module-Uploads.html#getLibraryUploadAlbum">getLibraryUploadAlbum</a></li><li><a href="module-Uploads.html#getLibraryUploadArtist">getLibraryUploadArtist</a></li><li><a href="module-Uploads.html#uploadSong">uploadSong</a></li></ul></div></li><li><a href="module-Watch.html">Watch</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Watch_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Watch.html#getWatchPlaylist">getWatchPlaylist</a></li><li><a href="module-Watch.html#getWatchPlaylistShuffle">getWatchPlaylistShuffle</a></li></ul></div></li></ul></div><div class="lnb-api hidden"><h3>Classes</h3><ul><li><a href="YTMusic.html">YTMusic</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="YTMusic_sub"></div></li></ul></div>
+</nav>
+<div id="resizer"></div>
+
+<div class="main" id="main">
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { CAROUSEL, CAROUSEL_CONTENTS, CAROUSEL_TITLE, CATEGORY_PARAMS, CATEGORY_TITLE, FRAMEWORK_MUTATIONS, GRID, GRID_ITEMS, MRLIR, MTRIR, MUSIC_SHELF, NAVIGATION_BROWSE_ID, SECTION_LIST, SINGLE_COLUMN_TAB, TITLE, TITLE_TEXT, } from '../parsers';
+import { parseContentList, parsePlaylist, parseVideo, } from '../parsers/browsing';
+import { parseChartArtist, parseChartSong, parseChartTrending, } from '../parsers/explore';
+import { nav } from '../parsers/utils';
+/**
+ * @module Explore
+ */
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export const ExploreMixin = (Base) => {
+    return class ExploreMixin extends Base {
+        /**
+         * Fetch "Moods &amp; Genres" categories from YouTube Music.
+         *
+         * @return Object of sections and categories
+         * @example
+    {
+      'For you': [
+        {
+        'params': 'ggMPOg1uX1ZwN0pHT2NBT1Fk',
+        'title': '1980s'
+        },
+        {
+        'params': 'ggMPOg1uXzZQbDB5eThLRTQ3',
+        'title': 'Feel Good'
+        },
+        ...
+      ],
+      'Genres': [
+        {
+        'params': 'ggMPOg1uXzVLbmZnaWI4STNs',
+        'title': 'Dance &amp; Electronic'
+        },
+        {
+        'params': 'ggMPOg1uX3NjZllsNGVEMkZo',
+        'title': 'Decades'
+        },
+        ...
+      ],
+      'Moods &amp; moments': [
+        {
+        'params': 'ggMPOg1uXzVuc0dnZlhpV3Ba',
+        'title': 'Chill'
+        },
+        {
+        'params': 'ggMPOg1uX2ozUHlwbWM3ajNq',
+        'title': 'Commute'
+        },
+        ...
+      ],
+    }
+         */
+        async getMoodCategories() {
+            const sections = {};
+            const response = await this._sendRequest('browse', { browseId: 'FEmusic_moods_and_genres' });
+            const naved = nav(response, [
+                ...SINGLE_COLUMN_TAB,
+                ...SECTION_LIST,
+            ]);
+            for (const section of naved) {
+                const title = nav(section, [
+                    ...GRID,
+                    'header',
+                    'gridHeaderRenderer',
+                    ...TITLE_TEXT,
+                ]);
+                sections[title] = [];
+                for (const category of nav(section, GRID_ITEMS)) {
+                    sections[title].push({
+                        title: nav(category, CATEGORY_TITLE),
+                        params: nav(category, CATEGORY_PARAMS),
+                    });
+                }
+            }
+            return sections;
+        }
+        /**
+         * Retrieve a list of playlists for a given "Moods &amp; Genres" category.
+         * @param params params obtained by `getMoodCategories`
+         * @returns List of playlists in the format of `getLibraryPlaylists`
+         */
+        async getMoodPlaylists(params) {
+            const playlists = [];
+            const response = await this._sendRequest('browse', {
+                browseId: 'FEmusic_moods_and_genres_category',
+                params: params,
+            });
+            for (const section of nav(response, [...SINGLE_COLUMN_TAB, ...SECTION_LIST])) {
+                let path = [];
+                if ('gridRenderer' in section) {
+                    path = GRID_ITEMS;
+                }
+                else if ('musicCarouselShelfRenderer' in section) {
+                    path = CAROUSEL_CONTENTS;
+                }
+                else if ('musicImmersiveCarouselShelfRenderer' in section) {
+                    path = ['musicImmersiveCarouselShelfRenderer', 'contents'];
+                }
+                if (path.length) {
+                    const results = nav(section, path);
+                    playlists.push(parseContentList(results, parsePlaylist));
+                }
+            }
+            return playlists;
+        }
+        /**
+         * Get latest charts data from YouTube Music: Top songs, top videos, top artists and top trending videos.
+         * Global charts have no Trending section, US charts have an extra Genres section with some Genre charts.
+         * @param {string} [country = 'ZZ'] ISO 3166-1 Alpha-2 country code.
+         * @returns Dictionary containing chart songs (only if authenticated), chart videos, chart artists and trending videos.
+         * @example
+    {
+      "countries": {
+        "selected": {
+          "text": "United States"
+        },
+        "options": ["DE",
+          "ZZ",
+          "ZW"]
+      },
+      "songs": {
+        "playlist": "VLPL4fGSI1pDJn6O1LS0XSdF3RyO0Rq_LDeI",
+        "items": [
+          {
+            "title": "Outside (Better Days)",
+            "videoId": "oT79YlRtXDg",
+            "artists": [
+              {
+                "name": "MO3",
+                "id": "UCdFt4Cvhr7Okaxo6hZg5K8g"
+              },
+              {
+                "name": "OG Bobby Billions",
+                "id": "UCLusb4T2tW3gOpJS1fJ-A9g"
+              }
+            ],
+            "thumbnails": [...],
+            "isExplicit": true,
+            "album": {
+              "name": "Outside (Better Days)",
+              "id": "MPREb_fX4Yv8frUNv"
+            },
+            "rank": "1",
+            "trend": "up"
+          }
+        ]
+      },
+      "videos": {
+        "playlist": "VLPL4fGSI1pDJn69On1f-8NAvX_CYlx7QyZc",
+        "items": [
+          {
+            "title": "EVERY CHANCE I GET (Official Music Video) (feat. Lil Baby &amp; Lil Durk)",
+            "videoId": "BTivsHlVcGU",
+            "playlistId": "PL4fGSI1pDJn69On1f-8NAvX_CYlx7QyZc",
+            "thumbnails": [],
+            "views": "46M"
+          }
+        ]
+      },
+      "artists": {
+        "playlist": null,
+        "items": [
+          {
+            "title": "YoungBoy Never Broke Again",
+            "browseId": "UCR28YDxjDE3ogQROaNdnRbQ",
+            "subscribers": "9.62M",
+            "thumbnails": [],
+            "rank": "1",
+            "trend": "neutral"
+          }
+        ]
+      },
+      "genres": [
+        {
+          "title": "Top 50 Pop Music Videos United States",
+          "playlistId": "PL4fGSI1pDJn77aK7sAW2AT0oOzo5inWY8",
+          "thumbnails": []
+        }
+      ],
+      "trending": {
+        "playlist": "VLPLrEnWoR732-DtKgaDdnPkezM_nDidBU9H",
+        "items": [
+          {
+            "title": "Permission to Dance",
+            "videoId": "CuklIb9d3fI",
+            "playlistId": "PLrEnWoR732-DtKgaDdnPkezM_nDidBU9H",
+            "artists": [
+              {
+                "name": "BTS",
+                "id": "UC9vrvNSL3xcWGSkV86REBSg"
+              }
+            ],
+            "thumbnails": [],
+            "views": "108M"
+          }
+        ]
+      }
+      }
+         */
+        async getCharts(country = 'ZZ') {
+            const body = { browseId: 'FEmusic_charts' };
+            if (country) {
+                body['formData'] = { selectedValues: [country] };
+            }
+            const endpoint = 'browse';
+            const response = await this._sendRequest(endpoint, body);
+            const results = nav(response, [...SINGLE_COLUMN_TAB, ...SECTION_LIST]);
+            const charts = { countries: {} };
+            const menu = nav(results[0], [
+                ...MUSIC_SHELF,
+                'subheaders',
+                0,
+                'musicSideAlignedItemRenderer',
+                'startItems',
+                0,
+                'musicSortFilterButtonRenderer',
+            ]);
+            charts['countries']['selected'] = nav(menu, TITLE);
+            charts['countries']['options'] = nav(response, FRAMEWORK_MUTATIONS)
+                .map((m) => nav(m, ['payload', 'musicFormBooleanChoice', 'opaqueToken'], true))
+                .filter((x) => x);
+            const chartsCategories = ['videos', 'artists'];
+            const hasSongs = !!this.getAuth();
+            const hasGenres = country == 'US';
+            const hasTrending = country != 'ZZ';
+            if (hasSongs) {
+                chartsCategories.splice(0, 0, 'songs');
+            }
+            if (hasGenres) {
+                chartsCategories.push('genres');
+            }
+            if (hasTrending) {
+                chartsCategories.push('trending');
+            }
+            // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+            const parseChart = (i, parseFunc, key) => {
+                parseContentList(nav(results[i + (hasSongs ? 1 : 0)], CAROUSEL_CONTENTS), parseFunc, key);
+            };
+            for (const [i, c] of chartsCategories.entries()) {
+                charts[c] = {
+                    playlist: nav(results[1 + i], [...CAROUSEL, ...CAROUSEL_TITLE, ...NAVIGATION_BROWSE_ID], true),
+                };
+            }
+            if (hasSongs) {
+                charts['songs'] = {
+                    ...charts['songs'],
+                    ...{
+                        items: parseChart(0, parseChartSong, MRLIR),
+                    },
+                };
+            }
+            charts['videos']['items'] = parseChart(1, parseVideo, MTRIR);
+            charts['artists']['items'] = parseChart(2, parseChartArtist, MRLIR);
+            if (hasGenres) {
+                charts['genres'] = parseChart(3, parsePlaylist, MTRIR);
+            }
+            if (hasTrending) {
+                charts['trending']['items'] = parseChart(3 + (hasGenres ? 1 : 0), parseChartTrending, MRLIR);
+            }
+            return charts;
+        }
+    };
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<footer>
+    <img class="logo" src="img/toast-ui.png" style="">
+    <div class="footer-text">NHN Entertainment. Frontend Development Lab</div>
+</footer>
+<script>prettyPrint();</script>
+<script src="scripts/jquery.min.js"></script>
+<script src="scripts/tui-doc.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+    <script>
+        var id = '_sub'.replace(/"/g, '_');
+        var selectedApi = document.getElementById(id); // do not use jquery selector
+        var $selectedApi = $(selectedApi);
+
+        $selectedApi.removeClass('hidden');
+        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+        showLnbApi();
+    </script>
+
+</body>
+</html>

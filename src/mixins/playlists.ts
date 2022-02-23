@@ -22,6 +22,10 @@ import { YTMusicBase } from './.mixin.helper';
 
 import * as pt from './playlists.types';
 
+/**
+ * @module Playlists
+ */
+
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const PlaylistsMixin = <TBase extends YTMusicBase>(Base: TBase) => {
   return class PlaylistsMixin extends Base {

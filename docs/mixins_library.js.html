@@ -1,0 +1,365 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Source: mixins/library.js | Source: mixins/library.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
+
+    
+        
+            <link type="text/css" rel="stylesheet" href="footer.css">
+        
+    
+</head>
+<body>
+<nav class="lnb" id="lnb">
+    <div class="logo" style="">
+        
+            <img src="img/toast-ui.png" width="100%" height="100%">
+        
+    </div>
+    <div class="title">
+        <h1><a href="index.html" class="link">Source: mixins/library.js</a></h1>
+        
+    </div>
+    <div class="search-container" id="search-container">
+        <input type="text" placeholder="Search">
+        <ul></ul>
+    </div>
+    
+    <div class="lnb-api hidden"><h3>Modules</h3><ul><li><a href="module-Browsing.html">Browsing</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Browsing_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Browsing.html#getAlbum">getAlbum</a></li><li><a href="module-Browsing.html#getAlbumBrowseId">getAlbumBrowseId</a></li><li><a href="module-Browsing.html#getArtist">getArtist</a></li><li><a href="module-Browsing.html#getArtistAlbums">getArtistAlbums</a></li><li><a href="module-Browsing.html#getBaseJSUrl">getBaseJSUrl</a></li><li><a href="module-Browsing.html#getLyrics">getLyrics</a></li><li><a href="module-Browsing.html#getSignatureTimestamp">getSignatureTimestamp</a></li><li><a href="module-Browsing.html#getSong">getSong</a></li><li><a href="module-Browsing.html#getUser">getUser</a></li><li><a href="module-Browsing.html#getUserPlaylists">getUserPlaylists</a></li><li><a href="module-Browsing.html#search">search</a></li></ul></div></li><li><a href="module-Explore.html">Explore</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Explore_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Explore.html#getCharts">getCharts</a></li><li><a href="module-Explore.html#getMoodCategories">getMoodCategories</a></li><li><a href="module-Explore.html#getMoodPlaylists">getMoodPlaylists</a></li></ul></div></li><li><a href="module-Library.html">Library</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Library_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Library.html#editSongLibraryStatus">editSongLibraryStatus</a></li><li><a href="module-Library.html#getHistory">getHistory</a></li><li><a href="module-Library.html#getLibraryAlbums">getLibraryAlbums</a></li><li><a href="module-Library.html#getLibraryArtists">getLibraryArtists</a></li><li><a href="module-Library.html#getLibraryPlaylists">getLibraryPlaylists</a></li><li><a href="module-Library.html#getLibrarySongs">getLibrarySongs</a></li><li><a href="module-Library.html#getLibrarySubscriptions">getLibrarySubscriptions</a></li><li><a href="module-Library.html#getLikedSongs">getLikedSongs</a></li><li><a href="module-Library.html#ratePlaylist">ratePlaylist</a></li><li><a href="module-Library.html#rateSong">rateSong</a></li><li><a href="module-Library.html#removeHistoryItems">removeHistoryItems</a></li><li><a href="module-Library.html#subscribeArtists">subscribeArtists</a></li><li><a href="module-Library.html#unsubscribeArtists">unsubscribeArtists</a></li></ul></div></li><li><a href="module-Playlists.html">Playlists</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Playlists_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Playlists.html#addPlaylistItems">addPlaylistItems</a></li><li><a href="module-Playlists.html#createPlaylist">createPlaylist</a></li><li><a href="module-Playlists.html#deletePlaylist">deletePlaylist</a></li><li><a href="module-Playlists.html#editPlaylist">editPlaylist</a></li><li><a href="module-Playlists.html#getPlaylist">getPlaylist</a></li><li><a href="module-Playlists.html#getPlaylistSuggestions">getPlaylistSuggestions</a></li><li><a href="module-Playlists.html#removePlaylistItems">removePlaylistItems</a></li></ul></div></li><li><a href="module-Uploads.html">Uploads</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Uploads_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Uploads.html#deleteUploadEntity">deleteUploadEntity</a></li><li><a href="module-Uploads.html#getLibraryUploadAlbum">getLibraryUploadAlbum</a></li><li><a href="module-Uploads.html#getLibraryUploadArtist">getLibraryUploadArtist</a></li><li><a href="module-Uploads.html#uploadSong">uploadSong</a></li></ul></div></li><li><a href="module-Watch.html">Watch</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Watch_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Watch.html#getWatchPlaylist">getWatchPlaylist</a></li><li><a href="module-Watch.html#getWatchPlaylistShuffle">getWatchPlaylistShuffle</a></li></ul></div></li></ul></div><div class="lnb-api hidden"><h3>Classes</h3><ul><li><a href="YTMusic.html">YTMusic</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="YTMusic_sub"></div></li></ul></div>
+</nav>
+<div id="resizer"></div>
+
+<div class="main" id="main">
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { prepareLikeEndpoint, prepareOrderParams, validateOrderParameters, } from '../helpers';
+import { SINGLE_COLUMN_TAB, SECTION_LIST, ITEM_SECTION, GRID, MUSIC_SHELF, TITLE, MENU_SERVICE, FEEDBACK_TOKEN, TITLE_TEXT, } from '../parsers';
+import { parseContentList, parsePlaylist } from '../parsers/browsing';
+import { parseLibraryAlbums, parseLibraryArtists, parseLibrarySongs, } from '../parsers/library';
+import { parsePlaylistItems } from '../parsers/playlists';
+import { validateResponse as validateResponseFunc, findObjectByKey, getContinuations, nav, resendRequestUntilParsedResponseIsValid, getValidatedContinuations, } from '../parsers/utils';
+/**
+ * @module Library
+ */
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export const LibraryMixin = (Base) => {
+    return class LibraryMixin extends Base {
+        /**
+         * Retrieves the playlists in the user's library.
+         * @param {number} [limit = 25] Number of playlists to retrieve.
+         * @return Array of owned playlists.
+         * @example &lt;caption>Each item is in the following format&lt;/caption>
+         * {
+         *   'playlistId': 'PLQwVIlKxHM6rz0fDJVv_0UlXGEWf-bFys',
+         *   'title': 'Playlist title',
+         *   'thumbnails: [...],
+         *   'count': 5
+         * }
+         */
+        async getLibraryPlaylists(limit = 25) {
+            this._checkAuth();
+            const body = { browseId: 'FEmusic_liked_playlists' };
+            const endpoint = 'browse';
+            const response = await this._sendRequest(endpoint, body);
+            let results = findObjectByKey(nav(response, [...SINGLE_COLUMN_TAB, ...SECTION_LIST]), 'itemSectionRenderer');
+            results = nav(results, [...ITEM_SECTION, ...GRID]);
+            let playlists = parseContentList(results['items'].slice(1), parsePlaylist);
+            if ('continuations' in results) {
+                const requestFunc = async (additionalParams) => await this._sendRequest(endpoint, body, additionalParams);
+                const parseFunc = (contents) => parseContentList(contents, parsePlaylist);
+                playlists = [
+                    ...playlists,
+                    ...(await getContinuations(results, 'gridContinuation', limit - playlists.length, requestFunc, parseFunc)),
+                ];
+            }
+            return playlists;
+        }
+        /**
+         * Gets the songs in the user's library (liked videos are not included).
+         * To get liked songs and videos, use `getLikedSongs`.
+         * @param {Object} [options=]
+         * @param {number} [options.limit = 25] Limit number of songs to retrieve.
+         * @param {boolean} [options.validateResponse = false] Flag indicating if responses from YTM should be validated and retried in case when some songs are missing.
+         * @param {lt.Order} [options.order=] Order of songs to return. Allowed values: 'a_to_z', 'z_to_a', 'recently_added'.
+         * @return List of songs. Same format as `getPlaylist`
+         */
+        async getLibrarySongs(options) {
+            this._checkAuth();
+            const { limit = 25, validateResponse = false, order } = options ?? {};
+            const body = { browseId: 'FEmusic_liked_videos' };
+            validateOrderParameters(order);
+            if (order) {
+                body['params'] = prepareOrderParams(order);
+            }
+            const endpoint = 'browse';
+            const perPage = 25;
+            const requestFunc = async (_additionalParams) => await this._sendRequest(endpoint, body); //additionalParams doesnt do anything? @codyduong PR this.
+            const parseFunc = (rawResponse) => parseLibrarySongs(rawResponse);
+            let response;
+            if (validateResponse) {
+                const validateFunc = (parsed) => validateResponseFunc(parsed, perPage, limit, 0);
+                response = await resendRequestUntilParsedResponseIsValid(requestFunc, null, parseFunc, validateFunc, 3);
+            }
+            else {
+                response = parseFunc(requestFunc(null));
+            }
+            const results = response['results'];
+            let songs = response['parsed'];
+            if ('continuations' in results) {
+                const requestContinuationsFunc = async (additionalParams) => await this._sendRequest(endpoint, body, additionalParams);
+                const parseContinuationsFunc = (contents) => parsePlaylistItems(contents);
+                if (validateResponse) {
+                    songs = {
+                        ...songs,
+                        ...(await getValidatedContinuations(results, 'musicShelfContinuation', limit - songs.length, perPage, requestContinuationsFunc, parseContinuationsFunc)),
+                    };
+                }
+                else {
+                    songs = [
+                        ...songs,
+                        ...(await getContinuations(results, 'musicShelfContinuation', limit - songs.length, requestContinuationsFunc, parseContinuationsFunc)),
+                    ];
+                }
+            }
+            return songs;
+        }
+        /**
+         * Gets the albums in the user's library.
+         * @param {Object} [options=]
+         * @param {number} [options.limit = 25] Number of albums to return.
+         * @param {lt.Order} [options.order=] Order of albums to return. Allowed values: 'a_to_z', 'z_to_a', 'recently_added'.
+         * @return List of albums.
+         * @example &lt;caption>Each item is in the following format&lt;/caption>
+         * {
+         *   "browseId": "MPREb_G8AiyN7RvFg",
+         *   "title": "Beautiful",
+         *   "type": "Album",
+         *   "thumbnails": [...],
+         *   "artists": [{
+         *     "name": "Project 46",
+         *     "id": "UCXFv36m62USAN5rnVct9B4g"
+         *   }],
+         *     "year": "2015"
+         * }
+         */
+        async getLibraryAlbums(options) {
+            this._checkAuth();
+            const { limit = 25, order } = options ?? {};
+            const body = { browseId: 'FEmusic_liked_albums' };
+            if (order) {
+                body['params'] = prepareOrderParams(order);
+            }
+            const endpoint = 'browse';
+            const response = await this._sendRequest(endpoint, body);
+            return await parseLibraryAlbums(response, async (additionalParams) => await this._sendRequest(endpoint, body, additionalParams), limit);
+        }
+        /**
+         * Gets the artists of the songs in the user's library.
+         * @param {Object} [options=]
+         * @param {number} [options.limit = 25] Number of artists to return.
+         * @param {lt.Order} [options.order=] Order of artists to return.
+         * @return List of artists.
+         * @example &lt;caption>Each item is in the following format&lt;/caption>
+         * {
+         *   "browseId": "UCxEqaQWosMHaTih-tgzDqug",
+         *   "artist": "WildVibes",
+         *   "subscribers": "2.91K",
+         *   "thumbnails": [...]
+         * }
+         */
+        async getLibraryArtists(options) {
+            this._checkAuth();
+            const body = { browseId: 'FEmusic_library_corpus_track_artists' };
+            const { limit = 25, order } = options ?? {};
+            validateOrderParameters(order);
+            const endpoint = 'browse';
+            const response = await this._sendRequest(endpoint, body);
+            return await parseLibraryArtists(response, async (additionalParams) => await this._sendRequest(endpoint, body, additionalParams), limit);
+        }
+        /**
+         * Gets the artists the user has subscribed to.
+         * @param options
+         * @param {number} [options.limit=25] Number of artists to return.
+         * @param {lt.Order} [options.order=]  Order of artists to return. Allowed values: 'a_to_z', 'z_to_a', 'recently_added'.
+         * @return List of artists. Same format as `getLibraryArtists`
+         */
+        async getLibrarySubscriptions(options) {
+            this._checkAuth();
+            const { limit = 25, order } = options ?? {};
+            const body = {
+                browseId: 'FEmusic_library_corpus_artists',
+            };
+            validateOrderParameters(order);
+            if (order) {
+                body['params'] = prepareOrderParams(order);
+            }
+            const endpoint = 'browse';
+            const response = await this._sendRequest(endpoint, body);
+            return parseLibraryArtists(response, async (additionalParams) => await this._sendRequest(endpoint, body, additionalParams), limit);
+        }
+        /**
+         * Gets playlist items for the 'Liked Songs' playlist.
+         * @param {number} [limit=100] How many items to return.
+         * @return List of playlistItem dictionaries. See `getPlaylist`
+         */
+        async getLikedSongs(limit = 100) {
+            //@ts-expect-error: Mix this in @codyduong
+            return await this.getPlaylist('LM', limit);
+        }
+        /**
+         * Gets your play history in reverse chronological order.
+         *
+         * @return List of playlistItems, see `getPlaylist`.
+         *
+         * The additional property ``played`` indicates when the playlistItem was played.
+         *
+         * The additional property ``feedbackToken`` can be used to remove items with `removeHistoryItems`.
+         */
+        async getHistory() {
+            this._checkAuth();
+            const body = { browseId: 'FEmusic_history' };
+            const endpoint = 'browse';
+            const response = await this._sendRequest(endpoint, body);
+            const results = nav(response, [...SINGLE_COLUMN_TAB, ...SECTION_LIST]);
+            let songs = [];
+            for (const content of results) {
+                const data = nav(content, [...MUSIC_SHELF, 'contents'], true);
+                if (!data) {
+                    const error = nav(content, ['musicNotifierShelfRenderer', ...TITLE], true);
+                    throw new Error(error);
+                }
+                const menuEntries = [-1, ...MENU_SERVICE, ...FEEDBACK_TOKEN];
+                const songlist = parsePlaylistItems(data, menuEntries);
+                for (const song of songlist) {
+                    song['played'] = nav(content['musicShelfRenderer'], TITLE_TEXT);
+                }
+                songs = [...songs, ...songlist];
+            }
+            return songs;
+        }
+        /**
+         * Remove an item from the account's history. This method does currently not work with brand accounts.
+         * @param feedbackTokens  Token to identify the item to remove, obtained from `getHistory`.
+         * @return Full response.
+         */
+        async removeHistoryItems(feedbackTokens) {
+            this._checkAuth();
+            const body = { feedbackTokens };
+            const endpoint = 'feedback';
+            const response = await this._sendRequest(endpoint, body);
+            return response;
+        }
+        /**
+         * Rates a song ("thumbs up"/"thumbs down" interactions on YouTube Music).
+         * @param {string} [videoId] Video id.
+         * @param {string} [rating='INDIFFERENT'] One of 'LIKE', 'DISLIKE', 'INDIFFERENT'.
+         * 'INDIFFERENT' removes the playlist/album from the library
+         * @return Full response.
+         */
+        async rateSong(videoId, rating = 'INDIFFERENT') {
+            this._checkAuth();
+            const body = { target: { videoId } };
+            const endpoint = prepareLikeEndpoint(rating);
+            if (!endpoint) {
+                return;
+            }
+            return await this._sendRequest(endpoint, body);
+        }
+        /**
+         * Adds or removes a song from your library depending on the token provided.
+         * @param {string[]} [feedbackTokens] List of feedbackTokens obtained from authenticated requests
+         * to endpoints that return songs (i.e. `get_album`).
+         * @return Full response.
+         */
+        async editSongLibraryStatus(feedbackTokens) {
+            this._checkAuth();
+            const body = { feedbackTokens };
+            const endpoint = 'feedback';
+            return await this._sendRequest(endpoint, body);
+        }
+        /**
+         * Rates a playlist/album ("Add to library"/"Remove from library" interactions on YouTube Music)
+         * You can also dislike a playlist/album, which has an effect on your recommendations
+         * @param {string} [videoId] Playlist id.
+         * @param {string} [rating='INDIFFERENT'] One of 'LIKE', 'DISLIKE', 'INDIFFERENT'.
+         * 'INDIFFERENT' removes the playlist/album from the library.
+         * @return Full response.
+         */
+        async ratePlaylist(playlistId, rating = 'INDIFFERENT') {
+            this._checkAuth();
+            const body = { target: { playlistId } };
+            const endpoint = prepareLikeEndpoint(rating);
+            return endpoint ? await this._sendRequest(endpoint, body) : null;
+        }
+        /**
+         * Subscribe to artists. Adds the artists to your library.
+         * @param channelIds Artist channel ids.
+         * @return Full response.
+         */
+        async subscribeArtists(channelIds) {
+            this._checkAuth();
+            const body = { channelIds };
+            const endpoint = 'subscription/subscribe';
+            return await this._sendRequest(endpoint, body);
+        }
+        /**
+         * Unsubscribe to artists. Removes the artists to your library.
+         * @param channelIds Artist channel ids.
+         * @return Full response.
+         */
+        async unsubscribeArtists(channelIds) {
+            this._checkAuth();
+            const body = { channelIds: channelIds };
+            const endpoint = 'subscription/unsubscribe';
+            return await this._sendRequest(endpoint, body);
+        }
+    };
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<footer>
+    <img class="logo" src="img/toast-ui.png" style="">
+    <div class="footer-text">NHN Entertainment. Frontend Development Lab</div>
+</footer>
+<script>prettyPrint();</script>
+<script src="scripts/jquery.min.js"></script>
+<script src="scripts/tui-doc.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+    <script>
+        var id = '_sub'.replace(/"/g, '_');
+        var selectedApi = document.getElementById(id); // do not use jquery selector
+        var $selectedApi = $(selectedApi);
+
+        $selectedApi.removeClass('hidden');
+        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+        showLnbApi();
+    </script>
+
+</body>
+</html>

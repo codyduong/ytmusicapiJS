@@ -30,6 +30,10 @@ import { findObjectByKey, getContinuations, nav } from '../parsers/utils';
 import type { Artist, Filter, FilterSingular, Scope } from '../types';
 import * as bt from './browsing.types';
 
+/**
+ * @module Browsing
+ */
+
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
   return class BrowsingMixin extends Base {
@@ -565,7 +569,7 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
 
     /**
      * Get information and tracks of an album
-     * @param browseId browseId of the album, for example returned by {class}.search <-- TODO @codyduong
+     * @param browseId browseId of the album, for example returned by {@link YTMusic.search}
      * @returns Object with album and track metadata.
      * @example
      * {

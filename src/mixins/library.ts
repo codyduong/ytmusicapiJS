@@ -33,6 +33,10 @@ import { YTMusicBase } from './.mixin.helper';
 
 import * as lt from './library.types';
 
+/**
+ * @module Library
+ */
+
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const LibraryMixin = <TBase extends YTMusicBase>(Base: TBase) => {
   return class LibraryMixin extends Base {

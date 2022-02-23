@@ -1,0 +1,16 @@
+{
+  "opts": {
+    "template": "node_modules/tui-jsdoc-template",
+    "destination": "./docs/"
+  },
+  "templates": {
+    "default": {
+      "staticFiles": {
+        "include": ["docs-styles"]
+      }
+    },
+    "css": [
+      "footer.css"
+    ]
+  }
+}

@@ -5,17 +5,10 @@ import * as fs from 'fs';
 import * as helpers from './helpers';
 import { Parser } from './parsers/browsing';
 import { setup } from './setup';
-import { BrowsingMixin } from './mixins/browsing';
-import { WatchMixin } from './mixins/watch';
-import { ExploreMixin } from './mixins/explore';
-import { LibraryMixin } from './mixins/library';
-import { PlaylistsMixin } from './mixins/playlists';
-import { UploadsMixin } from './mixins/uploads';
 
 import type { Headers } from './types';
 import axios from 'axios';
 
-// BrowsingMixin, WatchMixin, ExploreMixin, LibraryMixin, PlaylistsMixin, UploadsMixin
 export class _YTMusic {
   #auth: string | null;
   // _agent: https.Agent;
@@ -28,7 +21,7 @@ export class _YTMusic {
   sapisid: any;
 
   /**
-   * Create a new instance to interact with YouTube Music.
+   * This is an internal class, please use {@link YTMusic}
    * @param {string} [auth=]  Provide a string or path to file.
    * Authentication credentials are needed to manage your library.
    * Should be an adjusted version of `headers_auth.json.example` in the project root.
@@ -39,14 +32,11 @@ export class _YTMusic {
    * Otherwise the default account is used. You can retrieve the user ID
    * by going to https://myaccount.google.com/brandaccounts and selecting your brand account.
    * The user ID will be in the URL: https://myaccount.google.com/b/user_id/
-   * @param proxies Optional. Proxy configuration in requests_ format_.
-   *
-   * _requests: https://requests.readthedocs.io/
-   *
-   * _format: https://requests.readthedocs.io/en/master/user/advanced/#proxies
+   * @param proxies Optional. No usage in current API
    * @param {string} [language] Optional. Can be used to change the language of returned data.
    * English will be used by default. Available languages can be checked in
    * the ytmusicapi/locales directory.
+   * @access private
    */
   constructor(
     auth?: string,
@@ -217,10 +207,3 @@ export class _YTMusic {
     return setup(filepath, headers_raw);
   }
 }
-
-const YTMusic = UploadsMixin(
-  PlaylistsMixin(
-    LibraryMixin(ExploreMixin(WatchMixin(BrowsingMixin(_YTMusic))))
-  )
-);
-export default YTMusic;

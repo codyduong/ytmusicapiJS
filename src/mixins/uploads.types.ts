@@ -56,7 +56,7 @@ export type getLibraryUploadAlbumReturn = {
     videoId: string;
     title: string;
     duration: string;
-    duration_seconds: 255;
+    duration_seconds: number;
     artists: null | {
       name: string;
       id: string;

@@ -6,6 +6,10 @@ import { parseWatchPlaylist } from '../parsers/watch';
 
 import * as wt from './watch.types';
 
+/**
+ * @module Watch
+ */
+
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const WatchMixin = <TBase extends YTMusicBase>(Base: TBase) => {
   return class WatchMixin extends Base {

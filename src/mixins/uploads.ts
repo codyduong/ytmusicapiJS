@@ -22,6 +22,10 @@ import * as ut from './uploads.types';
 import utf8 from 'utf8';
 import axios from 'axios';
 
+/**
+ * @module Uploads
+ */
+
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const UploadsMixin = <TBase extends YTMusicBase>(Base: TBase) => {
   return class UploadsMixin extends Base {

@@ -1,0 +1,416 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Source: mixins/playlists.js | Source: mixins/playlists.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
+
+    
+        
+            <link type="text/css" rel="stylesheet" href="footer.css">
+        
+    
+</head>
+<body>
+<nav class="lnb" id="lnb">
+    <div class="logo" style="">
+        
+            <img src="img/toast-ui.png" width="100%" height="100%">
+        
+    </div>
+    <div class="title">
+        <h1><a href="index.html" class="link">Source: mixins/playlists.js</a></h1>
+        
+    </div>
+    <div class="search-container" id="search-container">
+        <input type="text" placeholder="Search">
+        <ul></ul>
+    </div>
+    
+    <div class="lnb-api hidden"><h3>Modules</h3><ul><li><a href="module-Browsing.html">Browsing</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Browsing_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Browsing.html#getAlbum">getAlbum</a></li><li><a href="module-Browsing.html#getAlbumBrowseId">getAlbumBrowseId</a></li><li><a href="module-Browsing.html#getArtist">getArtist</a></li><li><a href="module-Browsing.html#getArtistAlbums">getArtistAlbums</a></li><li><a href="module-Browsing.html#getBaseJSUrl">getBaseJSUrl</a></li><li><a href="module-Browsing.html#getLyrics">getLyrics</a></li><li><a href="module-Browsing.html#getSignatureTimestamp">getSignatureTimestamp</a></li><li><a href="module-Browsing.html#getSong">getSong</a></li><li><a href="module-Browsing.html#getUser">getUser</a></li><li><a href="module-Browsing.html#getUserPlaylists">getUserPlaylists</a></li><li><a href="module-Browsing.html#search">search</a></li></ul></div></li><li><a href="module-Explore.html">Explore</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Explore_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Explore.html#getCharts">getCharts</a></li><li><a href="module-Explore.html#getMoodCategories">getMoodCategories</a></li><li><a href="module-Explore.html#getMoodPlaylists">getMoodPlaylists</a></li></ul></div></li><li><a href="module-Library.html">Library</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Library_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Library.html#editSongLibraryStatus">editSongLibraryStatus</a></li><li><a href="module-Library.html#getHistory">getHistory</a></li><li><a href="module-Library.html#getLibraryAlbums">getLibraryAlbums</a></li><li><a href="module-Library.html#getLibraryArtists">getLibraryArtists</a></li><li><a href="module-Library.html#getLibraryPlaylists">getLibraryPlaylists</a></li><li><a href="module-Library.html#getLibrarySongs">getLibrarySongs</a></li><li><a href="module-Library.html#getLibrarySubscriptions">getLibrarySubscriptions</a></li><li><a href="module-Library.html#getLikedSongs">getLikedSongs</a></li><li><a href="module-Library.html#ratePlaylist">ratePlaylist</a></li><li><a href="module-Library.html#rateSong">rateSong</a></li><li><a href="module-Library.html#removeHistoryItems">removeHistoryItems</a></li><li><a href="module-Library.html#subscribeArtists">subscribeArtists</a></li><li><a href="module-Library.html#unsubscribeArtists">unsubscribeArtists</a></li></ul></div></li><li><a href="module-Playlists.html">Playlists</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Playlists_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Playlists.html#addPlaylistItems">addPlaylistItems</a></li><li><a href="module-Playlists.html#createPlaylist">createPlaylist</a></li><li><a href="module-Playlists.html#deletePlaylist">deletePlaylist</a></li><li><a href="module-Playlists.html#editPlaylist">editPlaylist</a></li><li><a href="module-Playlists.html#getPlaylist">getPlaylist</a></li><li><a href="module-Playlists.html#getPlaylistSuggestions">getPlaylistSuggestions</a></li><li><a href="module-Playlists.html#removePlaylistItems">removePlaylistItems</a></li></ul></div></li><li><a href="module-Uploads.html">Uploads</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Uploads_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Uploads.html#deleteUploadEntity">deleteUploadEntity</a></li><li><a href="module-Uploads.html#getLibraryUploadAlbum">getLibraryUploadAlbum</a></li><li><a href="module-Uploads.html#getLibraryUploadArtist">getLibraryUploadArtist</a></li><li><a href="module-Uploads.html#uploadSong">uploadSong</a></li></ul></div></li><li><a href="module-Watch.html">Watch</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Watch_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Watch.html#getWatchPlaylist">getWatchPlaylist</a></li><li><a href="module-Watch.html#getWatchPlaylistShuffle">getWatchPlaylistShuffle</a></li></ul></div></li></ul></div><div class="lnb-api hidden"><h3>Classes</h3><ul><li><a href="YTMusic.html">YTMusic</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="YTMusic_sub"></div></li></ul></div>
+</nav>
+<div id="resizer"></div>
+
+<div class="main" id="main">
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { htmlToText, sumTotalDuration, toInt } from '../helpers';
+import { DESCRIPTION, MUSIC_SHELF, NAVIGATION_BROWSE_ID, RELOAD_CONTINUATION, SECTION_LIST_ITEM, SINGLE_COLUMN_TAB, SUBTITLE2, SUBTITLE3, THUMBNAIL_CROPPED, TITLE_TEXT, } from '../parsers';
+import { parsePlaylistItems } from '../parsers/playlists';
+import { getContinuations, getContinuationString, nav, validatePlaylistId, } from '../parsers/utils';
+/**
+ * @module Playlists
+ */
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export const PlaylistsMixin = (Base) => {
+    return class PlaylistsMixin extends Base {
+        /**
+         * Return a list of playlist items.
+         * @param {string} [playlistId ] Playlist id.
+         * @param {number} [limit=100] How many songs to return.
+         * @example &lt;caption>Each item is in the following format&lt;/caption>
+         * {
+         *   "id": "PLQwVIlKxHM6qv-o99iX9R85og7IzF9YS_",
+         *   "privacy": "PUBLIC",
+         *   "title": "New EDM This Week 03/13/2020",
+         *   "thumbnails": [...]
+         *   "description": "Weekly r/EDM new release roundup. Created with github.com/sigma67/spotifyplaylist_to_gmusic",
+         *   "author": "sigmatics",
+         *   "year": "2020",
+         *   "duration": "6+ hours",
+         *   "duration_seconds": 52651,
+         *   "trackCount": 237,
+         *   "tracks": [
+         *     {
+         *       "videoId": "bjGppZKiuFE",
+         *       "title": "Lost",
+         *       "artists": [
+         *         {
+         *           "name": "Guest Who",
+         *           "id": "UCkgCRdnnqWnUeIH7EIc3dBg"
+         *         },
+         *         {
+         *           "name": "Kate Wild",
+         *           "id": "UCwR2l3JfJbvB6aq0RnnJfWg"
+         *         }
+         *       ],
+         *       "album": {
+         *       "name": "Lost",
+         *       "id": "MPREb_PxmzvDuqOnC"
+         *     },
+         *     "duration": "2:58",
+         *     "likeStatus": "INDIFFERENT",
+         *     "thumbnails": [...],
+         *     "isAvailable": True,
+         *     "isExplicit": False,
+         *     "feedbackTokens": {
+         *     "add": "AB9zfpJxtvrU...",
+         *     "remove": "AB9zfpKTyZ..."
+         *     }
+         *   ]
+         * }
+         */
+        async getPlaylist(playlistId, limit = 100) {
+            const browseId = !playlistId.startsWith('VL')
+                ? `VL${playlistId}`
+                : playlistId;
+            const body = { browseId: browseId };
+            const endpoint = 'browse';
+            const response = await this._sendRequest(endpoint, body);
+            const results = nav(response, [
+                ...SINGLE_COLUMN_TAB,
+                ...SECTION_LIST_ITEM,
+                'musicPlaylistShelfRenderer',
+            ]);
+            const playlist = { id: results['playlistId'] };
+            const ownPlaylist = 'musicEditablePlaylistDetailHeaderRenderer' in response['header'];
+            let header;
+            if (!ownPlaylist) {
+                header = response['header']['musicDetailHeaderRenderer'];
+                playlist['privacy'] = 'PUBLIC';
+            }
+            else {
+                header =
+                    response['header']['musicEditablePlaylistDetailHeaderRenderer'];
+                playlist['privacy'] =
+                    header['editHeader']['musicPlaylistEditHeaderRenderer']['privacy'];
+                header = header['header']['musicDetailHeaderRenderer'];
+            }
+            playlist['title'] = nav(header, TITLE_TEXT);
+            playlist['thumbnails'] = nav(header, THUMBNAIL_CROPPED);
+            playlist['description'] = nav(header, DESCRIPTION, true);
+            const runCount = header['subtitle']['runs'].length;
+            if (runCount > 1) {
+                playlist['author'] = {
+                    name: nav(header, SUBTITLE2),
+                    id: nav(header, ['subtitle', 'runs', 2, ...NAVIGATION_BROWSE_ID], true),
+                };
+                if (runCount == 5) {
+                    playlist['year'] = nav(header, SUBTITLE3);
+                }
+            }
+            const songCount = toInt('' //@codyduong todo
+            );
+            if (header['secondSubtitle']['runs'].length > 1) {
+                playlist['duration'] = header['secondSubtitle']['runs'][2]['text'];
+            }
+            playlist['trackCount'] = songCount;
+            playlist['suggestions_token'] = nav(response, [
+                ...SINGLE_COLUMN_TAB,
+                'sectionListRenderer',
+                'contents',
+                1,
+                ...MUSIC_SHELF,
+                ...RELOAD_CONTINUATION,
+                true,
+            ]);
+            playlist['tracks'] = [];
+            if (songCount > 0) {
+                playlist['tracks'] = [
+                    ...playlist['tracks'],
+                    ...parsePlaylistItems(results['contents']),
+                ];
+                const songsToGet = Math.min(limit, songCount);
+                if ('continuations' in results) {
+                    const requestFunc = async (additionalParams) => await this._sendRequest(endpoint, body, additionalParams);
+                    const parseFunc = (contents) => parsePlaylistItems(contents);
+                    playlist['tracks'] = [
+                        ...playlist['tracks'],
+                        ...(await getContinuations(results, 'musicPlaylistShelfContinuation', songsToGet - playlist['tracks'].length, requestFunc, parseFunc)),
+                    ];
+                }
+            }
+            playlist['duration_seconds'] = sumTotalDuration(playlist);
+            return playlist;
+        }
+        /**
+         * Gets suggested tracks to add to a playlist. Suggestions are offered for playlists with less than 100 tracks
+         * @param suggestionsToken Token returned by `getPlaylist` or this function
+         * @returns Object containing suggested `tracks` and a `refresh_token` to get another set of suggestions.
+         * For data format of tracks, check `getPlaylist`
+         */
+        async getPlaylistSuggestions(suggestionsToken) {
+            if (!suggestionsToken) {
+                throw new Error('Suggestions token is undefined.\nPlease ensure the playlist is small enough to receive suggestions.');
+            }
+            const endpoint = 'browse';
+            const additionalParams = getContinuationString(suggestionsToken);
+            const response = this._sendRequest(endpoint, {}, additionalParams);
+            const results = nav(response, [
+                'continuationContents',
+                'musicShelfContinuation',
+            ]);
+            const refreshToken = nav(results, RELOAD_CONTINUATION);
+            const suggestions = parsePlaylistItems(results['contents']);
+            return { tracks: suggestions, refresh_token: refreshToken };
+        }
+        /**
+         * Creates a new empty playlist and returns its id.
+         * @param title Playlist title.
+         * @param description Playlist description.
+         * @param privacyStatus Playlists can be 'PUBLIC', 'PRIVATE', or 'UNLISTED'. Default: 'PRIVATE'.
+         * @param options
+         * @param {string[]} [options.videoIds] IDs of songs to create the playlist with.
+         * @param {string} [options.sourcePlaylist] Another playlist whose songs should be added to the new playlist.
+         * @returns ID of the YouTube playlist or full response if there was an error.
+         */
+        async createPlaylist(title, description, privacyStatus, options) {
+            this._checkAuth();
+            const { videoIds, sourcePlaylist } = options;
+            const body = {
+                title: title,
+                description: htmlToText(description),
+                privacyStatus: privacyStatus,
+            };
+            if (videoIds) {
+                body['videoIds'] = videoIds;
+            }
+            if (sourcePlaylist) {
+                {
+                    body['sourcePlaylistId'] = sourcePlaylist;
+                }
+            }
+            const endpoint = 'playlist/create';
+            const response = await this._sendRequest(endpoint, body);
+            return 'playlistId' in response ? response['playlistId'] : response;
+        }
+        /**
+         * Edit title, description or privacyStatus of a playlist.
+         * You may also move an item within a playlist or append another playlist to this playlist.
+         * @param playlistId Playlist id.
+         * @param options
+         * @param {string} [options.title=] New title for the playlist.
+         * @param {string} [options.description=] New description for the playlist.
+         * @param {pt.PrivacyStatu} [options.privacyStatus=] New privacy status for the playlist.
+         * @param {string} [options.moveItem=] Move one item before another. Items are specified by setVideoId, see `getPlaylist`.
+         * @param {string} [options.addPlaylistId=] Id of another playlist to add to this playlist
+         * @return Status String or full response
+         */
+        async editPlaylist(playlistId, options) {
+            this._checkAuth();
+            const { title, description, privacyStatus, moveItem, addPlaylistId } = options;
+            const body = {
+                playlistId: validatePlaylistId(playlistId),
+            };
+            const actions = [];
+            if (title) {
+                {
+                    actions.push({
+                        action: 'ACTION_SET_PLAYLIST_NAME',
+                        playlistName: title,
+                    });
+                }
+            }
+            if (description) {
+                actions.push({
+                    action: 'ACTION_SET_PLAYLIST_DESCRIPTION',
+                    playlistDescription: description,
+                });
+            }
+            if (privacyStatus) {
+                actions.push({
+                    action: 'ACTION_SET_PLAYLIST_PRIVACY',
+                    playlistPrivacy: privacyStatus,
+                });
+            }
+            if (moveItem) {
+                actions.push({
+                    action: 'ACTION_MOVE_VIDEO_BEFORE',
+                    setVideoId: moveItem[0],
+                    movedSetVideoIdSuccessor: moveItem[1],
+                });
+            }
+            if (addPlaylistId) {
+                actions.push({
+                    action: 'ACTION_ADD_PLAYLIST',
+                    addedFullListId: addPlaylistId,
+                });
+            }
+            body['actions'] = actions;
+            const endpoint = 'browse/edit_playlist';
+            const response = await this._sendRequest(endpoint, body);
+            return 'status' in response ? response['status'] : response;
+        }
+        /**
+         * Delete a playlist.
+         * @param {string} [playlistId] Playlist id.
+         * @returns Status String or full response.
+         */
+        async deletePlaylist(playlistId) {
+            this._checkAuth();
+            const body = { playlistId: validatePlaylistId(playlistId) };
+            const endpoint = 'playlist/delete';
+            const response = await this._sendRequest(endpoint, body);
+            return 'status' in response ? response['status'] : response;
+        }
+        /**
+         * Add songs to an existing playlist
+         * @param playlistId Playlist id.
+         * @param {string[]} [options.videoIds] IDs of songs to create the playlist with.
+         * @param {string} [options.sourcePlaylist] Another playlist whose songs should be added to the new playlist.
+         * @param {boolean} [options.duplicates=false]  If true, duplicates will be added. If false, an error will be returned if there are duplicates (no items are added to the playlist)
+         * @returns Status String and an object containing the new setVideoId for each videoId or full response.
+         */
+        async addPlaylistItems(playlistId, options) {
+            this._checkAuth();
+            const { videoIds, sourcePlaylist, duplicates } = options;
+            const body = {
+                playlistId: validatePlaylistId(playlistId),
+                actions: [],
+            };
+            if (!videoIds &amp;&amp; !sourcePlaylist) {
+                throw new Error('You must provide either videoIds or a source_playlist to add to the playlist');
+            }
+            if (videoIds) {
+                for (const videoId of videoIds) {
+                    const action = {
+                        action: 'ACTION_ADD_VIDEO',
+                        addedVideoId: videoId,
+                    };
+                    if (duplicates) {
+                        action['dedupeOption'] = 'DEDUPE_OPTION_SKIP';
+                    }
+                    body['actions'].push(action);
+                }
+            }
+            if (sourcePlaylist) {
+                body['actions'].append({
+                    action: 'ACTION_ADD_PLAYLIST',
+                    addedFullListId: sourcePlaylist,
+                });
+                // add an empty ACTION_ADD_VIDEO because otherwise
+                // YTM doesn't return the dict that maps videoIds to their new setVideoIds
+                if (!videoIds) {
+                    body['actions'].append({
+                        action: 'ACTION_ADD_VIDEO',
+                        addedVideoId: null,
+                    });
+                }
+            }
+            const endpoint = 'browse/edit_playlist';
+            const response = await this._sendRequest(endpoint, body);
+            if ('status' in response &amp;&amp; 'SUCCEEDED' in response['status']) {
+                const resultArray = [
+                    (response['playlistEditResults'] ?? []).map((resultData) => resultData['playlistEditVideoAddedResultData']),
+                ];
+                return { status: response['status'], playlistEditResults: resultArray };
+            }
+            else {
+                return response;
+            }
+        }
+        /**
+         * Remove songs from an existing playlist.
+         * @param playlistId: Playlist id.
+         * @param videos: List of PlaylistItems, see `getPlaylist`.
+         *
+         */
+        async removePlaylistItems(playlistId, videos) {
+            this._checkAuth();
+            videos = videos.filter((x) => 'videoId' in x &amp;&amp; 'setVideoId' in x);
+            if (videos.length == 0) {
+                throw new Error('Cannot remove songs, because setVideoId is missing. Do you own this playlist?');
+            }
+            const body = {
+                playlistId: validatePlaylistId(playlistId),
+                actions: [],
+            };
+            for (const video of videos) {
+                body['actions'].push({
+                    setVideoId: video['setVideoId'],
+                    removedVideoId: video['videoId'],
+                    action: 'ACTION_REMOVE_VIDEO',
+                });
+            }
+            const endpoint = 'browse/edit_playlist';
+            const response = await this._sendRequest(endpoint, body);
+            return 'status' in response ? response['status'] : response;
+        }
+    };
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<footer>
+    <img class="logo" src="img/toast-ui.png" style="">
+    <div class="footer-text">NHN Entertainment. Frontend Development Lab</div>
+</footer>
+<script>prettyPrint();</script>
+<script src="scripts/jquery.min.js"></script>
+<script src="scripts/tui-doc.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+    <script>
+        var id = '_sub'.replace(/"/g, '_');
+        var selectedApi = document.getElementById(id); // do not use jquery selector
+        var $selectedApi = $(selectedApi);
+
+        $selectedApi.removeClass('hidden');
+        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+        showLnbApi();
+    </script>
+
+</body>
+</html>
