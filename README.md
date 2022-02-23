@@ -77,6 +77,49 @@ const ytm = new YTMusic()
 
 const results = await yt.search('Rickroll')
 ```
+results
+```hjson
+[
+  {
+    category: 'Top result',
+    resultType: 'video',
+    title: 'Never Gonna Give You Up',
+    views: null,
+    videoId: 'dQw4w9WgXcQ',
+    duration: null,
+    year: null,
+    artists: [ [Object], [Object] ],
+    thumbnails: [ [Object] ]
+  },
+  {
+    category: 'Songs',
+    resultType: 'song',
+    title: 'Never Gonna Give You Up',
+    album: null,
+    feedbackTokens: { add: null, remove: null },
+    videoId: 'lYBUbBu4W08',
+    duration: null,
+    year: null,
+    artists: [ [Object], [Object] ],
+    isExplicit: false,
+    thumbnails: [ [Object], [Object] ]
+  },
+  {
+    category: 'Songs',
+    resultType: 'song',
+    title: 'Rickroll',
+    album: null,
+    feedbackTokens: { add: null, remove: null },
+    videoId: 'oBKeQItWbnA',
+    duration: null,
+    year: null,
+    artists: [ [Object], [Object], [Object] ],
+    isExplicit: false,
+    thumbnails: [ [Object], [Object] ]
+  },
+  ...
+]
+```
 
 [https://codyduong.github.io/ytmusicapiJS/YTMusic.html](Documentation)
 
