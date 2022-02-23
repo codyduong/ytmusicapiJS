@@ -69,7 +69,16 @@ More comprehensive list and explanation [here in the original repo](https://gith
 | ------------- | ------------- |
 | `npm install @codyduong/ytmusicapi`  | `yarn add @codyduong/ytmusicapi` |
 
+Quick Usage Snippet
+```ts
+import YTMusic from '@codyduong/ytmusicapi';
 
+const ytm = new YTMusic()
+
+const results = await yt.search('Rickroll')
+```
+
+[https://codyduong.github.io/ytmusicapiJS/YTMusic.html](Documentation)
 
 See the [Documentation for the Python 3 API](https://ytmusicapi.readthedocs.io/en/latest/usage.html) for reference.
 
