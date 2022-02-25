@@ -190,20 +190,15 @@ export class _YTMusic {
     return this.#auth;
   }
 
-  // @classmethod
-  static setup(
-    // cls,
-    filepath: string,
-    headers_raw: string
-  ): string {
-    /**
-      Requests browser headers from the user via command line
-      and returns a string that can be passed to YTMusic()
-      :param filepath: Optional filepath to store headers to.
-      :param headers_raw: Optional request headers copied from browser.
-          Otherwise requested from terminal
-      :return: configuration headers string
-      */
-    return setup(filepath, headers_raw);
+  /**
+   * Requests browser headers from the user via command line
+   * and returns a string that can be passed to YTMusic()
+   */
+  static setup(options: { filepath?: string; headersRaw: string }): string;
+  static setup(options: { filepath: string; headersRaw?: string }): string;
+  static setup(options: { filepath: string; headersRaw: string }): string {
+    const { filepath, headersRaw } = options;
+
+    return setup(filepath, headersRaw);
   }
 }
