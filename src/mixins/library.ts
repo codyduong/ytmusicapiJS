@@ -29,16 +29,21 @@ import {
   resendRequestUntilParsedResponseIsValid,
   getValidatedContinuations,
 } from '../parsers/utils';
-import { YTMusicBase } from './.mixin.helper';
+import { GConstructor, Mixin } from './.mixin.helper';
+import { PlaylistsMixin } from './playlists';
 
 import * as lt from './library.types';
+
+export type LibraryMixin = Mixin<typeof LibraryMixin>;
 
 /**
  * @module Library
  */
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const LibraryMixin = <TBase extends YTMusicBase>(Base: TBase) => {
+export const LibraryMixin = <TBase extends GConstructor<PlaylistsMixin>>(
+  Base: TBase
+) => {
   return class LibraryMixin extends Base {
     /**
      * Retrieves the playlists in the user's library.
@@ -281,7 +286,6 @@ export const LibraryMixin = <TBase extends YTMusicBase>(Base: TBase) => {
      * @return List of playlistItem dictionaries. See `getPlaylist`
      */
     async getLikedSongs(limit = 100): Promise<Record<string, any>> {
-      //@ts-expect-error: Mix this in @codyduong
       return await this.getPlaylist('LM', limit);
     }
 

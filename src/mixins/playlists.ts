@@ -18,16 +18,21 @@ import {
   nav,
   validatePlaylistId,
 } from '../parsers/utils';
-import { YTMusicBase } from './.mixin.helper';
+import { GConstructor, Mixin } from './.mixin.helper';
+import { ExploreMixin } from './explore';
 
 import * as pt from './playlists.types';
+
+export type PlaylistsMixin = Mixin<typeof PlaylistsMixin>;
 
 /**
  * @module Playlists
  */
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const PlaylistsMixin = <TBase extends YTMusicBase>(Base: TBase) => {
+export const PlaylistsMixin = <TBase extends GConstructor<ExploreMixin>>(
+  Base: TBase
+) => {
   return class PlaylistsMixin extends Base {
     /**
      * Return a list of playlist items.

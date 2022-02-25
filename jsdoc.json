@@ -1,16 +1,14 @@
 {
   "opts": {
-    "template": "node_modules/tui-jsdoc-template",
-    "destination": "./docs/"
+    "template": "node_modules/clean-jsdoc-theme",
+    "destination": "./docs/",
+    "readme": "README.md",
+    "theme_opts": {
+      "theme": "dark"
+    }
   },
   "templates": {
-    "default": {
-      "staticFiles": {
-        "include": ["docs-styles"]
-      }
-    },
-    "css": [
-      "footer.css"
-    ]
+    "cleverLinks": true,
+    "monospaceLinks": true
   }
 }

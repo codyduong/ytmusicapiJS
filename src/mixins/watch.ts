@@ -1,17 +1,22 @@
-import { YTMusicBase } from './.mixin.helper';
+/**
+ * @module Watch
+ */
+
+import { GConstructor, Mixin } from './.mixin.helper';
 
 import { NAVIGATION_PLAYLIST_ID, TAB_CONTENT } from '../parsers';
 import { getContinuations, nav, validatePlaylistId } from '../parsers/utils';
 import { parseWatchPlaylist } from '../parsers/watch';
 
 import * as wt from './watch.types';
+import { BrowsingMixin } from './browsing';
 
-/**
- * @module Watch
- */
+export type WatchMixin = Mixin<typeof WatchMixin>;
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const WatchMixin = <TBase extends YTMusicBase>(Base: TBase) => {
+export const WatchMixin = <TBase extends GConstructor<BrowsingMixin>>(
+  Base: TBase
+) => {
   return class WatchMixin extends Base {
     /**
      * Get a watch list of tracks. This watch playlist appears when you press

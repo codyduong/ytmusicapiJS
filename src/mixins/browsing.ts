@@ -1,7 +1,7 @@
 import * as utf8 from 'utf8';
 
 import { YTM_DOMAIN } from '../constants';
-import type { YTMusicBase } from './.mixin.helper';
+import type { GConstructor, Mixin } from './.mixin.helper';
 
 import {
   DESCRIPTION,
@@ -29,22 +29,27 @@ import { findObjectByKey, getContinuations, nav } from '../parsers/utils';
 
 import type { Artist, Filter, FilterSingular, Scope } from '../types';
 import * as bt from './browsing.types';
+import { _YTMusic } from '../ytmusic';
+
+export type BrowsingMixin = Mixin<typeof BrowsingMixin>;
 
 /**
  * @module Browsing
  */
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
-  return class BrowsingMixin extends Base {
+export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
+  Base: TBase
+) => {
+  return class Browsing extends Base {
     /**
      * Search YouTube music.
      * Returns results within the provided category.
      * @param {string} query Query string, i.e. 'Oasis Wonderwall'
      * @param {options} [options=]
-     * @param {string} [options.filter=] Filter for item types. Allowed values: ``songs``, ``videos``, ``albums``, ``artists``, ``playlists``, ``community_playlists``, ``featured_playlists``, ``uploads``.
+     * @param {'songs'|'videos'|'albums'|'artists'|'playlists'|'community_playlists'|'featured_playlists'} [options.filter=] Filter for item types.
      *    @default: Default search, including all types of items.
-     * @param {string} [options.scope=] Search scope. Allowed values: ``library``, ``uploads``.
+     * @param {'libary'|'uploads'} [options.scope=] Search scope.
      *    @default: Search the public YouTube Music catalogue.
      * @param {number} [options.scope=20] Number of search results to return
      * @param {boolean} [ignoreSpelling=false] Whether to ignore YTM spelling suggestions.
@@ -55,8 +60,8 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
      * resultType specifies the type of item (important for default search).
      * albums, artists and playlists additionally contain a browseId, corresponding to
      * albumId, channelId and playlistId (browseId=``VL``+playlistId)
-     * @example list for default search with one result per resultType for brevity. Normally
-     * there are 3 results per resultType and an additional ``thumbnails`` key::
+     * @example <caption> list for default search with one result per resultType for brevity. Normally
+     * there are 3 results per resultType and an additional ``thumbnails`` key. </caption>
      * [
      *   {
      *     "category": "Top result",
@@ -279,8 +284,8 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
      * Get information about an artist and their top releases (songs,
      * albums, singles, videos, and related artists). The top lists
      * contain pointers for getting the full list of releases. For
-     * songs/videos, pass the browseId to `getPlaylist`.
-     * For albums/singles, pass browseId and params to `getArtistAlbums`.
+     * songs/videos, pass the browseId to {@link https://codyduong.github.io/ytmusicapiJS/module-Playlists.html#getPlaylist | getPlaylist}.
+     * For albums/singles, pass browseId and params to {@link https://codyduong.github.io/ytmusicapiJS/module-Browsing.html#getArtistAlbums | getArtistAlbums}.
      *
      * @param {string} channelId channel id of the artist
      * @return Object with requested information.
@@ -442,8 +447,8 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
     /**
      * Get the full list of an artist's albums or singles
      * @param {string} channelId channel Id of the artist
-     * @param {string} params params obtained by `getArtist`
-     * @returns List of albums in the format of `getLibraryAlbums`, except artists key is missing.
+     * @param {string} params params obtained by {@link https://codyduong.github.io/ytmusicapiJS/module-Browsing.html#getArtist | getArtist}
+     * @returns List of albums in the format of {@link https://codyduong.github.io/ytmusicapiJS/module-Library.html#getLibraryAlbums | getLibraryAlbums}, except artists key is missing.
      */
     async getArtistAlbums(
       channelId: string,
@@ -569,7 +574,7 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
 
     /**
      * Get information and tracks of an album
-     * @param browseId browseId of the album, for example returned by {@link YTMusic.search}
+     * @param {string} browseId of the album, for example returned by {@link search}
      * @returns Object with album and track metadata.
      * @example
      * {
@@ -590,12 +595,12 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
      *     {
      *       "videoId": "iKLU7z_xdYQ",
      *       "title": "Walk On Water (feat. Beyoncé)",
-     *       "artists": None,
-     *       "album": None,
+     *       "artists": null,
+     *       "album": null,
      *       "likeStatus": "INDIFFERENT",
-     *       "thumbnails": None,
-     *       "isAvailable": True,
-     *       "isExplicit": True,
+     *       "thumbnails": null,
+     *       "isAvailable": true,
+     *       "isExplicit": true,
      *       "duration": "5:03",
      *       "feedbackTokens":
      *       {
@@ -624,8 +629,8 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
 
     /**
      * Returns metadata and streaming information about a song or video.
-     * @param videoId {string} Video id
-     * @param signatureTimestamp {number} Provide the current YouTube signatureTimestamp.
+     * @param {string} [videoId] Video id
+     * @param {number} [signatureTimestamp] Provide the current YouTube signatureTimestamp.
           If not provided a default value will be used, which might result in invalid streaming URLs
      * @return Object with song metadata
      * @example
@@ -858,8 +863,8 @@ export const BrowsingMixin = <TBase extends YTMusicBase>(Base: TBase) => {
     }
 
     /**
-     * Fetch the `base.js` script from YouTube Music and parse out the `signatureTimestamp` for use with `getSong`.
-     * @param url Optional. Provide the URL of the `base.js` script. If this isn't specified a call will be made to `getBaseJSUrl`.
+     * Fetch the `base.js` script from YouTube Music and parse out the `signatureTimestamp` for use with {@link https://codyduong.github.io/ytmusicapiJS/module-Browsing.html#getSong | getSong}.
+     * @param url Optional. Provide the URL of the `base.js` script. If this isn't specified a call will be made to {@link https://codyduong.github.io/ytmusicapiJS/module-Browsing.html#getBaseJSUrl | getBaseJSUrl}.
      * @returns `signatureTimestamp` string
      */
     async getSignatureTimestamp(url?: string): Promise<number | null> {

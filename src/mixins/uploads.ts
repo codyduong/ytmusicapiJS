@@ -1,3 +1,7 @@
+/**
+ * @module Uploads
+ */
+
 import {
   prepareOrderParams,
   sumTotalDuration,
@@ -14,20 +18,21 @@ import { parseAlbumHeader } from '../parsers/albums';
 import { parseLibraryArtists, parseLibraryAlbums } from '../parsers/library';
 import { parseUploadedItems } from '../parsers/uploads';
 import { findObjectByKey, getContinuations, nav } from '../parsers/utils';
-import { YTMusicBase } from './.mixin.helper';
+import { GConstructor, Mixin } from './.mixin.helper';
 import { existsSync, readFileSync, statSync } from 'fs';
 import { extname, basename } from 'path';
 
 import * as ut from './uploads.types';
 import utf8 from 'utf8';
 import axios from 'axios';
+import { LibraryMixin } from './library';
 
-/**
- * @module Uploads
- */
+export type UploadsMixin = Mixin<typeof UploadsMixin>;
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const UploadsMixin = <TBase extends YTMusicBase>(Base: TBase) => {
+export const UploadsMixin = <TBase extends GConstructor<LibraryMixin>>(
+  Base: TBase
+) => {
   return class UploadsMixin extends Base {
     /**
      * Returns a list of uploaded songs

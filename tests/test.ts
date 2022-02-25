@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import ConfigParser from 'configparser';
 import path from 'path';
-import YTMusic from '../src/ytmusic';
+import YTMusic from '../src/index';
 
 const sampleAlbum = 'MPREb_4pL8gzRtw1p'; // Eminem - Revival
 const sampleVideo = 'ZrOKjDZOtkA'; // Oasis - Wonderwall (Remastered)

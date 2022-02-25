@@ -78,7 +78,7 @@ const ytm = new YTMusic()
 const results = await yt.search('Rickroll')
 ```
 
-[https://codyduong.github.io/ytmusicapiJS/YTMusic.html](Documentation)
+[Documentation](https://codyduong.github.io/ytmusicapiJS/)
 
 See the [Documentation for the Python 3 API](https://ytmusicapi.readthedocs.io/en/latest/usage.html) for reference.
 

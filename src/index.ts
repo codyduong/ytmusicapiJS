@@ -27,8 +27,8 @@ import { UploadsMixin } from './mixins/uploads';
  * the ytmusicapi/locales directory.
  */
 const YTMusic = UploadsMixin(
-  PlaylistsMixin(
-    LibraryMixin(ExploreMixin(WatchMixin(BrowsingMixin(_YTMusic))))
+  LibraryMixin(
+    PlaylistsMixin(ExploreMixin(WatchMixin(BrowsingMixin(_YTMusic))))
   )
 );
 

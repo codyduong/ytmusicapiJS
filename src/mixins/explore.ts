@@ -27,16 +27,21 @@ import {
   parseChartTrending,
 } from '../parsers/explore';
 import { nav } from '../parsers/utils';
-import { YTMusicBase } from './.mixin.helper';
+import { GConstructor, Mixin } from './.mixin.helper';
 
 import * as et from './explore.types';
+import { WatchMixin } from './watch';
+
+export type ExploreMixin = Mixin<typeof ExploreMixin>;
 
 /**
  * @module Explore
  */
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const ExploreMixin = <TBase extends YTMusicBase>(Base: TBase) => {
+export const ExploreMixin = <TBase extends GConstructor<WatchMixin>>(
+  Base: TBase
+) => {
   return class ExploreMixin extends Base {
     /**
      * Fetch "Moods & Genres" categories from YouTube Music.
