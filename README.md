@@ -75,7 +75,7 @@ import YTMusic from '@codyduong/ytmusicapi';
 
 const ytm = new YTMusic()
 
-const results = await yt.search('Rickroll')
+const results = await ytm.search('Rickroll')
 ```
 results
 ```hjson
