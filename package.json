@@ -6,6 +6,7 @@
   "types": "dist/ytmusic.d.ts",
   "scripts": {
     "test": "yarn jest",
+    "test:pylib": "yarn jest pylib",
     "test:code": "yarn lint && yarn tsc --noEmit",
     "docs": "yarn tsc && yarn jsdoc dist/ -r -c ./jsdoc.json --verbose",
     "ci": "yarn install --frozen-lockfile",

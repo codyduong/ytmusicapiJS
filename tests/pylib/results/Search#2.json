@@ -1,0 +1,94 @@
+[
+  {
+    "category": "Albums",
+    "resultType": "album",
+    "title": "Wolfenstein II: The New Colossus (Original Game Soundtrack)",
+    "type": "Album",
+    "duration": null,
+    "year": "2018",
+    "artists": [
+      {
+        "name": "Various Artists",
+        "id": null
+      }
+    ],
+    "browseId": "MPREb_J7gmXvanSoZ",
+    "isExplicit": false,
+    "thumbnails": [
+      {
+        "url": "https://lh3.googleusercontent.com/Xd6KQf91b-7_xAsSl3O7sBjCIE0ZGANXNCr6X9-CQWfFVPOGpIOnTRnGBUa2biJNUtX-jTkWTvZ2Zk4=w60-h60-l90-rj",
+        "width": 60,
+        "height": 60
+      },
+      {
+        "url": "https://lh3.googleusercontent.com/Xd6KQf91b-7_xAsSl3O7sBjCIE0ZGANXNCr6X9-CQWfFVPOGpIOnTRnGBUa2biJNUtX-jTkWTvZ2Zk4=w120-h120-l90-rj",
+        "width": 120,
+        "height": 120
+      },
+      {
+        "url": "https://lh3.googleusercontent.com/Xd6KQf91b-7_xAsSl3O7sBjCIE0ZGANXNCr6X9-CQWfFVPOGpIOnTRnGBUa2biJNUtX-jTkWTvZ2Zk4=w226-h226-l90-rj",
+        "width": 226,
+        "height": 226
+      },
+      {
+        "url": "https://lh3.googleusercontent.com/Xd6KQf91b-7_xAsSl3O7sBjCIE0ZGANXNCr6X9-CQWfFVPOGpIOnTRnGBUa2biJNUtX-jTkWTvZ2Zk4=w544-h544-l90-rj",
+        "width": 544,
+        "height": 544
+      }
+    ]
+  },
+  {
+    "category": "Community playlists",
+    "resultType": "album",
+    "title": "Favorite Games",
+    "type": "TheDark Hood",
+    "duration": null,
+    "year": null,
+    "artists": [],
+    "views": "45",
+    "browseId": "VLPLGA8pRExhFITTWmXVr6kdl7gLcFxq1fHW",
+    "isExplicit": false,
+    "thumbnails": [
+      {
+        "url": "https://lh3.googleusercontent.com/7BOGV364tPQXmNd-VQaISrzYqfRBr8XeA12ruQdksAjXmfnq0viH5rspepN-KzRvUJVDllPPrcAzhtg=w60-h60-l90-rj",
+        "width": 60,
+        "height": 60
+      },
+      {
+        "url": "https://lh3.googleusercontent.com/7BOGV364tPQXmNd-VQaISrzYqfRBr8XeA12ruQdksAjXmfnq0viH5rspepN-KzRvUJVDllPPrcAzhtg=w120-h120-l90-rj",
+        "width": 120,
+        "height": 120
+      },
+      {
+        "url": "https://lh3.googleusercontent.com/7BOGV364tPQXmNd-VQaISrzYqfRBr8XeA12ruQdksAjXmfnq0viH5rspepN-KzRvUJVDllPPrcAzhtg=w226-h226-l90-rj",
+        "width": 226,
+        "height": 226
+      },
+      {
+        "url": "https://lh3.googleusercontent.com/7BOGV364tPQXmNd-VQaISrzYqfRBr8XeA12ruQdksAjXmfnq0viH5rspepN-KzRvUJVDllPPrcAzhtg=w544-h544-l90-rj",
+        "width": 544,
+        "height": 544
+      }
+    ]
+  },
+  {
+    "category": "Artists",
+    "resultType": "artist",
+    "artist": "Martin Stig Andersen",
+    "shuffleId": "RDAON7tIfXcgZ1cm2sZO1SFZkg",
+    "radioId": "RDEMN7tIfXcgZ1cm2sZO1SFZkg",
+    "browseId": "UC0VWLHnueM9L1rjly3cXZzg",
+    "thumbnails": [
+      {
+        "url": "https://lh3.googleusercontent.com/z8f_sld6pyMiV-1P_0kFnRMeAhaU19i11vNIttbE1zbMRxceaU6pQHpD5n8YdVIqm8dHI9KBwTRBdE0P=w60-h60-l90-rj",
+        "width": 60,
+        "height": 60
+      },
+      {
+        "url": "https://lh3.googleusercontent.com/z8f_sld6pyMiV-1P_0kFnRMeAhaU19i11vNIttbE1zbMRxceaU6pQHpD5n8YdVIqm8dHI9KBwTRBdE0P=w120-h120-l90-rj",
+        "width": 120,
+        "height": 120
+      }
+    ]
+  }
+]

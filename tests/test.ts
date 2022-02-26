@@ -72,7 +72,7 @@ describe('Browsing', () => {
       expect(results.length).toBeGreaterThan(5);
     });
     test('#9', async () => {
-      const results = await ytmusic.search('classical rock', {
+      const results = await ytmusic.search('clasic rock', {
         filter: 'community_playlists',
         ignoreSpelling: true,
       });
