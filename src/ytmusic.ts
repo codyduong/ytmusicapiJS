@@ -9,6 +9,14 @@ import { setup } from './setup';
 import type { Headers } from './types';
 import axios from 'axios';
 
+type _YTMusicConstructorOptions = {
+  auth?: string;
+  user?: string;
+  // https_agent?: boolean | https.Agent,
+  proxies?: Record<string, any>;
+  language?: string;
+};
+
 export class _YTMusic {
   #auth: string | null;
   // _agent: https.Agent;
@@ -22,29 +30,31 @@ export class _YTMusic {
 
   /**
    * This is an internal class, please use {@link YTMusic}
-   * @param {string} [auth=]  Provide a string or path to file.
+   * @param {_YTMusicConstructorOptions} [options=] Options object.
+   * @param {string} [options.auth=]  Provide a string or path to file.
    * Authentication credentials are needed to manage your library.
    * Should be an adjusted version of `headers_auth.json.example` in the project root.
    * See `setup` for how to fill in the correct credentials.
    * If not provided, a default header is used without authentication.
-   * @param {string} [user=]  Specify a user ID string to use in requests.
+   * @param {string} [options.user=]  Specify a user ID string to use in requests.
    * This is needed if you want to send requests on behalf of a brand account.
    * Otherwise the default account is used. You can retrieve the user ID
    * by going to https://myaccount.google.com/brandaccounts and selecting your brand account.
    * The user ID will be in the URL: https://myaccount.google.com/b/user_id/
-   * @param proxies Optional. No usage in current API
-   * @param {string} [language] Optional. Can be used to change the language of returned data.
+   * @param {any} [options.proxies] Optional. No usage in current API
+   * @param {string} [options.language] Optional. Can be used to change the language of returned data.
    * English will be used by default. Available languages can be checked in
    * the ytmusicapi/locales directory.
    * @access private
    */
-  constructor(
-    auth?: string,
-    user?: string,
-    // https_agent?: boolean | https.Agent,
-    proxies?: Record<string, any>,
-    language?: string
-  ) {
+  constructor(options: _YTMusicConstructorOptions) {
+    const {
+      auth: auth,
+      user: user,
+      proxies: proxies,
+      language: language,
+    } = options;
+
     this.#auth = auth ?? null;
 
     // if (https_agent instanceof https.Agent) {
