@@ -9,7 +9,7 @@ export function parseMenuPlaylists(
   //   nav(data, MENU_ITEMS),
   //   'menuNavigationItemRenderer'
   // );
-  const watchMenu: Record<string, any> = nav(data, MENU_ITEMS, true)?.[ //this isn't nullable in pylib todo @codyduong discovery
+  const watchMenu: Record<string, any> = nav(data, MENU_ITEMS)?.[ //this isn't nullable in pylib todo @codyduong discovery
     'menuNavigationItemRenderer'
   ];
   if (watchMenu) {

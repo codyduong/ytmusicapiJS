@@ -25,7 +25,8 @@ import { UploadsMixin } from './mixins/uploads';
  * @param {any} [options.proxies] Optional. No usage in current API
  * @param {string} [options.language] Optional. Can be used to change the language of returned data.
  * English will be used by default. Available languages can be checked in
- * the ytmusicapi/locales directory.
+ * the ytmusicapi/locales directory. A language that is not in the directory will still be
+ * attempted to be translated, but results may not be the best.
  */
 const YTMusic = UploadsMixin(
   LibraryMixin(

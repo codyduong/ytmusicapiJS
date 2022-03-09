@@ -163,7 +163,7 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
      *    @default: Default search, including all types of items.
      * @param {'libary'|'uploads'} [options.scope=] Search scope.
      *    @default: Search the public YouTube Music catalogue.
-     * @param {number} [options.scope=20] Number of search results to return
+     * @param {number} [options.limit=20] Number of search results to return
      * @param {boolean} [ignoreSpelling=false] Whether to ignore YTM spelling suggestions.
      * If true, the exact search term will be searched for, and will not be corrected.
      * This does not have any effect when the filter is set to ``uploads``.

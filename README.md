@@ -60,7 +60,7 @@ More comprehensive list and explanation [here in the original repo](https://gith
         <tr>
             <td colspan=3 align="center">Other</td>
         </tr>
-        <tr><td>locale</td><td>❌</td><td>0.21.0</td></tr>
+        <tr><td>locale</td><td>🐣</td><td>0.21.0</td></tr>
     </tbody>
 </table>
 

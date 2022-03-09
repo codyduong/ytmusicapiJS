@@ -130,7 +130,7 @@ export const PlaylistsMixin = <TBase extends GConstructor<ExploreMixin>>(
       }
 
       const songCount = toInt(
-        '' //@codyduong todo
+        header['secondSubtitle']['runs'][0]['text'].normalize('NFKD')
       );
       if (header['secondSubtitle']['runs'].length > 1) {
         playlist['duration'] = header['secondSubtitle']['runs'][2]['text'];

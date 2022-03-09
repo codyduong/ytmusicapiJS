@@ -17,14 +17,16 @@ type _YTMusicConstructorOptions = {
   language?: string;
 };
 
+import i18next from 'i18next';
+import { en, de } from './locales';
+
 export class _YTMusic {
   #auth: string | null;
   // _agent: https.Agent;
   proxies: any;
   headers: Headers;
   context: any;
-  language: string;
-  lang: any;
+  language: string | undefined;
   parser: Parser;
   sapisid: any;
 
@@ -47,13 +49,13 @@ export class _YTMusic {
    * the ytmusicapi/locales directory.
    * @access private
    */
-  constructor(options: _YTMusicConstructorOptions) {
+  constructor(options?: _YTMusicConstructorOptions) {
     const {
       auth: auth,
       user: user,
       proxies: proxies,
-      language: language,
-    } = options;
+      language: language = 'en',
+    } = options ?? {};
 
     this.#auth = auth ?? null;
 
@@ -106,18 +108,34 @@ export class _YTMusic {
     //     raise Exception("Language not supported. Supported languages are "
     //                     ', '.join(supported_languages))
     //                   }
-    this.language = language ?? ''; //todo @codyduong
-    try {
-      // locale.setlocale(locale.LC_ALL, this.language);
-    } catch (e) {
-      // with suppress(locale.Error):
-      // locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
-    }
+    this.language = language;
+    (async (): Promise<void> => {
+      if (i18next.isInitialized && i18next.language != language) {
+        throw new Error(
+          'Multiple instances of YTMusic are not supported with different languages, please use changeLangauge instance function instead!'
+        );
+      } else {
+        await i18next.init({
+          lng: language ?? 'en',
+          //debug: true,
+          resources: {
+            en,
+            de,
+          },
+        });
+      }
+    })();
+    // try {
+    //   // locale.setlocale(locale.LC_ALL, this.language);
+    // } catch (e) {
+    //   // with suppress(locale.Error):
+    //   // locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+    // }
 
     // this.lang = gettext.translation('base',
     //                                 localedir=locale_dir,
     //                                 languages=[language])
-    this.parser = new Parser(this.lang);
+    this.parser = new Parser();
 
     if (user) {
       this.context['context']['user']['onBehalfOfUser'] = user;
@@ -210,5 +228,21 @@ export class _YTMusic {
     const { filepath, headersRaw } = options;
 
     return setup(filepath, headersRaw);
+  }
+
+  async changeLanguage(language: string): Promise<void> {
+    this.language = language;
+    this.context['context']['client']['hl'] = language;
+    const changeLanguage = new Promise<void>((resolve, reject) => {
+      i18next.changeLanguage(language, (error) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve();
+        }
+      });
+    });
+
+    await changeLanguage;
   }
 }

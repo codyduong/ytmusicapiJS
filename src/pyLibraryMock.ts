@@ -52,9 +52,15 @@ export const time = {
   time: (): number => new Date().getTime() / 1000,
 };
 
-//I'm not sure if this implementation is the same
+//I'm not sure if this implementation is the same @codyduong
 export const locale = {
-  atoi: (string: string): number => parseInt(string),
+  atoi: (string: string): number => {
+    const numbered = Number(string);
+    if (isNaN(numbered)) {
+      throw new TypeError('Could not convert to number');
+    }
+    return parseInt(numbered.toFixed(0));
+  },
   setlocale: (_value: any, _value2: any): void => {
     throw new Error('Function not implemented.');
   },
@@ -66,12 +72,6 @@ export const CaseInsensitiveObject = <T extends Record<string, any>>(
   ...(Object.fromEntries(
     Object.entries(object).map(([k, v]) => [k.toLowerCase(), v])
   ) as T),
-  // ...(Object.fromEntries(
-  //   Object.entries(object).map(([k, v]) => [
-  //     `${k.slice(0, 1).toUpperCase()}${k.slice(1)}`,
-  //     v,
-  //   ])
-  // ) as T),
 });
 
 export class SimpleCookie {

@@ -122,11 +122,18 @@ export function getDatestamp(): any {
 
 export function toInt(string: string): any {
   const numberString = re.split(/[\x20\xa0]/, string)[0];
-  // try:
-  const intValue = locale.atoi(numberString);
-  // except ValueError:
-  //     number_string = number_string.replace(',', '')
-  //     int_value = int(number_string)
+  let intValue: number;
+  try {
+    intValue = locale.atoi(numberString);
+  } catch (e) {
+    if (e instanceof TypeError) {
+      const numberString2 = numberString.replace(',', '');
+      intValue = parseInt(numberString2);
+    } else {
+      throw e;
+    }
+  }
+
   return intValue;
 }
 

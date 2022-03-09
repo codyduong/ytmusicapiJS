@@ -2,6 +2,7 @@
 import ConfigParser from 'configparser';
 import path from 'path';
 import YTMusic from '../src/index';
+import i18next from 'i18next';
 
 const sampleAlbum = 'MPREb_4pL8gzRtw1p'; // Eminem - Revival
 const sampleVideo = 'ZrOKjDZOtkA'; // Oasis - Wonderwall (Remastered)
@@ -12,7 +13,7 @@ const config = new ConfigParser();
 config.read(`${__dirname}/test.cfg`);
 
 const ytmusic = new YTMusic();
-const ytmusicAuth = new YTMusic(config.get('auth', 'headers_file'));
+const ytmusicAuth = new YTMusic({ auth: config.get('auth', 'headers_file') });
 // const ytmusicBrand = new YTMusic(
 //   config.get('auth', 'headers'),
 //   config.get('auth', 'brand_account')

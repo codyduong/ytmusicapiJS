@@ -47,12 +47,11 @@ import type {
   Video,
 } from '../types';
 import * as bT from '../mixins/browsing.types';
+import _ from 'i18next';
 
 export class Parser {
-  lang: string;
-  constructor(language: string) {
-    this.lang = language;
-  }
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  constructor() {}
 
   parseSearchResults(
     results: bT.parseResults,
@@ -77,18 +76,13 @@ export class Parser {
           'video',
           'station',
         ];
-        // This is where we mock translation engine @codyduong TODO
-        // resultTypesLocal = [
-        //     _('artist'), _('playlist'),
-        //     _('song'), _('video'),
-        //     _('station')
-        // ]
+        console.log(resultType);
         const resultTypesLocal = [
-          'artist',
-          'playlist',
-          'song',
-          'video',
-          'station',
+          _.t('artist'),
+          _.t('playlist'),
+          _.t('song'),
+          _.t('video'),
+          _.t('station'),
         ];
         // default to album since it's labeled with multiple values ('Single', 'EP', etc.)
         if (resultType && !resultTypesLocal.includes(resultType)) {
@@ -235,13 +229,12 @@ export class Parser {
     const categories: ['albums', 'singles', 'videos', 'playlists', 'related'] =
       ['albums', 'singles', 'videos', 'playlists', 'related'];
     const categories_local = [
-      'albums',
-      'singles',
-      'videos',
-      'playlists',
-      'related',
+      _.t('albums'),
+      _.t('singles'),
+      _.t('videos'),
+      _.t('playlists'),
+      _.t('related'),
     ];
-    //const categories_local = [_('albums'), _('singles'), _('videos'), _('playlists'), _('related')] @codyduong todo locale
     const categories_parser: any[] = [
       parseAlbum,
       parseSingle,
