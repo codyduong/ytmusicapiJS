@@ -395,3 +395,13 @@ export function findObjectsByKey<T extends Array<Record<string, any>>>(
   }
   return objects;
 }
+
+export function getDotSeperatorIndex(runs: Record<string, any>[]): number {
+  let index = runs.length;
+  // cheap workaround rather than deep equality
+  const indexOf = runs.findIndex((v) => v['text'] == ' • ');
+  if (indexOf !== -1) {
+    index = indexOf;
+  }
+  return index;
+}

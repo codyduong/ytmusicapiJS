@@ -26,6 +26,7 @@ import {
 } from './songs';
 import {
   findObjectByKey,
+  getDotSeperatorIndex,
   getFlexColumnItem,
   getItemText,
   nav,
@@ -317,12 +318,7 @@ export function parseVideo(result: {
   [x: string]: { [x: string]: any };
 }): Video {
   const runs: Array<Record<string, any>> = result['subtitle']['runs'];
-  let artistsLen = runs.length;
-  // cheap workaround rather than deep equality
-  const indexOf = runs.findIndex((v) => v['text'] == ' • ');
-  if (indexOf !== -1) {
-    artistsLen = indexOf;
-  }
+  const artistsLen = getDotSeperatorIndex(runs);
   const video: Video = {
     title: nav(result, TITLE_TEXT),
     videoId: nav(result, NAVIGATION_VIDEO_ID),

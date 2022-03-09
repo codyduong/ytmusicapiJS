@@ -8,7 +8,7 @@ import {
   NAVIGATION_PLAYLIST_ID,
 } from '.';
 import { parseSongArtists } from './songs';
-import { getFlexColumnItem, nav } from './utils';
+import { getDotSeperatorIndex, getFlexColumnItem, nav } from './utils';
 
 const TRENDS = {
   ARROW_DROP_UP: 'up',
@@ -58,12 +58,15 @@ export function parseChartArtist(data: any): Record<string, any> {
 export function parseChartTrending(data: any): Record<string, any> {
   const flex_0 = getFlexColumnItem(data, 0);
   const artists = parseSongArtists(data, 1);
-  let views = artists.pop(); // last item is views for some reason
-  views = views['name'].split(' ')[0];
+  const index = getDotSeperatorIndex(artists);
+  // last item is views for some reason
+  const views =
+    index == artists.length ? null : artists.pop()['name'].split(' ')[0];
+
   return {
     title: nav(flex_0, TEXT_RUN_TEXT),
-    videoId: nav(flex_0, [...TEXT_RUN, ...NAVIGATION_VIDEO_ID]),
-    playlistId: nav(flex_0, [...TEXT_RUN, ...NAVIGATION_PLAYLIST_ID]),
+    videoId: nav(flex_0, [...TEXT_RUN, ...NAVIGATION_VIDEO_ID], true),
+    playlistId: nav(flex_0, [...TEXT_RUN, ...NAVIGATION_PLAYLIST_ID], true),
     artists: artists,
     thumbnails: nav(data, THUMBNAILS),
     views: views,
