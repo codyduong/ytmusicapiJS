@@ -581,11 +581,13 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
      *   "title": "Revival",
      *   "type": "Album",
      *   "thumbnails": [],
-     *   "description": "Revival is the ninth studio album by American rapper Eminem. ...",
-     *   "artists": [{
-     *     "name": "Eminem",
-     *     "id": "UCedvOgsKFzcK3hA5taf3KoQ"
-     *   }],
+     *   "description": "Revival is the...",
+     *   "artists": [
+     *     {
+     *       "name": "Eminem",
+     *       "id": "UCedvOgsKFzcK3hA5taf3KoQ"
+     *     }
+     *   ],
      *   "year": "2017",
      *   "trackCount": 19,
      *   "duration": "1 hour, 17 minutes",
@@ -595,20 +597,26 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
      *     {
      *       "videoId": "iKLU7z_xdYQ",
      *       "title": "Walk On Water (feat. Beyoncé)",
-     *       "artists": null,
-     *       "album": null,
+     *       "artists": [
+     *         {
+     *           "name": "Eminem",
+     *           "id": "UCedvOgsKFzcK3hA5taf3KoQ"
+     *         }
+     *       ],
+     *       "album": "Revival",
      *       "likeStatus": "INDIFFERENT",
      *       "thumbnails": null,
      *       "isAvailable": true,
      *       "isExplicit": true,
      *       "duration": "5:03",
-     *       "feedbackTokens":
-     *       {
-     *         "add": "AB9zfpJww...",
-     *         "remove": "AB9zfpI807..."
+     *       "duration_seconds": 303,
+     *       "feedbackTokens": {
+     *         "add": "AB9zfpK...",
+     *         "remove": "AB9zfpK..."
      *       }
      *     }
-     *   ]
+     *   ],
+     *   "duration_seconds": 4657
      * }
      */
     async getAlbum(browseId: string): Promise<Record<string, any>> {
@@ -623,6 +631,10 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
       ]);
       album['tracks'] = parsePlaylistItems(results['contents']);
       album['duration_seconds'] = helpers.sumTotalDuration(album);
+      for (const [i, _track] of album['tracks'].entries()) {
+        album['tracks'][i]['album'] = album['title'];
+        album['tracks'][i]['artists'] = album['artists'];
+      }
 
       return album;
     }
