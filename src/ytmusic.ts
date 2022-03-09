@@ -18,7 +18,7 @@ type _YTMusicConstructorOptions = {
 };
 
 import i18next from 'i18next';
-import { en, de } from './locales';
+import { en, de, es, it, fr, ja } from './locales';
 
 export class _YTMusic {
   #auth: string | null;
@@ -121,6 +121,10 @@ export class _YTMusic {
           resources: {
             en,
             de,
+            es,
+            fr,
+            it,
+            ja,
           },
         });
       }
