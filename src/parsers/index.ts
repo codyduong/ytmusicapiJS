@@ -34,10 +34,12 @@ export const PLAY_BUTTON = [
   'content',
   'musicPlayButtonRenderer',
 ];
-export const NAVIGATION_BROWSE_ID = [
-  'navigationEndpoint',
-  'browseEndpoint',
-  'browseId',
+export const NAVIGATION_BROWSE = ['navigationEndpoint', 'browseEndpoint'];
+export const NAVIGATION_BROWSE_ID = [...NAVIGATION_BROWSE, 'browseId'];
+export const PAGE_TYPE = [
+  'browseEndpointContextSupportedConfigs',
+  'browseEndpointContextMusicConfig',
+  'pageType',
 ];
 export const NAVIGATION_VIDEO_ID: [
   'navigationEndpoint',
@@ -77,8 +79,9 @@ export const FRAMEWORK_MUTATIONS = [
 ];
 export const TITLE: ['title', 'runs', 0] = ['title', 'runs', 0];
 export const TITLE_TEXT: ['title', ...typeof RUN_TEXT] = ['title', ...RUN_TEXT];
-export const TEXT_RUN = ['text', 'runs', 0];
-export const TEXT_RUN_TEXT = ['text', 'runs', 0, 'text'];
+export const TEXT_RUNS = ['text', 'runs'];
+export const TEXT_RUN = [...TEXT_RUNS, 0];
+export const TEXT_RUN_TEXT = [...TEXT_RUN, 'text'];
 export const SUBTITLE = ['subtitle', ...RUN_TEXT];
 export const SUBTITLE2 = ['subtitle', 'runs', 2, 'text'];
 export const SUBTITLE3 = ['subtitle', 'runs', 4, 'text'];

@@ -43,6 +43,118 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
 ) => {
   return class Browsing extends Base {
     /**
+     * Get the home page.
+     * The home page is structured as titled rows, returning 3 rows of music suggestions at a time.
+     * Content varies and may contain artist, album, song or playlist suggestions, sometimes mixed within the same row
+     *
+     * @param {number} [limit=3] Number of rows to return
+     * @returns List of objects keyed with 'title' text and 'contents' array
+     * @example
+     *  [
+     *    {
+     *        "title": "Your morning music",
+     *        "contents": [
+     *            { //album result
+     *                "title": "Sentiment",
+     *                "year": "Said The Sky",
+     *                "browseId": "MPREb_QtqXtd2xZMR",
+     *                "thumbnails": [...]
+     *            },
+     *            { //playlist result
+     *                "title": "r/EDM top submissions 01/28/2022",
+     *                "playlistId": "PLz7-xrYmULdSLRZGk-6GKUtaBZcgQNwel",
+     *                "thumbnails": [...],
+     *                "description": "redditEDM • 161 songs",
+     *                "count": "161",
+     *                "author": [
+     *                    {
+     *                        "name": "redditEDM",
+     *                        "id": "UCaTrZ9tPiIGHrkCe5bxOGwA"
+     *                    }
+     *                ]
+     *            }
+     *        ]
+     *    },
+     *    {
+     *        "title": "Your favorites",
+     *        "contents": [
+     *            { //artist result
+     *                "title": "Chill Satellite",
+     *                "browseId": "UCrPLFBWdOroD57bkqPbZJog",
+     *                "subscribers": "374",
+     *                "thumbnails": [...]
+     *            }
+     *            { //album result
+     *                "title": "Dragon",
+     *                "year": "Two Steps From Hell",
+     *                "browseId": "MPREb_M9aDqLRbSeg",
+     *                "thumbnails": [...]
+     *            }
+     *        ]
+     *    },
+     *    {
+     *        "title": "Quick picks",
+     *        "contents": [
+     *            { //song quick pick
+     *                "title": "Gravity",
+     *                "videoId": "EludZd6lfts",
+     *                "artists": [{
+     *                        "name": "yetep",
+     *                        "id": "UCSW0r7dClqCoCvQeqXiZBlg"
+     *                    }],
+     *                "thumbnails": [...],
+     *                "album": {
+     *                    "title": "Gravity",
+     *                    "browseId": "MPREb_D6bICFcuuRY"
+     *                }
+     *            },
+     *            { //video quick pick
+     *                "title": "Gryffin & Illenium (feat. Daya) - Feel Good (L3V3LS Remix)",
+     *                "videoId": "bR5l0hJDnX8",
+     *                "artists": [
+     *                    {
+     *                        "name": "L3V3LS",
+     *                        "id": "UCCVNihbOdkOWw_-ajIYhAbQ"
+     *                    }
+     *                ],
+     *                "thumbnails": [...],
+     *                "views": "10M views"
+     *            }
+     *        ]
+     *    }
+     * ]
+     */
+    async getHome(limit = 3): Promise<Record<string, any>[]> {
+      const endpoint = 'browse';
+      const body = { browseId: 'FEmusic_home' };
+      const response = await this._sendRequest(endpoint, body);
+      const _results = nav(response, [...SINGLE_COLUMN_TAB, ...SECTION_LIST]);
+      let home: any[] = [];
+
+      const sectionList = nav(response, [
+        ...SINGLE_COLUMN_TAB,
+        'sectionListRenderer',
+      ]);
+      if (sectionList['continuations']) {
+        const requestFunc = async (additionalParams: any): Promise<any> =>
+          this._sendRequest(endpoint, body, additionalParams);
+        const parseFunc = async (contents: any): Promise<any> =>
+          this.parser.parseHome(contents);
+        home = [
+          ...home,
+          getContinuations(
+            sectionList,
+            'sectionListContinuation',
+            limit - home.length,
+            requestFunc,
+            parseFunc
+          ),
+        ];
+      }
+      return home;
+    }
+
+    /**
      * Search YouTube music.
      * Returns results within the provided category.
      * @param {string} query Query string, i.e. 'Oasis Wonderwall'

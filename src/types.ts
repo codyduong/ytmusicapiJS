@@ -55,10 +55,12 @@ export type Playlist = {
   playlistId: string; //number?
   thumbnails: any;
   count?: any; //string; //number?
+  description?: string;
+  author?: string;
 };
 export type RelatedArtist = {
   title: string;
-  browseId: string; //number?
+  browseId: string;
   subscribers: string; //number?
   thumbnails: string;
 };
