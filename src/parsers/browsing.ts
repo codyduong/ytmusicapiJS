@@ -76,7 +76,6 @@ export class Parser {
           'video',
           'station',
         ];
-        console.log(resultType);
         const resultTypesLocal = [
           _.t('artist'),
           _.t('playlist'),

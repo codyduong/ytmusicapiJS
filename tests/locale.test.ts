@@ -40,7 +40,6 @@ describe.skip('Locales', () => {
     //expect(artist[0]['category'].toLowerCase()).toBe(i18next.t('artist'));
     //expect(song[0]['category'].toLowerCase()).toBe(i18next.t('song'));
     expect(video[0]['category'].toLowerCase()).toBe(i18next.t('videos'));
-    console.log(i18next.t('videos'));
   });
   test.skip('fr', async () => {
     await ytm.changeLanguage('fr');
@@ -55,7 +54,6 @@ describe.skip('Locales', () => {
     expect(artist[0]['category'].toLowerCase()).toBe(i18next.t('artist'));
     expect(song[0]['category'].toLowerCase()).toBe(i18next.t('song'));
     expect(video[0]['category'].toLowerCase()).toBe(i18next.t('videos'));
-    console.log(song[0]['category'], video[0]['category']);
   });
   test.skip('ja', async () => {
     await ytm.changeLanguage('ja');
