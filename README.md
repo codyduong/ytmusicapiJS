@@ -7,9 +7,12 @@ It emulates YouTube Music web client requests using the user's cookie data for a
 This library is intended to carry the same functionality as the library it is inspired by. As such, unless the need becomes great enough for a specific feature in this library, I recommend all API specific changes be directed to [`ytmusicapi`](https://github.com/sigma67/ytmusicapi) instead. 
 
 ## Features
-This library is a work in progress.
+See API here https://codyduong.github.io/ytmusicapiJS/
 
 More comprehensive list and explanation [here in the original repo](https://github.com/sigma67/ytmusicapi#features) or check out [the docs for the original repo](ytmusicapi.readthedocs.io/)
+
+<details title="Feature Parity">
+<summary>Feature Parity</summary>
 
 ✅ - Implemented
 
@@ -60,9 +63,10 @@ More comprehensive list and explanation [here in the original repo](https://gith
         <tr>
             <td colspan=3 align="center">Other</td>
         </tr>
-        <tr><td>locale</td><td>🐣</td><td>0.21.0</td></tr>
+        <tr><td>locale</td><td>✅</td><td>0.21.0</td></tr>
     </tbody>
 </table>
+</details>
 
 ## Setup and Usage
 | npm  | yarn |
@@ -126,11 +130,10 @@ results
 See the [Documentation for the Python 3 API](https://ytmusicapi.readthedocs.io/en/latest/usage.html) for reference.
 
 ## Contributing
-**I am currently not accepting PRs**, but will take issues into consideration if they are between a discrepancy between this library and the Python3 library. PR's are likely to open once I have finished implemented all the 0.21.0 versions
-
 The library is intended to keep features within the same scope of the original Python 3 library. This may/may not change at my discretion.
 
-<!--Pull requests are welcome, esp. with regards to resolving any API differences that occured through mistakes or otherwise.-->
+Pull requests are welcome, esp. with regards to resolving any API differences that occured through mistakes or otherwise. However, note that I would
+like to remain with similar API to the original library, so it is unlikely new API features will be approved (unless strictly relevant to the JS/TS version).
 
 The source code is structured almost identically to the Python 3 Library. I've also mocked some other dependencies, this is to maintain readability and ease of changes between the two APIs. 
 
