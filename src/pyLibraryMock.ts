@@ -20,6 +20,8 @@ export const re = {
     string.match(regex),
   match: (regex: RegExp, string: string): RegExpMatchArray | null =>
     string.match(regex),
+  sub: (regex: RegExp, replaceValue: string, string: string): string =>
+    string.replace(regex, replaceValue),
 };
 
 const convertToAsciiSafe = (string: string): string =>

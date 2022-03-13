@@ -111,7 +111,7 @@ export function getDatestamp(): any {
 }
 
 export function toInt(string: string): any {
-  const numberString = re.split(/[\x20\xa0]/, string)[0];
+  const numberString = re.sub(/^\\d/, '', string);
   let intValue: number;
   try {
     intValue = locale.atoi(numberString);
