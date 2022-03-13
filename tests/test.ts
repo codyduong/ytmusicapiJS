@@ -7,10 +7,13 @@ const _samplePlaylist = 'PL6bPxvf5dW5clc3y9wAoslzqUrmkZ5c-u'; // very large play
 const query = 'edm playlist';
 
 const config = new ConfigParser();
-config.read(`${__dirname}/test.cfg`);
 
 const ytmusic = new YTMusic();
-const ytmusicAuth = new YTMusic({ auth: config.get('auth', 'headers_file') });
+let ytmusicAuth: InstanceType<typeof YTMusic>;
+if (process.env.CI !== 'true') {
+  config.read(`${__dirname}/test.cfg`);
+  ytmusicAuth = new YTMusic({ auth: config.get('auth', 'headers_file') });
+}
 // const ytmusicBrand = new YTMusic(
 //   config.get('auth', 'headers'),
 //   config.get('auth', 'brand_account')
