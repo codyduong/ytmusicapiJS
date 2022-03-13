@@ -283,10 +283,17 @@ export class Parser {
     const items = [];
     for (const row of rows) {
       const contents = [];
-      const results = nav(row, CAROUSEL);
-      for (const result in results['contents']) {
-        const data = nav(result, [MTRIR], true);
-        let content: Record<string, any> | null = null;
+      let results;
+      if (row[CAROUSEL[0]]) {
+        results = nav(row, CAROUSEL);
+      } else if ('musicImmersiveCarouselShelfRenderer' in row) {
+        results = row['musicImmersiveCarouselShelfRenderer'];
+      } else {
+        continue;
+      }
+      for (const result of results['contents']) {
+        let data = nav(result, [MTRIR], true);
+        let content: Record<string, any> = {};
         if (data) {
           const page_type = nav(
             data,
@@ -304,27 +311,25 @@ export class Parser {
             content = parsePlaylist(data);
           }
         } else {
-          const data = nav(result, [MRLIR]);
-          const columns: any[] = [
-            //getFlexColumnItem(data, i) for i in range(0, len(data['flexColumns']))
-          ];
+          data = nav(result, [MRLIR]);
+          const columns: any[] = [];
+          for (let i = 0; i < data['flexColumns'].length; i++) {
+            columns.push(getFlexColumnItem(data, i));
+          }
           content = {
             title: nav(columns[0], TEXT_RUN_TEXT),
             videoId: nav(columns[0], [...TEXT_RUN, ...NAVIGATION_VIDEO_ID]),
-            artists: parseSongArtistsRuns(nav(columns[1], TEXT_RUNS)),
             thumbnails: nav(data, THUMBNAILS),
+            ...parseSongRuns(nav(columns[1], TEXT_RUNS)),
           };
           if (columns.length > 2 && columns[2]) {
             content['album'] = {
               title: nav(columns[2], TEXT_RUN_TEXT),
               browseId: nav(columns[2], [...TEXT_RUN, ...NAVIGATION_BROWSE_ID]),
             };
-          } else {
-            content['artists'].pop();
-            content['views'] = nav(columns[1], [...TEXT_RUNS, 2, 'text']);
           }
         }
-        contents.push(content);
+        Object.keys(content).length > 0 && contents.push(content);
       }
       items.push({
         title: nav(results, [...CAROUSEL_TITLE, 'text']),
@@ -369,10 +374,10 @@ export function parseSingle(result: any): Single {
 export function parseSong(result: any): Record<string, any> {
   return {
     title: nav(result, TITLE_TEXT),
-    artists: parseSongArtistsRuns(result['subtitle']['runs'].slice(2)),
     videoId: nav(result, NAVIGATION_VIDEO_ID),
     playlistId: nav(result, NAVIGATION_PLAYLIST_ID, true),
     thumbnails: nav(result, THUMBNAIL_RENDERER),
+    ...parseSongRuns(result['subtitle']['runs']),
   };
 }
 

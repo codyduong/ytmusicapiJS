@@ -124,7 +124,7 @@ export async function getContinuations(
   continuation_type: string | number,
   limit: number,
   requestFunc: (arg1: any) => Promise<Record<string, any>>,
-  parse_func: any,
+  parse_func: (arg1: any) => any,
   ctokenPath = ''
 ): Promise<Array<any>> {
   let items: any[] = [];
@@ -198,8 +198,7 @@ function getContinuationParams(results: any, ctoken_path: string): string {
 }
 
 export function getContinuationString(ctoken: string): string {
-  //return "&ctoken=" + ctoken + "&continuation=" + ctoken
-  return `&ctoken=${ctoken}&continuation=ctoken`;
+  return `&ctoken=${ctoken}&continuation=${ctoken}`;
 }
 
 function getContinuationContents<T extends Record<string, any>>(

@@ -118,7 +118,7 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
      *                    }
      *                ],
      *                "thumbnails": [...],
-     *                "views": "10M views"
+     *                "views": "10M"
      *            }
      *        ]
      *    }
@@ -128,27 +128,27 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
       const endpoint = 'browse';
       const body = { browseId: 'FEmusic_home' };
       const response = await this._sendRequest(endpoint, body);
-      const _results = nav(response, [...SINGLE_COLUMN_TAB, ...SECTION_LIST]);
-      let home: any[] = [];
+      const results = nav(response, [...SINGLE_COLUMN_TAB, ...SECTION_LIST]);
+      let home: any[] = [...this.parser.parseHome(results)];
 
       const sectionList = nav(response, [
         ...SINGLE_COLUMN_TAB,
         'sectionListRenderer',
       ]);
-      if (sectionList['continuations']) {
+      if ('continuations' in sectionList) {
         const requestFunc = async (additionalParams: any): Promise<any> =>
-          this._sendRequest(endpoint, body, additionalParams);
-        const parseFunc = async (contents: any): Promise<any> =>
+          await this._sendRequest(endpoint, body, additionalParams);
+        const parseFunc = (contents: any): any =>
           this.parser.parseHome(contents);
         home = [
           ...home,
-          getContinuations(
+          ...(await getContinuations(
             sectionList,
             'sectionListContinuation',
             limit - home.length,
             requestFunc,
             parseFunc
-          ),
+          )),
         ];
       }
       return home;

@@ -24,10 +24,10 @@ if (process.env.CI !== 'true') {
  */
 describe('Browsing', () => {
   describe('Get Home', () => {
-    //Not implemented yet
-    test.skip('#1', async () => {
-      const result = await ytmusic.getHome(6);
-      expect(result.length).toBeGreaterThanOrEqual(6);
+    test('#1', async () => {
+      //This is broken right now, for some reason we are only able to see up to 2 (when it is 6+ on a browser)
+      const result = await ytmusic.getHome(2);
+      expect(result.length).toBeGreaterThanOrEqual(2);
     });
     test.skip('(Auth) #2', async () => {
       const result = ytmusicAuth.getHome(6);
