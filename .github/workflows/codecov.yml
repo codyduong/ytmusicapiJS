@@ -1,0 +1,28 @@
+name: codecov
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '**.ts'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+    - uses: actions/checkout@master
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'yarn'
+    - run: yarn ci
+    - run: yarn test --coverage
+    - uses: codecov/codecov-action@v2
+      with:
+        fail_ci_if_error: true
+        verbose: true

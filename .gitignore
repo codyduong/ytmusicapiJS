@@ -3,3 +3,4 @@ tests/test.cfg
 headers_auth.json
 dist
 yarn-error.log
+coverage
