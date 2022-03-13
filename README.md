@@ -1,3 +1,7 @@
+[![Downloads](https://img.shields.io/npm/dm/@codyduong/ytmusicapi?style=flat-square)](https://www.npmjs.com/package/@codyduong/ytmusicapi)
+[![Code coverage](https://img.shields.io/codecov/c/github/codyduong/ytmusicapijs?style=flat-square)](https://codecov.io/gh/codyduong/ytmusicapiJS)
+[![Latest release](https://img.shields.io/github/v/release/codyduong/ytmusicapijs?style=flat-square)](https://github.com/codyduong/ytmusicapiJS/releases)
+[![Commits since latest release](https://img.shields.io/github/commits-since/codyduong/ytmusicapijs/latest?style=flat-square)](https://github.com/codyduong/ytmusicapiJS/releases)
 # ytmusicapiJS: Unofficial API for YouTube Music
 
 ytmusicapiJS is a JS/TS implementation of the Python 3 library [`ytmusicapi`](https://github.com/sigma67/ytmusicapi)
