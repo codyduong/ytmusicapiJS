@@ -20,38 +20,83 @@ export const WatchMixin = <TBase extends GConstructor<BrowsingMixin>>(
   return class WatchMixin extends Base {
     /**
      * Get a watch list of tracks. This watch playlist appears when you press
-        play on a track in YouTube Music.
-        Please note that the `INDIFFERENT` likeStatus of tracks returned by this
-        endpoint may be either `INDIFFERENT` or `DISLIKE`, due to ambiguous data
-        returned by YouTube Music.
-
+     * play on a track in YouTube Music.
+     * Please note that the `INDIFFERENT` likeStatus of tracks returned by this
+     * endpoint may be either `INDIFFERENT` or `DISLIKE`, due to ambiguous data
+     * returned by YouTube Music.
+     *
      * @param videoId {string} videoId of the played video
      * @param playlistId {string} playlistId of the played playlist or album
      * @param limit {number} minimum number of watch playlist items to return
      * @param params only used internally by `getWatchPlaylistShuffle`
-     * @return List of playlist items:
+     * @return List of watch playlist items. The counterpart key is optional and only
+     * appears if a song has a corresponding video counterpart (UI song/video switcher).
      * @example
      * {
-          "tracks": [
-              {
-                "title": "Interstellar (Main Theme) - Piano Version",
-                "byline": "Patrik Pietschmann • 47M views",
-                "length": "4:47",
-                "videoId": "4y33h81phKU",
-                "thumbnail": [
-                  {
-                    "url": "https://i.ytimg.com/vi/4y...",
-                    "width": 400,
-                    "height": 225
-                  }
-                ],
-                "feedbackTokens": [],
-                "likeStatus": "LIKE"
-              },...
-          ],
-          "playlistId": "RDAMVM4y33h81phKU",
-          "lyrics": "MPLYt_HNNclO0Ddoc-17"
-        }
+     *   "tracks": [
+     *      {
+     *        "videoId": "9mWr4c_ig54",
+     *        "title": "Foolish Of Me (feat. Jonathan Mendelsohn)",
+     *        "length": "3:07",
+     *        "thumbnail": [
+     *          {
+     *            "url": "https://lh3.googleusercontent.com/ulK2YaLtOW0PzcN7ufltG6e4ae3WZ9Bvg8CCwhe6LOccu1lCKxJy2r5AsYrsHeMBSLrGJCNpJqXgwczk=w60-h60-l90-rj",
+     *            "width": 60,
+     *            "height": 60
+     *          }...
+     *        ],
+     *        "feedbackTokens": {
+     *          "add": "AB9zfpIGg9XN4u2iJ...",
+     *          "remove": "AB9zfpJdzWLcdZtC..."
+     *        },
+     *        "likeStatus": "INDIFFERENT",
+     *        "artists": [
+     *          {
+     *            "name": "Seven Lions",
+     *            "id": "UCYd2yzYRx7b9FYnBSlbnknA"
+     *          },
+     *          {
+     *            "name": "Jason Ross",
+     *            "id": "UCVCD9Iwnqn2ipN9JIF6B-nA"
+     *          },
+     *          {
+     *            "name": "Crystal Skies",
+     *            "id": "UCTJZESxeZ0J_M7JXyFUVmvA"
+     *          }
+     *        ],
+     *        "album": {
+     *          "name": "Foolish Of Me",
+     *          "id": "MPREb_C8aRK1qmsDJ"
+     *        },
+     *        "year": "2020",
+     *        "counterpart": {
+     *          "videoId": "E0S4W34zFMA",
+     *          "title": "Foolish Of Me [ABGT404] (feat. Jonathan Mendelsohn)",
+     *          "length": "3:07",
+     *          "thumbnail": [...],
+     *          "feedbackTokens": null,
+     *          "likeStatus": "LIKE",
+     *          "artists": [
+     *            {
+     *              "name": "Jason Ross",
+     *              "id": null
+     *            },
+     *            {
+     *              "name": "Seven Lions",
+     *              "id": null
+     *            },
+     *            {
+     *              "name": "Crystal Skies",
+     *              "id": null
+     *            }
+     *          ],
+     *          "views": "6.6K"
+     *        }
+     *      },...
+     *   ],
+     *   "playlistId": "RDAMVM4y33h81phKU",
+     *   "lyrics": "MPLYt_HNNclO0Ddoc-17"
+     * }
      */
     async getWatchPlaylist(
       watchPlaylist: wt.getWatchPlaylistOptions
