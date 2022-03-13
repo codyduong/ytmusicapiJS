@@ -285,11 +285,11 @@ export const ExploreMixin = <TBase extends GConstructor<WatchMixin>>(
 
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       const parseChart = (i: number, parseFunc: any, key: string) => {
-        parseContentList(
-          nav(results[i + (hasSongs ? 1 : 0)], CAROUSEL_CONTENTS),
+        return parseContentList(
+          nav(results[i + (hasSongs ? 1 : 0)], CAROUSEL_CONTENTS, true),
           parseFunc,
           key
-        );
+        ).filter((x) => x);
       };
       for (const [i, c] of chartsCategories.entries()) {
         charts[c] = {

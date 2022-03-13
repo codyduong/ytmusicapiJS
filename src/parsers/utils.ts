@@ -301,20 +301,21 @@ type navNodeTestObj = {
   arrayUnknown: [unknown];
 };
 type navNodeTest = navNode<navNodeTestObj>;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const navNodeTest1: navNodeTest = ['matrix', 1, 2];
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const navNodeTest2: navNodeTest = ['nestedObj', 'nestedObj2a'];
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const navNodeTest3: navNodeTest = ['objectInArray', 1, 'object', 'objectChild'];
+const _navNodeTest1: navNodeTest = ['matrix', 1, 2];
+const _navNodeTest2: navNodeTest = ['nestedObj', 'nestedObj2a'];
+const _navNodeTest3: navNodeTest = [
+  'objectInArray',
+  1,
+  'object',
+  'objectChild',
+];
 
 export function nav<T extends Record<string, any> | Array<any>, U = any>(
   root: T,
   items: navNode<T>,
   nullIfAbsent?: boolean
 ): U;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function nav<T extends never, U = any>(
+export function nav<_T extends never, U = any>(
   root: any | null,
   items: (string | number)[],
   nullIfAbsent?: boolean

@@ -7,13 +7,14 @@ import { Parser } from './parsers/browsing';
 import { setup } from './setup';
 
 import type { Headers } from './types';
-import axios from 'axios';
+import axios, { AxiosProxyConfig } from 'axios';
+import https from 'https';
 
 type _YTMusicConstructorOptions = {
   auth?: string;
   user?: string;
-  // https_agent?: boolean | https.Agent,
-  proxies?: Record<string, any>;
+  httpsAgent?: boolean | https.Agent;
+  proxies?: AxiosProxyConfig | false;
   language?: string;
 };
 
@@ -22,8 +23,8 @@ import { en, de, es, it, fr, ja } from './locales';
 
 export class _YTMusic {
   #auth: string | null;
-  // _agent: https.Agent;
-  proxies: any;
+  _httpsAgent: https.Agent | undefined;
+  proxies?: AxiosProxyConfig | false;
   headers: Headers;
   context: any;
   language: string | undefined;
@@ -43,7 +44,8 @@ export class _YTMusic {
    * Otherwise the default account is used. You can retrieve the user ID
    * by going to https://myaccount.google.com/brandaccounts and selecting your brand account.
    * The user ID will be in the URL: https://myaccount.google.com/b/user_id/
-   * @param {any} [options.proxies] Optional. No usage in current API
+   * @param {} [options.httpsAgent] Optional. Define an HTTP proxy for your request.
+   * @param {AxiosProxyConfig} [options.proxies] Optional. Define an HTTP proxy for your request.
    * @param {string} [options.language] Optional. Can be used to change the language of returned data.
    * English will be used by default. Available languages can be checked in
    * the ytmusicapi/locales directory.
@@ -55,23 +57,22 @@ export class _YTMusic {
       user: user,
       proxies: proxies,
       language: language = 'en',
+      httpsAgent,
     } = options ?? {};
 
     this.#auth = auth ?? null;
 
-    // if (https_agent instanceof https.Agent) {
-    //   this._https = https_agent;
-    // } else {
-    //   if (https_agent) {
-    //     // Build a new session.
-    //     this._https = new https.Agent({
-    //       timeout: 30000,
-    //     });
-    //   } else {
-    //     // Use the Requests API module as a "session".
-    //     this._https = https.api;
-    //   }
-    // }
+    if (httpsAgent instanceof https.Agent) {
+      this._httpsAgent = httpsAgent;
+    } else {
+      if (httpsAgent) {
+        this._httpsAgent = new https.Agent({
+          timeout: 30000,
+        });
+      } else {
+        this._httpsAgent = undefined;
+      }
+    }
 
     this.proxies = proxies;
 
@@ -102,13 +103,16 @@ export class _YTMusic {
     // prepare context
     this.context = helpers.initializeContext();
     this.context['context']['client']['hl'] = language;
-    // locale_dir = os.path.abspath(os.path.dirname(__file__)) + os.sep + 'locales'
-    // const supported_languages = [f for f in os.listdir(locale_dir)]
-    // if (language not in supported_languages) {
-    //     raise Exception("Language not supported. Supported languages are "
-    //                     ', '.join(supported_languages))
-    //                   }
+
     this.language = language;
+    const supportedLanguages = ['en', 'de', 'es', 'fr', 'it', 'ja'];
+    if (!supportedLanguages.includes(language)) {
+      console.warn(
+        `The language '${language}' is not supported.\nSupported languages are ${supportedLanguages.join(
+          ', '
+        )}\nYTMusicAPI will still work, but some functions such as search or get_artist may not work. See https://github.com/codyduong/ytmusicapiJS/tree/main/src/locales for more details.`
+      );
+    }
     (async (): Promise<void> => {
       if (i18next.isInitialized && i18next.language != language) {
         throw new Error(
@@ -161,7 +165,7 @@ export class _YTMusic {
   async _sendRequest<T extends Record<string, any>>(
     endpoint: string,
     body: Record<string, any>,
-    ...additionalParams: string[]
+    additionalParams = ''
   ): Promise<T> {
     body = { ...body, ...this.context };
 
@@ -182,19 +186,12 @@ export class _YTMusic {
       {
         headers: this.headers,
         proxy: this.proxies,
+        httpsAgent: this?._httpsAgent,
       }
     );
+    //console.log(response);
     const responseText = response.data;
-    if (response.status >= 400) {
-      const message =
-        'Server returned HTTP ' +
-        String(response.status) +
-        ': ' +
-        response.statusText +
-        '.\n';
-      const error = responseText.error?.message;
-      throw new Error(message + error);
-    }
+
     return responseText;
   }
 
@@ -206,6 +203,7 @@ export class _YTMusic {
       params: params,
       headers: this?.headers,
       proxy: this?.proxies,
+      httpsAgent: this?._httpsAgent,
     });
     return response.data;
   }

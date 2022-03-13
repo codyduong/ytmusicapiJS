@@ -1,4 +1,6 @@
+import { Except } from 'type-fest';
 import { FilterSingular } from '../types';
+import { getLibraryAlbumsReturn } from './library.types';
 
 /**search */
 export type searchResponse = {
@@ -254,13 +256,10 @@ export type getArtistReturn = {
 /**
  * getArtistAlbums
  */
-export type getArtistAlbumsReturn = {
-  browseId: string;
-  title: string;
-  type: string;
-  thumbnails: thumbnails;
-  year: string;
-}[];
+export type getArtistAlbumsReturn = Except<
+  getLibraryAlbumsReturn[number],
+  'artists'
+>[];
 
 /**
  * getUser
@@ -275,14 +274,22 @@ type getUserReturnCategories =
 type getUserReturnShared = {
   browseId?: string;
   params?: string;
-  results?: {
-    title: string;
-    videoId: string;
-    artists: artists;
-    playlistId: string;
-    thumbnails: thumbnails;
-    views: string;
-  }[];
+  results: Array<
+    | {
+        title: string;
+        videoId: string;
+        artists: artists;
+        playlistId: string;
+        thumbnails: thumbnails;
+        views: string;
+      }
+    | {
+        browseId: string;
+        subscribers: string;
+        title: string;
+        thumbnails: thumbnails;
+      }
+  >;
 };
 export type getUserReturn = {
   name: string;

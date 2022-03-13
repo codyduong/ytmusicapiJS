@@ -1,13 +1,3 @@
-// import re
-// import json
-// from http.cookies import SimpleCookie
-// from hashlib import sha1
-// import time
-// from datetime import date
-// from functools import wraps
-// import locale
-// from ytmusicapi.constants import *
-
 import { re, json, time, locale, SimpleCookie } from './pyLibraryMock';
 import * as utf8 from 'utf8';
 import * as constants from './constants';
@@ -163,11 +153,3 @@ export function sumTotalDuration(item: any): any {
     )
   );
 }
-
-// function i18n(method):
-//     @wraps(method)
-//     def _impl(self, *method_args, **method_kwargs):
-//         method.__globals__['_'] = self.lang.gettext
-//         return method(self, *method_args, **method_kwargs)
-
-//     return _impl

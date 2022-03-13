@@ -15,7 +15,11 @@ export const SECTION_LIST: ['sectionListRenderer', 'contents'] = [
   'sectionListRenderer',
   'contents',
 ];
-export const SECTION_LIST_ITEM = ['sectionListRenderer', 'contents', 0];
+export const SECTION_LIST_ITEM: ['sectionListRenderer', 'contents', 0] = [
+  'sectionListRenderer',
+  'contents',
+  0,
+];
 export const ITEM_SECTION = ['itemSectionRenderer', 'contents', 0];
 export const MUSIC_SHELF: ['musicShelfRenderer'] = ['musicShelfRenderer'];
 export const GRID: ['gridRenderer'] = ['gridRenderer'];

@@ -12,7 +12,7 @@ const readFile = (s: string): any =>
     })
   );
 
-describe('Browsing', () => {
+describe.skip('Browsing', () => {
   describe('Search', () => {
     test('#1', async () => {
       const results = await ytmusic.search(query);

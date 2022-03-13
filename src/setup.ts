@@ -42,14 +42,13 @@ export function setup(filepath: any, headersRaw: string): string {
         continue;
       }
       userHeaders[header[0].toLowerCase()] = header.slice(1).join(': ');
-    } //': '.join(header[1:])
+    }
   } catch (e) {
     throw new Error(
       'Error parsing your input, please try again. Full error: ' + String(e)
     );
   }
 
-  //let missing_headers = {"cookie", "x-goog-authuser"} - set(k.lower() for const k in user_headers.keys())
   const missing_headers = ['cookie', 'x-goog-authuser'].filter(
     (reqKey) => !(reqKey in userHeaders)
   );

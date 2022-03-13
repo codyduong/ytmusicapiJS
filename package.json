@@ -1,11 +1,12 @@
 {
   "name": "@codyduong/ytmusicapi",
-  "version": "0.1.0-alpha.4",
+  "version": "0.1.0",
   "description": "Unofficial API for YouTube Music",
   "main": "dist/ytmusic.js",
   "types": "dist/ytmusic.d.ts",
   "scripts": {
-    "test": "yarn jest",
+    "test": "yarn jest -t '^(?!\\(Auth\\)).*$'",
+    "test:full": "yarn jest",
     "test:pylib": "yarn jest pylib",
     "test:code": "yarn lint && yarn tsc --noEmit",
     "docs": "yarn tsc && yarn jsdoc dist/ -r -c ./jsdoc.json --verbose",
@@ -42,6 +43,7 @@
     "axios": "^0.26.0",
     "i18next": "^21.6.13",
     "prompt-sync": "^4.2.0",
+    "type-fest": "^2.12.0",
     "utf8": "^3.0.0"
   },
   "directories": {

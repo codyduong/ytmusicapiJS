@@ -55,22 +55,27 @@ export function parseChartArtist(data: any): Record<string, any> {
   return parsed;
 }
 
-export function parseChartTrending(data: any): Record<string, any> {
-  const flex_0 = getFlexColumnItem(data, 0);
-  const artists = parseSongArtists(data, 1);
-  const index = getDotSeperatorIndex(artists);
-  // last item is views for some reason
-  const views =
-    index == artists.length ? null : artists.pop()['name'].split(' ')[0];
+export function parseChartTrending(data: any): Record<string, any> | null {
+  if (data) {
+    const flex_0 = getFlexColumnItem(data, 0);
+    const artists = parseSongArtists(data, 1);
+    if (artists) {
+      const index = getDotSeperatorIndex(artists);
+      // last item is views for some reason
+      const views =
+        index == artists.length ? null : artists.pop()['name'].split(' ')[0];
 
-  return {
-    title: nav(flex_0, TEXT_RUN_TEXT),
-    videoId: nav(flex_0, [...TEXT_RUN, ...NAVIGATION_VIDEO_ID], true),
-    playlistId: nav(flex_0, [...TEXT_RUN, ...NAVIGATION_PLAYLIST_ID], true),
-    artists: artists,
-    thumbnails: nav(data, THUMBNAILS),
-    views: views,
-  };
+      return {
+        title: nav(flex_0, TEXT_RUN_TEXT),
+        videoId: nav(flex_0, [...TEXT_RUN, ...NAVIGATION_VIDEO_ID], true),
+        playlistId: nav(flex_0, [...TEXT_RUN, ...NAVIGATION_PLAYLIST_ID], true),
+        artists: artists,
+        thumbnails: nav(data, THUMBNAILS),
+        views: views,
+      };
+    }
+  }
+  return null;
 }
 
 export function parseRanking(data: any): Record<string, any> {
