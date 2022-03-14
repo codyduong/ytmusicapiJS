@@ -33,6 +33,10 @@ import { GConstructor, Mixin } from './.mixin.helper';
 import { PlaylistsMixin } from './playlists';
 
 import * as lt from './library.types';
+import { parsePlaylistReturn } from '../parsers/browsing.types';
+import { parsePlaylistItemsReturn } from '../parsers/playlists.types';
+import { getPlaylistReturn } from './playlists.types';
+import { parseLibarySongsReturn } from '../parsers/library.types';
 
 export type LibraryMixin = Mixin<typeof LibraryMixin>;
 
@@ -57,7 +61,7 @@ export const LibraryMixin = <TBase extends GConstructor<PlaylistsMixin>>(
      *   'count': 5
      * }
      */
-    async getLibraryPlaylists(limit = 25): Promise<Array<Record<string, any>>> {
+    async getLibraryPlaylists(limit = 25): Promise<parsePlaylistReturn[]> {
       this._checkAuth();
       const body = { browseId: 'FEmusic_liked_playlists' };
       const endpoint = 'browse';
@@ -68,7 +72,7 @@ export const LibraryMixin = <TBase extends GConstructor<PlaylistsMixin>>(
         'itemSectionRenderer'
       );
       results = nav(results, [...ITEM_SECTION, ...GRID]);
-      let playlists: Array<any> = parseContentList(
+      let playlists = parseContentList(
         results['items'].slice(1),
         parsePlaylist
       );
@@ -76,7 +80,8 @@ export const LibraryMixin = <TBase extends GConstructor<PlaylistsMixin>>(
       if ('continuations' in results) {
         const requestFunc = async (additionalParams: string): Promise<any> =>
           await this._sendRequest(endpoint, body, additionalParams);
-        const parseFunc = (contents: Record<string, any>[]): any =>
+        // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+        const parseFunc = (contents: Record<string, any>[]) =>
           parseContentList(contents, parsePlaylist);
         playlists = [
           ...playlists,
@@ -106,7 +111,7 @@ export const LibraryMixin = <TBase extends GConstructor<PlaylistsMixin>>(
       limit?: number;
       validateResponse?: boolean;
       order?: lt.Order;
-    }): Promise<Array<Record<string, any>>> {
+    }): Promise<getPlaylistReturn['tracks']> {
       this._checkAuth();
       const { limit = 25, validateResponse = false, order } = options ?? {};
 
@@ -121,10 +126,10 @@ export const LibraryMixin = <TBase extends GConstructor<PlaylistsMixin>>(
 
       const requestFunc = async (_additionalParams: any): Promise<any> =>
         await this._sendRequest(endpoint, body); //additionalParams doesnt do anything? @codyduong PR this.
-      const parseFunc = (rawResponse: any): any =>
+      const parseFunc = (rawResponse: any): parseLibarySongsReturn =>
         parseLibrarySongs(rawResponse);
 
-      let response: Record<string, any>;
+      let response;
       if (validateResponse) {
         const validateFunc = (parsed: any): any =>
           validateResponseFunc(parsed, perPage, limit, 0);
@@ -147,8 +152,9 @@ export const LibraryMixin = <TBase extends GConstructor<PlaylistsMixin>>(
           additionalParams: string
         ): Promise<any> =>
           await this._sendRequest(endpoint, body, additionalParams);
-        const parseContinuationsFunc = (contents: any): any =>
-          parsePlaylistItems(contents);
+        const parseContinuationsFunc = (
+          contents: any
+        ): parsePlaylistItemsReturn => parsePlaylistItems(contents);
 
         if (validateResponse) {
           songs = [
@@ -260,7 +266,7 @@ export const LibraryMixin = <TBase extends GConstructor<PlaylistsMixin>>(
     async getLibrarySubscriptions(options?: {
       limit?: number;
       order?: lt.Order;
-    }): Promise<Array<Record<string, any>>> {
+    }): Promise<lt.getLibraryArtistsReturn> {
       this._checkAuth();
       const { limit = 25, order } = options ?? {};
       const body: Record<string, any> = {
@@ -285,7 +291,9 @@ export const LibraryMixin = <TBase extends GConstructor<PlaylistsMixin>>(
      * @param {number} [limit=100] How many items to return.
      * @return List of playlistItem dictionaries. See `getPlaylist`
      */
-    async getLikedSongs(limit = 100): Promise<Record<string, any>> {
+    async getLikedSongs(
+      limit = 100
+    ): Promise<ReturnType<typeof this.getPlaylist>> {
       return await this.getPlaylist('LM', limit);
     }
 
@@ -298,13 +306,13 @@ export const LibraryMixin = <TBase extends GConstructor<PlaylistsMixin>>(
      *
      * The additional property ``feedbackToken`` can be used to remove items with `removeHistoryItems`.
      */
-    async getHistory(): Promise<Record<string, any>[]> {
+    async getHistory(): Promise<lt.getHistoryReturn> {
       this._checkAuth();
       const body = { browseId: 'FEmusic_history' };
       const endpoint = 'browse';
       const response = await this._sendRequest(endpoint, body);
       const results = nav(response, [...SINGLE_COLUMN_TAB, ...SECTION_LIST]);
-      let songs: any[] = [];
+      let songs: lt.getHistoryReturn = [];
       for (const content of results) {
         const data = nav(content, [...MUSIC_SHELF, 'contents'], true);
         if (!data) {
@@ -316,7 +324,7 @@ export const LibraryMixin = <TBase extends GConstructor<PlaylistsMixin>>(
           throw new Error(error);
         }
         const menuEntries = [[-1, ...MENU_SERVICE, ...FEEDBACK_TOKEN]];
-        const songlist = parsePlaylistItems(data, menuEntries);
+        const songlist = parsePlaylistItems(data, menuEntries) as any;
         for (const song of songlist) {
           song['played'] = nav(content['musicShelfRenderer'], TITLE_TEXT);
         }
@@ -331,7 +339,7 @@ export const LibraryMixin = <TBase extends GConstructor<PlaylistsMixin>>(
      * @return Full response.
      */
     async removeHistoryItems(
-      feedbackTokens: string[]
+      feedbackTokens: any[]
     ): Promise<Record<string, any>> {
       this._checkAuth();
       const body = { feedbackTokens };

@@ -21,6 +21,7 @@ import {
   parsePlaylist,
   parseVideo,
 } from '../parsers/browsing';
+import { parsePlaylistReturn } from '../parsers/browsing.types';
 import {
   parseChartArtist,
   parseChartSong,
@@ -45,46 +46,46 @@ export const ExploreMixin = <TBase extends GConstructor<WatchMixin>>(
   return class ExploreMixin extends Base {
     /**
      * Fetch "Moods & Genres" categories from YouTube Music.
-     * 
+     *
      * @return Object of sections and categories
      * @example
-{
-  'For you': [
-    {
-    'params': 'ggMPOg1uX1ZwN0pHT2NBT1Fk',
-    'title': '1980s'
-    },
-    {
-    'params': 'ggMPOg1uXzZQbDB5eThLRTQ3',
-    'title': 'Feel Good'
-    },
-    ...
-  ],
-  'Genres': [
-    {
-    'params': 'ggMPOg1uXzVLbmZnaWI4STNs',
-    'title': 'Dance & Electronic'
-    },
-    {
-    'params': 'ggMPOg1uX3NjZllsNGVEMkZo',
-    'title': 'Decades'
-    },
-    ...
-  ],
-  'Moods & moments': [
-    {
-    'params': 'ggMPOg1uXzVuc0dnZlhpV3Ba',
-    'title': 'Chill'
-    },
-    {
-    'params': 'ggMPOg1uX2ozUHlwbWM3ajNq',
-    'title': 'Commute'
-    },
-    ...
-  ],
-}
+     * {
+     *   'For you': [
+     *     {
+     *     'params': 'ggMPOg1uX1ZwN0pHT2NBT1Fk',
+     *     'title': '1980s'
+     *     },
+     *     {
+     *     'params': 'ggMPOg1uXzZQbDB5eThLRTQ3',
+     *     'title': 'Feel Good'
+     *     },
+     *     ...
+     *   ],
+     *   'Genres': [
+     *     {
+     *     'params': 'ggMPOg1uXzVLbmZnaWI4STNs',
+     *     'title': 'Dance & Electronic'
+     *     },
+     *     {
+     *     'params': 'ggMPOg1uX3NjZllsNGVEMkZo',
+     *     'title': 'Decades'
+     *     },
+     *     ...
+     *   ],
+     *   'Moods & moments': [
+     *     {
+     *     'params': 'ggMPOg1uXzVuc0dnZlhpV3Ba',
+     *     'title': 'Chill'
+     *     },
+     *     {
+     *     'params': 'ggMPOg1uX2ozUHlwbWM3ajNq',
+     *     'title': 'Commute'
+     *     },
+     *     ...
+     *   ],
+     * }
      */
-    async getMoodCategories(): Promise<Record<string, any>> {
+    async getMoodCategories(): Promise<et.getMoodCategoriesReturn> {
       const sections: Record<string, any> = {};
       const response = await this._sendRequest<et.getMoodCategoriesResponse>(
         'browse',
@@ -121,8 +122,8 @@ export const ExploreMixin = <TBase extends GConstructor<WatchMixin>>(
      * @param params params obtained by `getMoodCategories`
      * @returns List of playlists in the format of `getLibraryPlaylists`
      */
-    async getMoodPlaylists(params: string): Promise<Record<string, any>> {
-      const playlists: Array<any> = [];
+    async getMoodPlaylists(params: string): Promise<parsePlaylistReturn[]> {
+      let playlists: any[] | PromiseLike<parsePlaylistReturn[]> = [];
       const response = await this._sendRequest<et.getMoodPlaylists>('browse', {
         browseId: 'FEmusic_moods_and_genres_category',
         params: params,
@@ -141,7 +142,10 @@ export const ExploreMixin = <TBase extends GConstructor<WatchMixin>>(
         }
         if (path.length) {
           const results = nav(section, path);
-          playlists.push(parseContentList(results, parsePlaylist));
+          playlists = [
+            ...playlists,
+            ...parseContentList(results, parsePlaylist),
+          ];
         }
       }
       return playlists;
@@ -153,95 +157,97 @@ export const ExploreMixin = <TBase extends GConstructor<WatchMixin>>(
      * @param {string} [country = 'ZZ'] ISO 3166-1 Alpha-2 country code.
      * @returns Dictionary containing chart songs (only if authenticated), chart videos, chart artists and trending videos.
      * @example
-{
-  "countries": {
-    "selected": {
-      "text": "United States"
-    },
-    "options": ["DE",
-      "ZZ",
-      "ZW"]
-  },
-  "songs": {
-    "playlist": "VLPL4fGSI1pDJn6O1LS0XSdF3RyO0Rq_LDeI",
-    "items": [
-      {
-        "title": "Outside (Better Days)",
-        "videoId": "oT79YlRtXDg",
-        "artists": [
-          {
-            "name": "MO3",
-            "id": "UCdFt4Cvhr7Okaxo6hZg5K8g"
-          },
-          {
-            "name": "OG Bobby Billions",
-            "id": "UCLusb4T2tW3gOpJS1fJ-A9g"
-          }
-        ],
-        "thumbnails": [...],
-        "isExplicit": true,
-        "album": {
-          "name": "Outside (Better Days)",
-          "id": "MPREb_fX4Yv8frUNv"
-        },
-        "rank": "1",
-        "trend": "up"
-      }
-    ]
-  },
-  "videos": {
-    "playlist": "VLPL4fGSI1pDJn69On1f-8NAvX_CYlx7QyZc",
-    "items": [
-      {
-        "title": "EVERY CHANCE I GET (Official Music Video) (feat. Lil Baby & Lil Durk)",
-        "videoId": "BTivsHlVcGU",
-        "playlistId": "PL4fGSI1pDJn69On1f-8NAvX_CYlx7QyZc",
-        "thumbnails": [],
-        "views": "46M"
-      }
-    ]
-  },
-  "artists": {
-    "playlist": null,
-    "items": [
-      {
-        "title": "YoungBoy Never Broke Again",
-        "browseId": "UCR28YDxjDE3ogQROaNdnRbQ",
-        "subscribers": "9.62M",
-        "thumbnails": [],
-        "rank": "1",
-        "trend": "neutral"
-      }
-    ]
-  },
-  "genres": [
-    {
-      "title": "Top 50 Pop Music Videos United States",
-      "playlistId": "PL4fGSI1pDJn77aK7sAW2AT0oOzo5inWY8",
-      "thumbnails": []
-    }
-  ],
-  "trending": {
-    "playlist": "VLPLrEnWoR732-DtKgaDdnPkezM_nDidBU9H",
-    "items": [
-      {
-        "title": "Permission to Dance",
-        "videoId": "CuklIb9d3fI",
-        "playlistId": "PLrEnWoR732-DtKgaDdnPkezM_nDidBU9H",
-        "artists": [
-          {
-            "name": "BTS",
-            "id": "UC9vrvNSL3xcWGSkV86REBSg"
-          }
-        ],
-        "thumbnails": [],
-        "views": "108M"
-      }
-    ]
-  }
-  }
+     * {
+     *   "countries": {
+     *     "selected": {
+     *       "text": "United States"
+     *     },
+     *     "options": ["DE",
+     *       "ZZ",
+     *       "ZW"]
+     *   },
+     *   "songs": {
+     *     "playlist": "VLPL4fGSI1pDJn6O1LS0XSdF3RyO0Rq_LDeI",
+     *     "items": [
+     *       {
+     *         "title": "Outside (Better Days)",
+     *         "videoId": "oT79YlRtXDg",
+     *         "artists": [
+     *           {
+     *             "name": "MO3",
+     *             "id": "UCdFt4Cvhr7Okaxo6hZg5K8g"
+     *           },
+     *           {
+     *             "name": "OG Bobby Billions",
+     *             "id": "UCLusb4T2tW3gOpJS1fJ-A9g"
+     *           }
+     *         ],
+     *         "thumbnails": [...],
+     *         "isExplicit": true,
+     *         "album": {
+     *           "name": "Outside (Better Days)",
+     *           "id": "MPREb_fX4Yv8frUNv"
+     *         },
+     *         "rank": "1",
+     *         "trend": "up"
+     *       }
+     *     ]
+     *   },
+     *   "videos": {
+     *     "playlist": "VLPL4fGSI1pDJn69On1f-8NAvX_CYlx7QyZc",
+     *     "items": [
+     *       {
+     *         "title": "EVERY CHANCE I GET (Official Music Video) (feat. Lil Baby & Lil Durk)",
+     *         "videoId": "BTivsHlVcGU",
+     *         "playlistId": "PL4fGSI1pDJn69On1f-8NAvX_CYlx7QyZc",
+     *         "thumbnails": [],
+     *         "views": "46M"
+     *       }
+     *     ]
+     *   },
+     *   "artists": {
+     *     "playlist": null,
+     *     "items": [
+     *       {
+     *         "title": "YoungBoy Never Broke Again",
+     *         "browseId": "UCR28YDxjDE3ogQROaNdnRbQ",
+     *         "subscribers": "9.62M",
+     *         "thumbnails": [],
+     *         "rank": "1",
+     *         "trend": "neutral"
+     *       }
+     *     ]
+     *   },
+     *   "genres": [
+     *     {
+     *       "title": "Top 50 Pop Music Videos United States",
+     *       "playlistId": "PL4fGSI1pDJn77aK7sAW2AT0oOzo5inWY8",
+     *       "thumbnails": []
+     *     }
+     *   ],
+     *   "trending": {
+     *     "playlist": "VLPLrEnWoR732-DtKgaDdnPkezM_nDidBU9H",
+     *     "items": [
+     *       {
+     *         "title": "Permission to Dance",
+     *         "videoId": "CuklIb9d3fI",
+     *         "playlistId": "PLrEnWoR732-DtKgaDdnPkezM_nDidBU9H",
+     *         "artists": [
+     *           {
+     *             "name": "BTS",
+     *             "id": "UC9vrvNSL3xcWGSkV86REBSg"
+     *           }
+     *         ],
+     *         "thumbnails": [],
+     *         "views": "108M"
+     *       }
+     *     ]
+     *   }
+     * }
      */
-    async getCharts(country = 'ZZ'): Promise<Record<string, any>> {
+    async getCharts(
+      country = 'ZZ'
+    ): Promise<et.getChartsReturn<typeof country>> {
       const body: Record<string, any> = { browseId: 'FEmusic_charts' };
       if (country) {
         body['formData'] = { selectedValues: [country] };
@@ -249,7 +255,9 @@ export const ExploreMixin = <TBase extends GConstructor<WatchMixin>>(
       const endpoint = 'browse';
       const response = await this._sendRequest(endpoint, body);
       const results = nav(response, [...SINGLE_COLUMN_TAB, ...SECTION_LIST]);
-      const charts: Record<string, any> = { countries: {} };
+      const charts: et.getChartsReturn<typeof country> = {
+        countries: {},
+      } as any;
       const menu = nav(results[0], [
         ...MUSIC_SHELF,
         'subheaders',
@@ -268,7 +276,7 @@ export const ExploreMixin = <TBase extends GConstructor<WatchMixin>>(
           nav(m, ['payload', 'musicFormBooleanChoice', 'opaqueToken'], true)
         )
         .filter((x) => x);
-      const chartsCategories = ['videos', 'artists'];
+      const chartsCategories: (keyof typeof charts)[] = ['videos', 'artists'];
 
       const hasSongs = !!this.getAuth();
       const hasGenres = country == 'US';
@@ -284,14 +292,19 @@ export const ExploreMixin = <TBase extends GConstructor<WatchMixin>>(
       }
 
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      const parseChart = (i: number, parseFunc: any, key: string) => {
-        return parseContentList(
+      const parseChart = <T extends (arg0: any) => any>(
+        i: number,
+        parseFunc: T,
+        key: string
+      ) => {
+        return parseContentList<ReturnType<T>>(
           nav(results[i + (hasSongs ? 1 : 0)], CAROUSEL_CONTENTS, true),
           parseFunc,
           key
         ).filter((x) => x);
       };
       for (const [i, c] of chartsCategories.entries()) {
+        //@ts-expect-error, we'll set the items later...
         charts[c] = {
           playlist: nav(
             results[1 + i],
@@ -314,6 +327,7 @@ export const ExploreMixin = <TBase extends GConstructor<WatchMixin>>(
       charts['artists']['items'] = parseChart(2, parseChartArtist, MRLIR);
 
       if (hasGenres) {
+        //@ts-expect-error: TS didn't detect this control flow discrimination...
         charts['genres'] = parseChart(3, parsePlaylist, MTRIR);
       }
 

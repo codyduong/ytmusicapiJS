@@ -1,3 +1,9 @@
+export type thumbnail = {
+  url: string;
+  width: number;
+  height: number;
+};
+export type thumbnails = thumbnail[];
 export type Headers = {
   'user-agent': string;
   accept: string;
@@ -30,56 +36,3 @@ export type FilterSingular =
   | 'featured_playlist'
   | 'upload';
 export type Scope = 'library' | 'uploads';
-export type Album = {
-  title: string;
-  year: string; //number?
-  browseId: string; //number?
-  thumbnails: string;
-};
-export type Single = {
-  title: string;
-  year: string; //number?
-  browseId: string; //number?
-  thumbnails: string;
-};
-export type Video = {
-  title: string;
-  videoId: string; //number?
-  artists: string;
-  playlistId: string; //number?
-  thumbnails: string;
-  views?: string; //number?
-};
-export type Playlist = {
-  title: string;
-  playlistId: string; //number?
-  thumbnails: any;
-  count?: any; //string; //number?
-  description?: string;
-  author?: string;
-};
-export type RelatedArtist = {
-  title: string;
-  browseId: string;
-  subscribers: string; //number?
-  thumbnails: string;
-};
-export type Artist = {
-  description?: string | null;
-  views?: string | null;
-  name?: string;
-  channelId?: string;
-  shuffleId?: string;
-  radioId?: string;
-  subscribers?: string;
-  subscribed?: boolean;
-  thumbnails?: string;
-  songs?: Record<string, any>;
-  albums: {
-    browseId: string;
-    params: string;
-  };
-  related: {
-    results: Array<any>;
-  };
-};

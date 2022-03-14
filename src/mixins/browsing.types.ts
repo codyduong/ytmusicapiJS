@@ -1,6 +1,8 @@
 import { Except } from 'type-fest';
-import { FilterSingular } from '../types';
-import { getLibraryAlbumsReturn } from './library.types';
+import { FilterSingular, thumbnail, thumbnails as tb } from '../types';
+import * as parser_bT from '../parsers/browsing.types';
+import { parsePlaylistItemsReturn } from '../parsers/playlists.types';
+import { parseAlbumHeaderReturn } from '../parsers/albums.types';
 
 /**search */
 export type searchResponse = {
@@ -129,15 +131,11 @@ export type getArtistRadioId =
 export type getArtistSubscribers =
   getArtistHeader['subscriptionButton']['subscribeButtonRenderer']['subscriberCountText']['runs'][0]['text'];
 
+//Function parameters and returns
 /**
  * search
  */
-type thumbnail = {
-  url: string;
-  width: number;
-  height: number;
-};
-export type thumbnails = thumbnail[];
+export type thumbnails = tb;
 type duration = string | null;
 type artist = {
   name: string;
@@ -206,8 +204,10 @@ type searchArtist = {
   shuffleId: string;
   radioId: string;
 };
-type searchReturnHelper<T> = T & {
-  //@ts-expect-error: yup.
+type searchReturnHelper<T extends { category: string }> = Omit<
+  T,
+  'category'
+> & {
   category: T['category'] | 'Top result';
   thumbnails: thumbnails;
 };
@@ -217,7 +217,7 @@ type searchAllUnion =
   | searchReturnHelper<searchAlbum>
   | searchReturnHelper<searchCommunityPlaylists>
   | searchReturnHelper<searchFeaturedPlaylists>;
-type searchMappedHelper = {
+export type searchMappedHelper = {
   songs: searchReturnHelper<searchSong>[];
   videos: searchReturnHelper<searchVideo>[];
   albums: searchReturnHelper<searchAlbum>[];
@@ -238,89 +238,161 @@ export type searchReturn<T extends keyof searchMappedHelper = 'null'> =
  * getArtist
  */
 export type getArtistReturn = {
-  description: string;
-  views: string;
   name: string;
-  channelId: string;
-  shuffleId?: string;
+  description: string | null;
+  views: string | null;
+  channelId: string | null;
+  shuffleId: string | null;
+  radioId: string | null;
   subscribers: string;
   subscribed: boolean;
-  thumbnails: thumbnails;
-  albums?: getUserReturnShared;
-  singles?: getUserReturnShared;
-  videos?: getUserReturnShared;
-  playlists?: getUserReturnShared;
-  related?: getUserReturnShared;
-};
-
-/**
- * getArtistAlbums
- */
-export type getArtistAlbumsReturn = Except<
-  getLibraryAlbumsReturn[number],
-  'artists'
->[];
-
-/**
- * getUser
- */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-type getUserReturnCategories =
-  | 'albums'
-  | 'singles'
-  | 'videos'
-  | 'playlists'
-  | 'related';
-type getUserReturnShared = {
-  browseId?: string;
-  params?: string;
-  results: Array<
-    | {
-        title: string;
-        videoId: string;
-        artists: artists;
-        playlistId: string;
-        thumbnails: thumbnails;
-        views: string;
-      }
+  thumbnails: thumbnails | null;
+  songs:
     | {
         browseId: string;
-        subscribers: string;
-        title: string;
-        thumbnails: thumbnails;
+        results: parsePlaylistItemsReturn;
       }
-  >;
-};
+    | {
+        browseId: null;
+      };
+} & parser_bT.parseArtistContentsReturn;
+
 export type getUserReturn = {
   name: string;
-  // albums?: getUserReturnCatergorized;
-  // singles?: getUserReturnCatergorized;
-  videos?: getUserReturnShared;
-  playlists?: getUserReturnShared;
-  // related?: getUserReturnCatergorized;
-};
-
-/**
- * getUserPlaylists
- */
-export type getUserPlaylistsReturn = {
-  playlistId: string;
-  title: string;
-  thumbnails: thumbnails;
-  count?: number;
-}[];
-
-/**
- * getAlbumBrowseId
- */
+} & parser_bT.parseArtistContentsReturn;
 
 /**
  * getAlbum
  */
+export type getAlbumReturn = parseAlbumHeaderReturn & {
+  tracks: (Except<parsePlaylistItemsReturn[number], 'album'> & {
+    album: string;
+    artists: parseAlbumHeaderReturn['artists'];
+  })[];
+};
 
 /**
  * getSong
  */
+type getSongFormats = Partial<{
+  width: number;
+  hiehgt: number;
+  fps: number;
+  qualityLabel: string;
+  signatureCipher: string;
+
+  //adaptive
+  itag: number;
+  url: string;
+  mimeType: string;
+  bitrate: number;
+  initRange: {
+    start: string;
+    end: string;
+  };
+  indexRange: {
+    start: string;
+    end: string;
+  };
+  lastModified: string;
+  contentLength: string;
+  quality: string;
+  projectionType: string;
+  averageBitrate: number;
+  highReplication: boolean;
+  audioQuality: string;
+  approxDurationMs: string;
+  audioSampleRate: string;
+  audioChannels: number;
+  loudnessDb: number;
+}>[];
+
+export type getSongRequest<T extends string, U extends string = string> = {
+  playabilityStatus: {
+    status: string;
+    playableInEmbed: boolean;
+    audioOnlyPlayability: {
+      audioOnlyPlayabilityRenderer: {
+        trackingParams: string;
+        audioOnlyAvailability: string;
+      };
+    };
+    miniplayer: {
+      miniplayerRenderer: {
+        playbackMode: string;
+      };
+    };
+    contextParams: string;
+  };
+  streamingData: {
+    expiresIn: string;
+    formats: getSongFormats[];
+    adaptiveFormats: getSongFormats;
+  };
+  videoDetails: {
+    videoId: string;
+    title: string;
+    lengthSeconds: string;
+    channelId: string;
+    isOwnerViewing: boolean;
+    isCrawlable: boolean;
+    thumbnail: { thumbnails: thumbnails };
+    allowRatings: boolean;
+    viewCount: string;
+    author: string;
+    isPrivate: boolean;
+    isUnpluggedCorpus: boolean;
+    musicVideoType: string;
+    isLiveContent: boolean;
+  };
+  microformat: {
+    microformatDataRenderer: {
+      urlCanonical: `https://music.youtube.com/watch?v=${T}`;
+      title: string;
+      description: string;
+      thumbnail: thumbnail;
+      siteName: 'YouTube Music';
+      appName: 'YouTube Music';
+      androidPackage: 'com.google.android.apps.youtube.music';
+      iosAppStoreId: '1017492454';
+      iosAppArguments: `https://music.youtube.com/watch?v=${T}`;
+      ogType: 'video.other';
+      urlApplinksIos: `vnd.youtube.music://music.youtube.com/watch?v=${T}&feature=applinks`;
+      urlApplinksAndroid: `vnd.youtube.music://music.youtube.com/watch?v=${T}&feature=applinks`;
+      urlTwitterIos: `vnd.youtube.music://music.youtube.com/watch?v=${T}&feature=twitter-deep-link`;
+      urlTwitterAndroid: `vnd.youtube.music://music.youtube.com/watch?v=${T}&feature=twitter-deep-link`;
+      twitterCardType: 'player';
+      twitterSiteHandle: '@YouTubeMusic';
+      schemaDotOrgType: 'http://schema.org/VideoObject';
+      noindex: boolean;
+      unlisted: boolean;
+      paid: boolean;
+      familySafe: boolean;
+      tags: string[];
+      availableCountries?: any;
+      pageOwnerDetails: {
+        name: string;
+        externalChannelId: `${U}`;
+        youtubeProfileUrl: `http://www.youtube.com/channel/${U}`;
+      };
+      videoDetails: {
+        externalVideoId: string;
+        durationSeconds: string;
+        durationIso8601: string;
+      };
+      linkAlternates: {
+        hrefUrl: string;
+        title?: string;
+        alternateType: string;
+      };
+      viewCount: string;
+      publishDate: `${string}-${string}-${string}`;
+      category: string;
+      uploadDate: `${string}-${string}-${string}`;
+    };
+  };
+  //There are more keys but they are all removed...
+};
 
 /**
  * getLyrics

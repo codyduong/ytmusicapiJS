@@ -5,13 +5,13 @@ const ytm = new YTMusic({ language: 'en' });
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const quickQuery = async (c: InstanceType<typeof YTMusic>) => {
   return {
-    artist: await c.search<'artists'>('edm', { limit: 1, filter: 'artists' }),
+    artist: await c.search('edm', { limit: 1, filter: 'artists' }),
     // playlist: await c.search<'playlists'>('edm', {
     //   limit: 1,
     //   filter: 'playlists',
     // }),
-    song: await c.search<'songs'>('edm', { limit: 1, filter: 'songs' }),
-    video: await c.search<'videos'>('edm', { limit: 1, filter: 'videos' }),
+    song: await c.search('edm', { limit: 1, filter: 'songs' }),
+    video: await c.search('edm', { limit: 1, filter: 'videos' }),
     // station: await c.search<'artists'>('edm', {limit: 1, filter: 'artists'}),
   };
 };

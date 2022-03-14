@@ -10,20 +10,23 @@ import {
 import { toInt } from '../helpers';
 import { parseLikeStatus, parseSongRuns } from './songs';
 import { nav } from './utils';
+import * as parser_aT from './albums.types';
 
-export function parseAlbumHeader(response: any): any {
+export function parseAlbumHeader(
+  response: any
+): parser_aT.parseAlbumHeaderReturn {
   const header = nav(response, HEADER_DETAIL);
-  let album: Record<string, any> = {
+  let album: parser_aT.parseAlbumHeaderReturn = {
     title: nav(header, TITLE_TEXT),
     type: nav(header, SUBTITLE),
     thumbnails: nav(header, THUMBNAIL_CROPPED),
-  };
+  } as any;
   if ('description' in header) {
     album['description'] = header['description']['runs'][0]['text'];
   }
 
   const albumInfo = parseSongRuns(header['subtitle']['runs'].slice(2));
-  album = { ...album, albumInfo };
+  album = { ...album, ...albumInfo };
 
   if (header['secondSubtitle']['runs'].length > 1) {
     album['trackCount'] = toInt(header['secondSubtitle']['runs'][0]['text']);

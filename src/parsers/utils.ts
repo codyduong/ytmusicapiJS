@@ -1,4 +1,5 @@
 import { MENU_ITEMS, NAVIGATION_BROWSE_ID } from './index';
+import { parsePlaylistItemsReturn } from './playlists.types';
 
 export function parseMenuPlaylists(
   data: Record<string, any> | null,
@@ -213,13 +214,15 @@ function getContinuationContents<T extends Record<string, any>>(
   return [] as any;
 }
 
-export async function resendRequestUntilParsedResponseIsValid(
+export async function resendRequestUntilParsedResponseIsValid<
+  T extends { parsed: parsePlaylistItemsReturn; results: unknown }
+>(
   requestFunc: (additionalParams: any) => Promise<any>,
   request_additional_params: string | null,
-  parse_func: (rawResponse: any) => any,
-  validateFunc: (parsed: Record<string, any>) => boolean,
+  parse_func: (rawResponse: any) => T,
+  validateFunc: (parsed: T) => boolean,
   max_retries: number
-): Promise<any> {
+): Promise<T> {
   const response = await requestFunc(request_additional_params);
   let parsedObject = parse_func(response);
   let retryCounter = 0;

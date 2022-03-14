@@ -23,6 +23,7 @@ import {
   nav,
   parseMenuPlaylists,
 } from './utils';
+import * as parser_lt from './library.types';
 
 export function parseArtists(results: any, uploaded = false): Array<any> {
   const artists: Array<any> = [];
@@ -62,29 +63,30 @@ export async function parseLibraryAlbums(
     return [];
   }
   results = nav(results, GRID);
-  const albums = parseAlbums(results['items']);
+  let albums = parseAlbums(results['items']);
 
   if (results['continuations']) {
     const parseFunc = (contents: any): any => parseAlbums(contents);
-    albums.extend(
-      await getContinuations(
+    albums = [
+      ...albums,
+      ...(await getContinuations(
         results,
         'gridContinuation',
         limit - albums.length,
         requestFunc,
         parseFunc
-      )
-    );
+      )),
+    ];
   }
 
   return albums;
 }
 
-export function parseAlbums(results: any): any {
+export function parseAlbums(results: any): parser_lt.parseAlbumsReturn {
   const albums = [];
   for (const result of results) {
     const data = result[MTRIR];
-    const album: Record<string, any> = {};
+    const album: parser_lt.parseAlbumsReturn[number] = {} as any;
     album['browseId'] = nav(data, [...TITLE, ...NAVIGATION_BROWSE_ID]);
     album['title'] = nav(data, TITLE_TEXT);
     album['thumbnails'] = nav(data, THUMBNAIL_RENDERER);
@@ -127,7 +129,7 @@ export async function parseLibraryArtists(
   response: any,
   requestFunc: (arg1: any) => Promise<Record<string, any>>,
   limit: number
-): Promise<any> {
+): Promise<parser_lt.parseLibraryArtistsReturn> {
   let results = findObjectByKey(
     nav(response, [...SINGLE_COLUMN_TAB, ...SECTION_LIST]),
     'itemSectionRenderer'
@@ -153,13 +155,15 @@ export async function parseLibraryArtists(
   return artists;
 }
 
-export function parseLibrarySongs(response: any): any {
+export function parseLibrarySongs(
+  response: any
+): parser_lt.parseLibarySongsReturn {
   let results = findObjectByKey(
     nav(response, [...SINGLE_COLUMN_TAB, ...SECTION_LIST]),
     'itemSectionRenderer'
   );
   results = nav(results, ITEM_SECTION);
-  const songs: Record<string, any> = { results: [], parsed: [] };
+  const songs: parser_lt.parseLibarySongsReturn = { results: [], parsed: [] };
   if (results['musicShelfRenderer']) {
     songs['results'] = results['musicShelfRenderer'];
     songs['parsed'] = parsePlaylistItems(songs['results']['contents'].slice(1));

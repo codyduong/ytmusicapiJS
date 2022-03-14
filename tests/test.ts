@@ -491,16 +491,16 @@ describe('(Auth) Library', () => {
     });
   });
   //Don't remove history items...
-  describe.skip('Remove History Items', () => {
-    test('#1', async () => {
-      const songs = await ytmusicAuth.getHistory();
-      const response = await ytmusicAuth.removeHistoryItems([
-        songs[0]['feedbackToken'],
-        songs[1]['feedbackToken'],
-      ]);
-      expect(response['feedbackResponses']).toBeTruthy();
-    });
-  });
+  // describe.skip('Remove History Items', () => {
+  //   test('#1', async () => {
+  //     const songs = await ytmusicAuth.getHistory();
+  //     const response = await ytmusicAuth.removeHistoryItems([
+  //       songs[0]['feedbackToken'],
+  //       songs[1]['feedbackToken'],
+  //     ]);
+  //     expect(response['feedbackResponses']).toBeTruthy();
+  //   });
+  // });
   describe('Rate Song', () => {
     test('#1', async () => {
       const response = await ytmusicAuth.rateSong(sampleVideo, 'LIKE');
@@ -570,7 +570,7 @@ describe('Playlists', () => {
     test('#1', async () => {
       const playlist = await ytmusicBrand.getPlaylist(playlistsOwn);
       expect(playlist['tracks'].length).toBeLessThanOrEqual(100);
-      if (playlist['suggestions_tokens']) {
+      if (playlist['suggestions_token']) {
         const suggestions = await ytmusicBrand.getPlaylistSuggestions(
           playlist['suggestions_token']
         );
@@ -591,8 +591,8 @@ describe('Playlists', () => {
       description: playlist['description'],
       privacyStatus: playlist['privacy'],
       moveItem: [
-        playlist['tracks'][1]['setVideoId'],
-        playlist['tracks'][0]['setVideoId'],
+        playlist['tracks'][1]['setVideoId']!,
+        playlist['tracks'][0]['setVideoId']!,
       ],
     });
     expect(['STATUS_SUCCEEDED', 'Playlist edit failed']).toContain(response);
@@ -601,8 +601,8 @@ describe('Playlists', () => {
       description: playlist['description'],
       privacyStatus: playlist['privacy'],
       moveItem: [
-        playlist['tracks'][1]['setVideoId'],
-        playlist['tracks'][0]['setVideoId'],
+        playlist['tracks'][1]['setVideoId']!,
+        playlist['tracks'][0]['setVideoId']!,
       ],
     });
     expect(['STATUS_SUCCEEDED', 'Playlist edit failed']).toContain(response2);

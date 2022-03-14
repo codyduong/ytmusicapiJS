@@ -63,9 +63,6 @@ export const locale = {
     }
     return parseInt(numbered.toFixed(0));
   },
-  setlocale: (_value: any, _value2: any): void => {
-    throw new Error('Function not implemented.');
-  },
 };
 
 export const CaseInsensitiveObject = <T extends Record<string, any>>(

@@ -313,7 +313,9 @@ export const UploadsMixin = <TBase extends GConstructor<LibraryMixin>>(
       const body = { browseId: browseId };
       const endpoint = 'browse';
       const response = await this._sendRequest(endpoint, body);
-      const album = parseAlbumHeader(response);
+      const album = parseAlbumHeader(
+        response
+      ) as unknown as ut.getLibraryUploadAlbumReturn;
       const results = nav(response, [
         ...SINGLE_COLUMN_TAB,
         ...SECTION_LIST_ITEM,
@@ -329,7 +331,9 @@ export const UploadsMixin = <TBase extends GConstructor<LibraryMixin>>(
      * @param filepath Path to the music file (mp3, m4a, wma, flac or ogg).
      * @returns Status String or full response.
      */
-    async uploadSong(filepath: string): Promise<string | Record<string, any>> {
+    async uploadSong(
+      filepath: string
+    ): Promise<'STATUS_SUCCEEDED' | Record<string, any>> {
       this._checkAuth();
       if (existsSync(filepath)) {
         throw new Error('The provided file does not exist.');
@@ -379,7 +383,7 @@ export const UploadsMixin = <TBase extends GConstructor<LibraryMixin>>(
      */
     async deleteUploadEntity(
       entityId: string
-    ): Promise<string | Record<string, any>> {
+    ): Promise<'STATUS_SUCCEEDED' | Record<string, any>> {
       this._checkAuth();
       const endpoint = 'music/delete_privately_owned_entity';
       if (entityId.includes('FEmusic_library_privately_owned_release_detail')) {

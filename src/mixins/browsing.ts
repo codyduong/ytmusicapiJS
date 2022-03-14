@@ -27,8 +27,10 @@ import { parsePlaylistItems } from '../parsers/playlists';
 import { getSearchParams } from '../parsers/searchParams';
 import { findObjectByKey, getContinuations, nav } from '../parsers/utils';
 
-import type { Artist, Filter, FilterSingular, Scope } from '../types';
+import type { Filter, FilterSingular, Scope } from '../types';
 import * as bt from './browsing.types';
+import * as parser_bT from '../parsers/browsing.types';
+import * as parser_lT from '../parsers/library.types';
 import { _YTMusic } from '../ytmusic';
 
 export type BrowsingMixin = Mixin<typeof BrowsingMixin>;
@@ -50,86 +52,86 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
      * @param {number} [limit=3] Number of rows to return
      * @returns List of objects keyed with 'title' text and 'contents' array
      * @example
-     *  [
-     *    {
-     *        "title": "Your morning music",
-     *        "contents": [
-     *            { //album result
-     *                "title": "Sentiment",
-     *                "year": "Said The Sky",
-     *                "browseId": "MPREb_QtqXtd2xZMR",
-     *                "thumbnails": [...]
-     *            },
-     *            { //playlist result
-     *                "title": "r/EDM top submissions 01/28/2022",
-     *                "playlistId": "PLz7-xrYmULdSLRZGk-6GKUtaBZcgQNwel",
-     *                "thumbnails": [...],
-     *                "description": "redditEDM • 161 songs",
-     *                "count": "161",
-     *                "author": [
-     *                    {
-     *                        "name": "redditEDM",
-     *                        "id": "UCaTrZ9tPiIGHrkCe5bxOGwA"
-     *                    }
-     *                ]
-     *            }
-     *        ]
-     *    },
-     *    {
-     *        "title": "Your favorites",
-     *        "contents": [
-     *            { //artist result
-     *                "title": "Chill Satellite",
-     *                "browseId": "UCrPLFBWdOroD57bkqPbZJog",
-     *                "subscribers": "374",
-     *                "thumbnails": [...]
-     *            }
-     *            { //album result
-     *                "title": "Dragon",
-     *                "year": "Two Steps From Hell",
-     *                "browseId": "MPREb_M9aDqLRbSeg",
-     *                "thumbnails": [...]
-     *            }
-     *        ]
-     *    },
-     *    {
-     *        "title": "Quick picks",
-     *        "contents": [
-     *            { //song quick pick
-     *                "title": "Gravity",
-     *                "videoId": "EludZd6lfts",
-     *                "artists": [{
-     *                        "name": "yetep",
-     *                        "id": "UCSW0r7dClqCoCvQeqXiZBlg"
-     *                    }],
-     *                "thumbnails": [...],
-     *                "album": {
-     *                    "title": "Gravity",
-     *                    "browseId": "MPREb_D6bICFcuuRY"
-     *                }
-     *            },
-     *            { //video quick pick
-     *                "title": "Gryffin & Illenium (feat. Daya) - Feel Good (L3V3LS Remix)",
-     *                "videoId": "bR5l0hJDnX8",
-     *                "artists": [
-     *                    {
-     *                        "name": "L3V3LS",
-     *                        "id": "UCCVNihbOdkOWw_-ajIYhAbQ"
-     *                    }
-     *                ],
-     *                "thumbnails": [...],
-     *                "views": "10M"
-     *            }
-     *        ]
-     *    }
+     * [
+     *   {
+     *     "title": "Your morning music",
+     *     "contents": [
+     *       { //album result
+     *         "title": "Sentiment",
+     *         "year": "Said The Sky",
+     *         "browseId": "MPREb_QtqXtd2xZMR",
+     *         "thumbnails": [...]
+     *       },
+     *       { //playlist result
+     *         "title": "r/EDM top submissions 01/28/2022",
+     *         "playlistId": "PLz7-xrYmULdSLRZGk-6GKUtaBZcgQNwel",
+     *         "thumbnails": [...],
+     *         "description": "redditEDM • 161 songs",
+     *         "count": "161",
+     *         "author": [
+     *           {
+     *             "name": "redditEDM",
+     *             "id": "UCaTrZ9tPiIGHrkCe5bxOGwA"
+     *           }
+     *         ]
+     *       }
+     *     ]
+     *   },
+     *   {
+     *     "title": "Your favorites",
+     *     "contents": [
+     *       { //artist result
+     *         "title": "Chill Satellite",
+     *         "browseId": "UCrPLFBWdOroD57bkqPbZJog",
+     *         "subscribers": "374",
+     *         "thumbnails": [...]
+     *       }
+     *       { //album result
+     *         "title": "Dragon",
+     *         "year": "Two Steps From Hell",
+     *         "browseId": "MPREb_M9aDqLRbSeg",
+     *         "thumbnails": [...]
+     *       }
+     *     ]
+     *   },
+     *   {
+     *     "title": "Quick picks",
+     *     "contents": [
+     *       { //song quick pick
+     *         "title": "Gravity",
+     *         "videoId": "EludZd6lfts",
+     *         "artists": [{
+     *             "name": "yetep",
+     *             "id": "UCSW0r7dClqCoCvQeqXiZBlg"
+     *           }],
+     *         "thumbnails": [...],
+     *         "album": {
+     *           "title": "Gravity",
+     *           "browseId": "MPREb_D6bICFcuuRY"
+     *         }
+     *       },
+     *       { //video quick pick
+     *         "title": "Gryffin & Illenium (feat. Daya) - Feel Good (L3V3LS Remix)",
+     *         "videoId": "bR5l0hJDnX8",
+     *         "artists": [
+     *           {
+     *               "name": "L3V3LS",
+     *               "id": "UCCVNihbOdkOWw_-ajIYhAbQ"
+     *           }
+     *         ],
+     *         "thumbnails": [...],
+     *         "views": "10M"
+     *       }
+     *     ]
+     *   }
      * ]
      */
-    async getHome(limit = 3): Promise<Record<string, any>[]> {
+    async getHome(limit = 3): Promise<parser_bT.parseHomeReturn> {
       const endpoint = 'browse';
       const body = { browseId: 'FEmusic_home' };
       const response = await this._sendRequest(endpoint, body);
       const results = nav(response, [...SINGLE_COLUMN_TAB, ...SECTION_LIST]);
-      let home: any[] = [...this.parser.parseHome(results)];
+      let home = [...this.parser.parseHome(results)];
 
       const sectionList = nav(response, [
         ...SINGLE_COLUMN_TAB,
@@ -256,7 +258,88 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
      *   }
      * ]
      */
-    async search<T extends Filter | 'null'>(
+    async search(
+      query: string,
+      options?: {
+        filter?: undefined;
+        scope?: Scope;
+        limit?: number;
+        ignoreSpelling?: boolean;
+      }
+    ): Promise<bt.searchReturn<'null'>>;
+    async search(
+      query: string,
+      options?: {
+        filter?: 'songs';
+        scope?: Scope;
+        limit?: number;
+        ignoreSpelling?: boolean;
+      }
+    ): Promise<bt.searchReturn<'songs'>>;
+    async search(
+      query: string,
+      options?: {
+        filter?: 'videos';
+        scope?: Scope;
+        limit?: number;
+        ignoreSpelling?: boolean;
+      }
+    ): Promise<bt.searchReturn<'videos'>>;
+    async search(
+      query: string,
+      options?: {
+        filter?: 'albums';
+        scope?: Scope;
+        limit?: number;
+        ignoreSpelling?: boolean;
+      }
+    ): Promise<bt.searchReturn<'albums'>>;
+    async search(
+      query: string,
+      options?: {
+        filter?: 'artists';
+        scope?: Scope;
+        limit?: number;
+        ignoreSpelling?: boolean;
+      }
+    ): Promise<bt.searchReturn<'artists'>>;
+    async search(
+      query: string,
+      options?: {
+        filter?: 'playlists';
+        scope?: Scope;
+        limit?: number;
+        ignoreSpelling?: boolean;
+      }
+    ): Promise<bt.searchReturn<'playlists'>>;
+    async search(
+      query: string,
+      options?: {
+        filter?: 'community_playlists';
+        scope?: Scope;
+        limit?: number;
+        ignoreSpelling?: boolean;
+      }
+    ): Promise<bt.searchReturn<'community_playlists'>>;
+    async search(
+      query: string,
+      options?: {
+        filter?: 'featured_playlists';
+        scope?: Scope;
+        limit?: number;
+        ignoreSpelling?: boolean;
+      }
+    ): Promise<bt.searchReturn<'featured_playlists'>>;
+    async search(
+      query: string,
+      options?: {
+        filter?: 'uploads';
+        scope?: Scope;
+        limit?: number;
+        ignoreSpelling?: boolean;
+      }
+    ): Promise<bt.searchReturn<'uploads'>>;
+    async search<T extends Filter | 'null' = 'null'>(
       query: string,
       options?: {
         filter?: Exclude<Filter, 'null'>;
@@ -496,10 +579,10 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
         );
       }
 
-      let artist: Partial<Artist> = {
+      let artist: bt.getArtistReturn = {
         description: null,
         views: null,
-      };
+      } as any;
       const header = response['header']['musicImmersiveHeaderRenderer'];
       artist['name'] = nav(header, TITLE_TEXT);
       const descriptionShelf = findObjectByKey(
@@ -550,10 +633,11 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
             ...NAVIGATION_BROWSE_ID,
           ]);
         }
+        //@ts-expect-error: We're overriding the shape here
         artist['songs']['results'] = parsePlaylistItems(musicShelf['contents']);
       }
       artist = { ...artist, ...this.parser.parseArtistContents(results) };
-      return artist as any;
+      return artist;
     }
 
     /**
@@ -565,7 +649,7 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
     async getArtistAlbums(
       channelId: string,
       params: string
-    ): Promise<bt.getArtistAlbumsReturn> {
+    ): Promise<parser_lT.parseAlbumsReturn> {
       const body = { browseId: channelId, params: params };
       const endpoint = 'browse';
       const response = await this._sendRequest(endpoint, body);
@@ -627,15 +711,15 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
       const endpoint = 'browse';
       const body = { browseId: channelId };
       const response = await this._sendRequest(endpoint, body);
-      let user = {
+      const results = nav(response, [...SINGLE_COLUMN_TAB, ...SECTION_LIST]);
+      const user: bt.getUserReturn = {
         name: nav(response, [
           'header',
           'musicVisualHeaderRenderer',
           ...TITLE_TEXT,
-        ]),
+        ]) as string,
+        ...this.parser.parseArtistContents(results),
       };
-      const results = nav(response, [...SINGLE_COLUMN_TAB, ...SECTION_LIST]);
-      user = { ...user, ...this.parser.parseArtistContents(results) };
       return user;
     }
 
@@ -649,7 +733,7 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
     async getUserPlaylists(
       channelId: string,
       params: string
-    ): Promise<bt.getUserPlaylistsReturn> {
+    ): Promise<parser_bT.parsePlaylistReturn[]> {
       const endpoint = 'browse';
       const body = { browseId: channelId, params: params };
       const response = await this._sendRequest(endpoint, body);
@@ -668,7 +752,9 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
      * @param {string} [audioPlaylistId] id of the audio playlist (starting with `OLAK5uy_`)
      * @returns browseId (starting with `MPREb_`)
      */
-    async getAlbumBrowseId(audioPlaylistId: string): Promise<any> {
+    async getAlbumBrowseId(
+      audioPlaylistId: `OLAK5uy_${string}`
+    ): Promise<`MPREb_${string}`> {
       const params = { list: audioPlaylistId };
       const response = await this._sendGetRequest(
         YTM_DOMAIN + '/playlist',
@@ -681,7 +767,7 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
           .decode(utf8.encode(matches[0]))
           .replace(/^"+|"+$/g, '');
       }
-      return browse_id;
+      return browse_id as any;
     }
 
     /**
@@ -731,17 +817,21 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
      *   "duration_seconds": 4657
      * }
      */
-    async getAlbum(browseId: string): Promise<Record<string, any>> {
+    async getAlbum(browseId: string): Promise<bt.getAlbumReturn> {
       const body = { browseId: browseId };
       const endpoint = 'browse';
       const response = await this._sendRequest(endpoint, body);
-      const album = parseAlbumHeader(response);
       const results = nav(response, [
         ...SINGLE_COLUMN_TAB,
         ...SECTION_LIST_ITEM,
         ...MUSIC_SHELF,
       ]);
-      album['tracks'] = parsePlaylistItems(results['contents']);
+      const album: bt.getAlbumReturn = {
+        ...parseAlbumHeader(response),
+        //@ts-expect-error: We'll swap this out proper later.
+        tracks: parsePlaylistItems(results['contents']),
+        duration_seconds: undefined,
+      };
       album['duration_seconds'] = helpers.sumTotalDuration(album);
       for (const [i, _track] of album['tracks'].entries()) {
         album['tracks'][i]['album'] = album['title'];
@@ -755,7 +845,7 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
      * Returns metadata and streaming information about a song or video.
      * @param {string} [videoId] Video id
      * @param {number} [signatureTimestamp] Provide the current YouTube signatureTimestamp.
-          If not provided a default value will be used, which might result in invalid streaming URLs
+     * If not provided a default value will be used, which might result in invalid streaming URLs
      * @return Object with song metadata
      * @example
      * {
@@ -893,7 +983,7 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
     async getSong(
       videoId: string,
       signatureTimestamp?: number
-    ): Promise<Record<string, any>> {
+    ): Promise<bt.getSongRequest<typeof videoId>> {
       const endpoint = 'player';
       if (!signatureTimestamp) {
         signatureTimestamp = helpers.getDatestamp() - 1;
@@ -907,14 +997,16 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
         },
         video_id: videoId,
       };
-      const response = await this._sendRequest(endpoint, params);
+      const response = await this._sendRequest<
+        bt.getSongRequest<typeof videoId>
+      >(endpoint, params);
       const keys = [
         'videoDetails',
         'playabilityStatus',
         'streamingData',
         'microformat',
       ];
-      for (const k of Object.keys(response)) {
+      for (const k of Object.keys(response) as (keyof typeof response)[]) {
         if (!keys.includes(k)) {
           delete response[k];
         }

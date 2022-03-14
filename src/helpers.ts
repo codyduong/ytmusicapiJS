@@ -133,9 +133,9 @@ function sum(arr: Array<number>): number {
   return arr.reduce((a, b) => a + b, 0);
 }
 
-export function parseDuration(duration: string | undefined): any {
+export function parseDuration(duration: string | undefined): number {
   if (!duration) {
-    return duration;
+    return Number(duration);
   }
   const mappedIncrements = zip([1, 60, 3600], duration.split(':').reverse());
   const seconds = sum(
@@ -144,7 +144,7 @@ export function parseDuration(duration: string | undefined): any {
   return seconds;
 }
 
-export function sumTotalDuration(item: any): any {
+export function sumTotalDuration(item: any): number {
   return sum(
     item.tracks.map(
       ({ track }: { track?: { duration_seconds?: number } }) =>

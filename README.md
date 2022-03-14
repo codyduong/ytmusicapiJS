@@ -4,7 +4,7 @@
 [![Commits since latest release](https://img.shields.io/github/commits-since/codyduong/ytmusicapijs/latest?style=flat-square)](https://github.com/codyduong/ytmusicapiJS/releases)
 # ytmusicapiJS: Unofficial API for YouTube Music
 
-ytmusicapiJS is a JS/TS implementation of the Python 3 library [`ytmusicapi`](https://github.com/sigma67/ytmusicapi)
+ytmusicapiJS is a TypeScript implementation of the Python 3 library [`ytmusicapi`](https://github.com/sigma67/ytmusicapi)
 
 It emulates YouTube Music web client requests using the user's cookie data for authentication.
 
@@ -12,8 +12,6 @@ This library is intended to carry the same functionality as the library it is in
 
 ## Features
 See API here https://codyduong.github.io/ytmusicapiJS/
-
-More comprehensive list and explanation [here in the original repo](https://github.com/sigma67/ytmusicapi#features) or check out [the docs for the original repo](ytmusicapi.readthedocs.io/)
 
 <details title="Feature Parity">
 <summary>Feature Parity</summary>

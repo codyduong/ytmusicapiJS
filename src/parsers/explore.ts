@@ -7,7 +7,8 @@ import {
   NAVIGATION_BROWSE_ID,
   NAVIGATION_PLAYLIST_ID,
 } from '.';
-import { parseSongArtists } from './songs';
+import { thumbnails } from '../types';
+import { parseSongArtists, parseSongArtistsReturn } from './songs';
 import { getDotSeperatorIndex, getFlexColumnItem, nav } from './utils';
 
 const TRENDS = {
@@ -16,9 +17,26 @@ const TRENDS = {
   ARROW_CHART_NEUTRAL: 'neutral',
 };
 
-export function parseChartSong(data: any): Record<string, any> {
+export type parseChartSongReturn = {
+  title: string;
+  videoId: string | null;
+  artists: parseSongArtistsReturn;
+  thumbnails: thumbnails;
+  isExplicit: boolean;
+} & (
+  | {
+      album?: {
+        name: string;
+        id: string;
+      };
+    }
+  | {
+      views: string;
+    }
+);
+export function parseChartSong(data: any): parseChartSongReturn {
   const flex_0 = getFlexColumnItem(data, 0);
-  let parsed: Record<string, any> = {
+  let parsed: parseChartSongReturn = {
     title: nav(flex_0, TEXT_RUN_TEXT),
     videoId: nav(flex_0, [...TEXT_RUN, ...NAVIGATION_VIDEO_ID], true),
     artists: parseSongArtists(data, 1),
@@ -34,16 +52,27 @@ export function parseChartSong(data: any): Record<string, any> {
   } else {
     const flex_1 = getFlexColumnItem(data, 1);
     //const _ = nav(flex_1, ['text', 'runs']);
+    //@ts-expect-error: TS doesn't discriminate flow correctly here?
     parsed['views'] = nav(flex_1, ['text', 'runs', -1, 'text']).split(' ')[0];
   }
   parsed = { ...parsed, ...parseRanking(data) };
   return parsed;
 }
 
-export function parseChartArtist(data: any): Record<string, any> {
-  let subscribers = getFlexColumnItem(data, 1);
+export type parseChartArtistReturn = {
+  title: string;
+  browseId: string;
+  subscribers: string | null;
+  thumbnails: thumbnails;
+};
+export function parseChartArtist(data: any): parseChartArtistReturn {
+  const flexItem = getFlexColumnItem(data, 1);
+  let subscribers: string | null = null;
   if (subscribers) {
-    subscribers = nav(subscribers, TEXT_RUN_TEXT).split(' ')[0];
+    subscribers = nav<typeof subscribers, string>(
+      flexItem,
+      TEXT_RUN_TEXT
+    ).split(' ')[0];
   }
   let parsed = {
     title: nav(getFlexColumnItem(data, 0), TEXT_RUN_TEXT),
@@ -55,7 +84,15 @@ export function parseChartArtist(data: any): Record<string, any> {
   return parsed;
 }
 
-export function parseChartTrending(data: any): Record<string, any> | null {
+export type parseChartTrendingReturn = {
+  title: string;
+  videoId: string | null;
+  playlistId: string | null;
+  artists: parseSongArtistsReturn;
+  thumbnails: thumbnails;
+  views?: string | null;
+} | null;
+export function parseChartTrending(data: any): parseChartTrendingReturn {
   if (data) {
     const flex_0 = getFlexColumnItem(data, 0);
     const artists = parseSongArtists(data, 1);
@@ -63,7 +100,7 @@ export function parseChartTrending(data: any): Record<string, any> | null {
       const index = getDotSeperatorIndex(artists);
       // last item is views for some reason
       const views =
-        index == artists.length ? null : artists.pop()['name'].split(' ')[0];
+        index == artists.length ? null : artists.pop()?.['name'].split(' ')[0];
 
       return {
         title: nav(flex_0, TEXT_RUN_TEXT),

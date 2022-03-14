@@ -37,16 +37,8 @@ import {
   nav,
   parseMenuPlaylists,
 } from './utils';
-
-import type {
-  Album,
-  Artist,
-  Playlist,
-  RelatedArtist,
-  Single,
-  Video,
-} from '../types';
 import * as bT from '../mixins/browsing.types';
+import * as parser_bT from './browsing.types';
 import _ from 'i18next';
 
 export class Parser {
@@ -224,7 +216,9 @@ export class Parser {
     return searchResults;
   }
 
-  parseArtistContents(results: bT.getArtistResults): Artist {
+  parseArtistContents(
+    results: bT.getArtistResults
+  ): parser_bT.parseArtistContentsReturn {
     const categories: ['albums', 'singles', 'videos', 'playlists', 'related'] =
       ['albums', 'singles', 'videos', 'playlists', 'related'];
     const categories_local = [
@@ -241,7 +235,7 @@ export class Parser {
       parsePlaylist,
       parseRelatedArtist,
     ];
-    const artist: Record<string, any> = {};
+    const artist: parser_bT.parseArtistContentsReturn = {} as any;
     categories.forEach((category, i) => {
       const data = results
         .map((r) => {
@@ -256,6 +250,7 @@ export class Parser {
         })
         .filter((x) => x);
       if (data[0]) {
+        //@ts-expect-error: We set this later in flow
         artist[category] = { browseId: null, results: [] };
         if ('navigationEndpoint' in nav(data[0], CAROUSEL_TITLE)) {
           artist[category]['browseId'] = nav(data[0], [
@@ -263,12 +258,14 @@ export class Parser {
             ...NAVIGATION_BROWSE_ID,
           ]);
           if (['albums', 'singles', 'playlists'].includes(category)) {
-            artist[category]['params'] = nav(data[0], CAROUSEL_TITLE)[
+            //@ts-expect-error: TS Control Flow Discrimination fails here :(
+            artist[category].params = nav(data[0], CAROUSEL_TITLE)[
               'navigationEndpoint'
             ]['browseEndpoint']['params'];
           }
         }
 
+        //@ts-expect-error: It tries it's best LOL.
         artist[category]['results'] = parseContentList(
           data[0]['contents'],
           categories_parser[i]
@@ -276,11 +273,11 @@ export class Parser {
       }
     });
 
-    return artist as Artist;
+    return artist;
   }
 
-  parseHome(rows: any): any[] {
-    const items = [];
+  parseHome(rows: any): parser_bT.parseHomeReturn {
+    const items: parser_bT.parseHomeReturn = [];
     for (const row of rows) {
       const contents = [];
       let results;
@@ -293,7 +290,8 @@ export class Parser {
       }
       for (const result of results['contents']) {
         let data = nav(result, [MTRIR], true);
-        let content: Record<string, any> = {};
+        let content: parser_bT.parseHomeReturn[number]['contents'][number] =
+          {} as any;
         if (data) {
           const page_type = nav(
             data,
@@ -301,7 +299,6 @@ export class Parser {
             true
           );
           if (!page_type) {
-            // song
             content = parseSong(data);
           } else if (page_type == 'MUSIC_PAGE_TYPE_ALBUM') {
             content = parseAlbum(data);
@@ -319,7 +316,7 @@ export class Parser {
           content = {
             title: nav(columns[0], TEXT_RUN_TEXT),
             videoId: nav(columns[0], [...TEXT_RUN, ...NAVIGATION_VIDEO_ID]),
-            thumbnails: nav(data, THUMBNAILS),
+            thumbnails: nav(data, THUMBNAILS) as bT.thumbnails,
             ...parseSongRuns(nav(columns[1], TEXT_RUNS)),
           };
           if (columns.length > 2 && columns[2]) {
@@ -353,7 +350,7 @@ export function parseContentList<T>(
   return contents;
 }
 
-export function parseAlbum(result: any): Album {
+export function parseAlbum(result: any): parser_bT.parseAlbumReturn {
   return {
     title: nav(result, TITLE_TEXT, true), //@codyduong this isn't nullable in the py library? todo discovery why...
     year: nav(result, SUBTITLE2, true),
@@ -362,7 +359,7 @@ export function parseAlbum(result: any): Album {
   };
 }
 
-export function parseSingle(result: any): Single {
+export function parseSingle(result: any): parser_bT.parseSingleReturn {
   return {
     title: nav(result, TITLE_TEXT),
     year: nav(result, SUBTITLE, true),
@@ -371,7 +368,7 @@ export function parseSingle(result: any): Single {
   };
 }
 
-export function parseSong(result: any): Record<string, any> {
+export function parseSong(result: any): parser_bT.parseSongReturn {
   return {
     title: nav(result, TITLE_TEXT),
     videoId: nav(result, NAVIGATION_VIDEO_ID),
@@ -383,10 +380,10 @@ export function parseSong(result: any): Record<string, any> {
 
 export function parseVideo(result: {
   [x: string]: { [x: string]: any };
-}): Video {
+}): parser_bT.parseVideoReturn {
   const runs: Array<Record<string, any>> = result['subtitle']['runs'];
   const artistsLen = getDotSeperatorIndex(runs);
-  const video: Video = {
+  const video: parser_bT.parseVideoReturn = {
     title: nav(result, TITLE_TEXT),
     videoId: nav(result, NAVIGATION_VIDEO_ID),
     artists: parseSongArtistsRuns(runs.slice(0, artistsLen)),
@@ -399,8 +396,8 @@ export function parseVideo(result: {
 
 export function parsePlaylist(data: {
   [x: string]: { [x: string]: any };
-}): Playlist {
-  const playlist: Playlist = {
+}): parser_bT.parsePlaylistReturn {
+  const playlist: parser_bT.parsePlaylistReturn = {
     title: nav(data, TITLE_TEXT),
     playlistId: nav(data, [...TITLE, ...NAVIGATION_BROWSE_ID]).slice(2),
     thumbnails: nav(data, THUMBNAIL_RENDERER),
@@ -422,7 +419,9 @@ export function parsePlaylist(data: {
   return playlist;
 }
 
-export function parseRelatedArtist(data: any): RelatedArtist {
+export function parseRelatedArtist(
+  data: any
+): parser_bT.parseRelatedArtistReturn {
   let subscribers = nav(data, SUBTITLE, true);
   if (subscribers) {
     subscribers = subscribers.split(' ')[0];

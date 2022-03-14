@@ -11,11 +11,12 @@ import {
 import { parseDuration } from '../helpers';
 import { parseSongAlbum, parseSongArtists, parseSongMenuTokens } from './songs';
 import { getFixedColumnItem, getItemText, nav } from './utils';
+import * as parser_pT from './playlists.types';
 
 export function parsePlaylistItems(
   results: any,
   menuEntries?: Array<any> | null | undefined
-): any {
+): parser_pT.parsePlaylistItemsReturn {
   const songs = [];
   let count = 1;
   for (const result of results) {
@@ -121,5 +122,5 @@ export function parsePlaylistItems(
       console.log(`Item ${count}: ${e}`);
     }
   }
-  return songs;
+  return songs as any;
 }

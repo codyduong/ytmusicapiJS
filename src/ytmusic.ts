@@ -19,7 +19,7 @@ type _YTMusicConstructorOptions = {
 };
 
 import i18next from 'i18next';
-import { en, de, es, it, fr, ja } from './locales';
+import { en, de, es, it, fr, ja, ko, zh_CN } from './locales';
 
 export class _YTMusic {
   #auth: string | null;
@@ -129,20 +129,12 @@ export class _YTMusic {
             fr,
             it,
             ja,
+            ko,
+            zh_CN,
           },
         });
       }
     })();
-    // try {
-    //   // locale.setlocale(locale.LC_ALL, this.language);
-    // } catch (e) {
-    //   // with suppress(locale.Error):
-    //   // locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
-    // }
-
-    // this.lang = gettext.translation('base',
-    //                                 localedir=locale_dir,
-    //                                 languages=[language])
     this.parser = new Parser();
 
     if (user) {

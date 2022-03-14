@@ -3,7 +3,13 @@ import { parseDuration } from '../helpers';
 import { re } from '../pyLibraryMock';
 import { getBrowseId, getFlexColumnItem, getItemText, nav } from './utils';
 
-export function parseSongArtists(data: any, index: number): null | any {
+export type parseSongArtistsReturn = ReturnType<
+  typeof parseSongArtistsRuns
+> | null;
+export function parseSongArtists(
+  data: any,
+  index: number
+): parseSongArtistsReturn {
   const flexItem = getFlexColumnItem(data, index);
   if (!flexItem) {
     return null;
@@ -13,7 +19,9 @@ export function parseSongArtists(data: any, index: number): null | any {
   }
 }
 
-export function parseSongArtistsRuns(runs: any): any {
+export function parseSongArtistsRuns(
+  runs: any
+): { name: string; id?: string | null }[] {
   const artists = [];
   for (let j = 0; j < Math.trunc(runs.length / 2) + 1; j++) {
     artists.push({
@@ -21,16 +29,25 @@ export function parseSongArtistsRuns(runs: any): any {
       id: nav(runs[j * 2], NAVIGATION_BROWSE_ID, true),
     });
   }
+  return artists;
 }
 
-export function parseSongRuns(runs: Array<any>): any {
-  const parsed: Record<string, any> = { artists: [] };
+export type parseSongRunsReturn = {
+  artists: { name: string; id?: string | null }[];
+  album?: { name: string; id: string };
+  views?: string;
+  duration?: string;
+  duration_seconds?: number;
+  year?: string;
+};
+export function parseSongRuns(runs: Array<any>): parseSongRunsReturn {
+  const parsed: parseSongRunsReturn = { artists: [] };
   for (const [i, run] of runs.entries()) {
     if (i % 2 == 0) continue;
     const text = run['text'];
     if (run['navigationEndpoint']) {
       const item = {
-        name: test,
+        name: text,
         id: nav(run, NAVIGATION_BROWSE_ID, true),
       };
 
@@ -56,10 +73,11 @@ export function parseSongRuns(runs: Array<any>): any {
   return parsed;
 }
 
-export function parseSongAlbum(
-  data: any,
-  index: number
-): null | Record<string, any> {
+export type parseSongAlbumReturn = {
+  name: string | null;
+  id: string;
+} | null;
+export function parseSongAlbum(data: any, index: number): parseSongAlbumReturn {
   const flexItem = getFlexColumnItem(data, index);
   return !flexItem
     ? null
@@ -69,6 +87,10 @@ export function parseSongAlbum(
       };
 }
 
+export type parseSongMenuTokensReturn = {
+  add: string[];
+  remove: string[];
+};
 export function parseSongMenuTokens(item: any): any {
   const toggleMenu = item[TOGGLE_MENU];
   const serviceType = toggleMenu['defaultIcon']['iconType'];
@@ -94,7 +116,8 @@ export function parseSongMenuTokens(item: any): any {
   return { add: libraryAddToken, remove: libraryRemoveToken };
 }
 
-export function parseLikeStatus(service: any): any {
-  const status = ['LIKE', 'INDIFFERENT'];
+export type parseLikeStatusReturn = 'LIKE' | 'INDIFFERENT';
+export function parseLikeStatus(service: any): parseLikeStatusReturn {
+  const status: ['LIKE', 'INDIFFERENT'] = ['LIKE', 'INDIFFERENT'];
   return status[status.indexOf(service['likeEndpoint']['status']) - 1];
 }

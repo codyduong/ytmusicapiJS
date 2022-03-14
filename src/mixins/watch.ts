@@ -176,7 +176,10 @@ export const WatchMixin = <TBase extends GConstructor<BrowsingMixin>>(
       if ('continuations' in results) {
         const request_func = (additionalParams: any): any =>
           this._sendRequest(endpoint, body, additionalParams);
-        const parse_func = (contents: any): any => parseWatchPlaylist(contents);
+        const parse_func = (
+          contents: any
+        ): ReturnType<typeof parseWatchPlaylist> =>
+          parseWatchPlaylist(contents);
         tracks = [
           ...tracks,
           ...(await getContinuations(
@@ -201,7 +204,7 @@ export const WatchMixin = <TBase extends GConstructor<BrowsingMixin>>(
      */
     async getWatchPlaylistShuffle(
       options: wt.getWatchPlaylistShuffleOptions
-    ): Promise<wt.getWatchPlaylistReturn> {
+    ): Promise<ReturnType<typeof this.getWatchPlaylist>> {
       return this.getWatchPlaylist({
         ...options,
         params: 'wAEB8gECKAE%3D',

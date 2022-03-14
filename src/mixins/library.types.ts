@@ -1,3 +1,4 @@
+import { parsePlaylistItemsReturn } from '../parsers/playlists.types';
 import { thumbnails } from './browsing.types';
 
 export type Order = 'a_to_z' | 'z_to_a' | 'recently_added';
@@ -20,3 +21,6 @@ export type getLibraryArtistsReturn = {
   subscribers: string;
   thumbnails: thumbnails;
 }[];
+export type getHistoryReturn = (parsePlaylistItemsReturn[number] & {
+  played: boolean;
+})[];

@@ -50,6 +50,7 @@ export type getLibraryUploadAlbumReturn = {
   thumbnails: thumbnails;
   trackCount: number;
   duration: string;
+  duration_seconds: number;
   audioPlaylistId: string;
   tracks: {
     entityId: string;

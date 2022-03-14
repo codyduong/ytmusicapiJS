@@ -1,24 +1,5 @@
-type Track = {
-  title: string;
-  byline: string;
-  length: string;
-  videoId: string;
-  thumbnail: [
-    {
-      url: string;
-      width: number;
-      height: number;
-    }
-  ];
-  feedbackTokens: Array<any>;
-  likeStatus: string;
-  //@codyduong there are some more props. todo discovery
-};
-export type getWatchPlaylistReturn = {
-  tracks: Track[];
-  playlistId: string | null;
-  lyrics: string | null;
-};
+import { parseWatchPlaylistReturn } from '../parsers/watch';
+
 export type response = {
   contents: {
     singleColumnMusicWatchNextResultsRenderer: {
@@ -59,14 +40,6 @@ export type results = {
     };
   }[];
 };
-export type parseWatchPlaylistTrack = Omit<
-  Track,
-  'byline' | 'feedbackTokens' | 'likeStatus'
-> & {
-  byline?: string;
-  feedbackTokens: Array<any> | null;
-  likeStatus: string | null;
-};
 export type getWatchPlaylistOptions =
   | {
       videoId: string;
@@ -102,3 +75,8 @@ export type getWatchPlaylistShuffleOptions =
       playlistId?: string;
       limit?: number;
     };
+export type getWatchPlaylistReturn = {
+  tracks: parseWatchPlaylistReturn;
+  playlistId: string | null;
+  lyrics: string | null;
+};

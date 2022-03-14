@@ -74,8 +74,8 @@ export const PlaylistsMixin = <TBase extends GConstructor<ExploreMixin>>(
      *     "isAvailable": True,
      *     "isExplicit": False,
      *     "feedbackTokens": {
-     *     "add": "AB9zfpJxtvrU...",
-     *     "remove": "AB9zfpKTyZ..."
+     *       "add": "AB9zfpJxtvrU...",
+     *       "remove": "AB9zfpKTyZ..."
      *     }
      *   ]
      * }
@@ -83,7 +83,7 @@ export const PlaylistsMixin = <TBase extends GConstructor<ExploreMixin>>(
     async getPlaylist(
       playlistId: string,
       limit = 100
-    ): Promise<Record<string, any>> {
+    ): Promise<pt.getPlaylistReturn> {
       const browseId = !playlistId.startsWith('VL')
         ? `VL${playlistId}`
         : playlistId;
@@ -95,7 +95,9 @@ export const PlaylistsMixin = <TBase extends GConstructor<ExploreMixin>>(
         ...SECTION_LIST_ITEM,
         'musicPlaylistShelfRenderer',
       ]);
-      const playlist: Record<string, any> = { id: results['playlistId'] };
+      const playlist: pt.getPlaylistReturn = {
+        id: results['playlistId'],
+      } as any;
       const ownPlaylist =
         'musicEditablePlaylistDetailHeaderRenderer' in response['header'];
       let header;
@@ -332,7 +334,7 @@ export const PlaylistsMixin = <TBase extends GConstructor<ExploreMixin>>(
       playlistId: string,
       options: {
         title?: string;
-        description?: string;
+        description?: string | null;
         privacyStatus?: pt.PrivacyStatus;
         moveItem?: [string, string];
         addPlaylistId?: string;
@@ -417,7 +419,7 @@ export const PlaylistsMixin = <TBase extends GConstructor<ExploreMixin>>(
         sourcePlaylist: string;
         duplicates: boolean;
       }
-    ): Promise<string | Record<string, any>> {
+    ): Promise<pt.addPlaylistItemsReturn> {
       this._checkAuth();
       const { videoIds, sourcePlaylist, duplicates } = options;
       const body: Record<string, any> = {
@@ -479,7 +481,7 @@ export const PlaylistsMixin = <TBase extends GConstructor<ExploreMixin>>(
     async removePlaylistItems(
       playlistId: string,
       videos: Array<Record<string, any>>
-    ): Promise<string | Record<string, any>> {
+    ): Promise<string | pt.getPlaylistReturn['tracks']> {
       this._checkAuth();
       videos = videos.filter((x) => 'videoId' in x && 'setVideoId' in x);
       if (videos.length == 0) {
