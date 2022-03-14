@@ -255,22 +255,22 @@ export const UploadsMixin = <TBase extends GConstructor<LibraryMixin>>(
         results['contents'].pop(0);
       }
 
-      const items = parseUploadedItems(results['contents']);
+      let items = parseUploadedItems(results['contents']);
 
       if ('continuations' in results) {
         const requestFunc = async (additionalParams: string): Promise<any> =>
           await this._sendRequest(endpoint, body, additionalParams);
-        const parseFunc = (contents: any): Promise<any> =>
-          parseUploadedItems(contents);
-        items.extend(
-          getContinuations(
+        const parseFunc = (contents: any): any => parseUploadedItems(contents);
+        items = [
+          ...items,
+          ...(await getContinuations(
             results,
             'musicShelfContinuation',
             limit,
             requestFunc,
             parseFunc
-          )
-        );
+          )),
+        ];
       }
 
       return items;

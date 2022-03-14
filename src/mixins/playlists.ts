@@ -137,15 +137,18 @@ export const PlaylistsMixin = <TBase extends GConstructor<ExploreMixin>>(
       }
 
       playlist['trackCount'] = songCount;
-      playlist['suggestions_token'] = nav(response, [
-        ...SINGLE_COLUMN_TAB,
-        'sectionListRenderer',
-        'contents',
-        1,
-        ...MUSIC_SHELF,
-        ...RELOAD_CONTINUATION,
-        true,
-      ]);
+      playlist['suggestions_token'] = nav(
+        response,
+        [
+          ...SINGLE_COLUMN_TAB,
+          'sectionListRenderer',
+          'contents',
+          1,
+          ...MUSIC_SHELF,
+          ...RELOAD_CONTINUATION,
+        ],
+        true
+      );
 
       playlist['tracks'] = [];
       if (songCount > 0) {

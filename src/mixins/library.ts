@@ -136,7 +136,7 @@ export const LibraryMixin = <TBase extends GConstructor<PlaylistsMixin>>(
           3
         );
       } else {
-        response = parseFunc(requestFunc(null));
+        response = parseFunc(await requestFunc(null));
       }
 
       const results = response['results'];
@@ -151,7 +151,7 @@ export const LibraryMixin = <TBase extends GConstructor<PlaylistsMixin>>(
           parsePlaylistItems(contents);
 
         if (validateResponse) {
-          songs = {
+          songs = [
             ...songs,
             ...(await getValidatedContinuations(
               results,
@@ -161,7 +161,7 @@ export const LibraryMixin = <TBase extends GConstructor<PlaylistsMixin>>(
               requestContinuationsFunc,
               parseContinuationsFunc
             )),
-          };
+          ];
         } else {
           songs = [
             ...songs,
@@ -233,7 +233,7 @@ export const LibraryMixin = <TBase extends GConstructor<PlaylistsMixin>>(
      * }
      */
     async getLibraryArtists(options?: {
-      limit: number;
+      limit?: number;
       order?: lt.Order;
     }): Promise<lt.getLibraryArtistsReturn> {
       this._checkAuth();
@@ -315,7 +315,7 @@ export const LibraryMixin = <TBase extends GConstructor<PlaylistsMixin>>(
           );
           throw new Error(error);
         }
-        const menuEntries = [-1, ...MENU_SERVICE, ...FEEDBACK_TOKEN];
+        const menuEntries = [[-1, ...MENU_SERVICE, ...FEEDBACK_TOKEN]];
         const songlist = parsePlaylistItems(data, menuEntries);
         for (const song of songlist) {
           song['played'] = nav(content['musicShelfRenderer'], TITLE_TEXT);
@@ -351,12 +351,12 @@ export const LibraryMixin = <TBase extends GConstructor<PlaylistsMixin>>(
     async rateSong(
       videoId: string,
       rating: lt.Rating = 'INDIFFERENT'
-    ): Promise<Record<string, any> | void> {
+    ): Promise<Record<string, any>> {
       this._checkAuth();
       const body = { target: { videoId } };
       const endpoint = prepareLikeEndpoint(rating);
       if (!endpoint) {
-        return;
+        throw new Error('Invalid rating provided');
       }
 
       return await this._sendRequest(endpoint, body);
@@ -388,11 +388,14 @@ export const LibraryMixin = <TBase extends GConstructor<PlaylistsMixin>>(
     async ratePlaylist(
       playlistId: string,
       rating: lt.Rating = 'INDIFFERENT'
-    ): Promise<Record<string, any> | null> {
+    ): Promise<Record<string, any>> {
       this._checkAuth();
       const body = { target: { playlistId } };
       const endpoint = prepareLikeEndpoint(rating);
-      return endpoint ? await this._sendRequest(endpoint, body) : null;
+      if (!endpoint) {
+        throw new Error('Invalid rating provided');
+      }
+      return await this._sendRequest(endpoint, body);
     }
 
     /**

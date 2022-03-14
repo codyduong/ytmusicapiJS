@@ -177,7 +177,7 @@ export const WatchMixin = <TBase extends GConstructor<BrowsingMixin>>(
         const request_func = (additionalParams: any): any =>
           this._sendRequest(endpoint, body, additionalParams);
         const parse_func = (contents: any): any => parseWatchPlaylist(contents);
-        tracks = {
+        tracks = [
           ...tracks,
           ...(await getContinuations(
             results,
@@ -187,7 +187,7 @@ export const WatchMixin = <TBase extends GConstructor<BrowsingMixin>>(
             parse_func,
             isPlaylist ? '' : 'Radio'
           )),
-        };
+        ];
       }
       return { tracks: tracks, playlistId: playlist, lyrics: lyrics_browse_id };
     }

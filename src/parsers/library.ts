@@ -14,6 +14,7 @@ import {
   MRLIR,
   THUMBNAILS,
 } from '.';
+import { isDigit } from '../pyLibraryMock';
 import { parsePlaylistItems } from './playlists';
 import {
   findObjectByKey,
@@ -98,7 +99,7 @@ export function parseAlbums(results: any): any {
       }
 
       if (runCount == 3) {
-        if (nav(data, SUBTITLE2).isdigit()) {
+        if (isDigit(nav(data, SUBTITLE2))) {
           album['year'] = nav(data, SUBTITLE2);
         } else {
           hasArtists = true;

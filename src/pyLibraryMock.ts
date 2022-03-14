@@ -90,3 +90,5 @@ export class SimpleCookie {
     }
   }
 }
+
+export const isDigit = (s: string): boolean => /^\d+$/.test(s);

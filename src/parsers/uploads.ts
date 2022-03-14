@@ -9,20 +9,20 @@ import { parseDuration } from '../helpers';
 import { parseSongAlbum, parseSongArtists } from './songs';
 import { getFixedColumnItem, getItemText, nav } from './utils';
 
-export function parseUploadedItems(results: any): any {
+export function parseUploadedItems(results: any): Array<any> {
   const songs = [];
   for (const result of results) {
     const data = result[MRLIR];
     if (!data['menu']) {
       continue;
     }
-    const entityId = nav(data, MENU_ITEMS)[-1]['menuNavigationItemRenderer'][
-      'navigationEndpoint'
-    ]['confirmDialogEndpoint']['content']['confirmDialogRenderer'][
-      'confirmButton'
-    ]['buttonRenderer']['command']['musicDeletePrivatelyOwnedEntityCommand'][
-      'entityId'
-    ];
+    const entityId = nav(data, MENU_ITEMS).slice(-1)[0][
+      'menuNavigationItemRenderer'
+    ]['navigationEndpoint']['confirmDialogEndpoint']['content'][
+      'confirmDialogRenderer'
+    ]['confirmButton']['buttonRenderer']['command'][
+      'musicDeletePrivatelyOwnedEntityCommand'
+    ]['entityId'];
 
     const videoId = nav(data, [...MENU_ITEMS, [0], ...MENU_SERVICE])[
       'queueAddEndpoint'
@@ -46,4 +46,5 @@ export function parseUploadedItems(results: any): any {
 
     songs.push(song);
   }
+  return songs;
 }
