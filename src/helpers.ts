@@ -82,7 +82,6 @@ export async function getVisitorId(
   return { 'X-Goog-Visitor-Id': visitorId };
 }
 
-// @CODYDUONG TODO type better
 export function htmlToText(htmlText: string): any {
   const tags = re.findall(/<[^>]+>/, htmlText);
   for (const tag in tags) {

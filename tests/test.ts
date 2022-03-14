@@ -108,12 +108,12 @@ describe('Browsing', () => {
     });
   });
   describe('Search Uploads', () => {
-    test.skip('(Auth) #1', async () => {
-      const results = await ytmusicAuth.search('audiomachine', {
+    test('(Auth) #1', async () => {
+      const results = await ytmusicAuth.search('CHOCOLAT', {
         scope: 'uploads',
         limit: 40,
       });
-      expect(results).toBeGreaterThan(5);
+      expect(results.length).toBeGreaterThanOrEqual(1);
     });
   });
   describe('(Auth) Search Library', () => {
@@ -567,10 +567,83 @@ describe('Playlists', () => {
     });
   });
   describe('(Auth) Get Owned Playlist', () => {
-    test('#1', async () => {});
+    test('#1', async () => {
+      const playlist = await ytmusicBrand.getPlaylist(playlistsOwn);
+      expect(playlist['tracks'].length).toBeLessThanOrEqual(100);
+      if (playlist['suggestions_tokens']) {
+        const suggestions = await ytmusicBrand.getPlaylistSuggestions(
+          playlist['suggestions_token']
+        );
+        expect(suggestions['tracks'].length).toBeGreaterThan(5);
+        const refresh = await ytmusicBrand.getPlaylistSuggestions(
+          playlist['suggestions_token']
+        );
+        expect(refresh['tracks'].length).toBeGreaterThan(5);
+      }
+    });
   });
-  describe('(Auth) Edit Playlist', () => {});
-  describe('(Auth)  E2E', () => {});
+  test('(Auth) Edit Playlist', async () => {
+    const playlist = await ytmusicBrand.getPlaylist(
+      'PLdu3sa6Om8hGjimJ92G2CJmnm548Oxivh'
+    );
+    const response = await ytmusicBrand.editPlaylist(playlist['id'], {
+      title: playlist['title'],
+      description: playlist['description'],
+      privacyStatus: playlist['privacy'],
+      moveItem: [
+        playlist['tracks'][1]['setVideoId'],
+        playlist['tracks'][0]['setVideoId'],
+      ],
+    });
+    expect(['STATUS_SUCCEEDED', 'Playlist edit failed']).toContain(response);
+    const response2 = await ytmusicBrand.editPlaylist(playlist['id'], {
+      title: playlist['title'],
+      description: playlist['description'],
+      privacyStatus: playlist['privacy'],
+      moveItem: [
+        playlist['tracks'][1]['setVideoId'],
+        playlist['tracks'][0]['setVideoId'],
+      ],
+    });
+    expect(['STATUS_SUCCEEDED', 'Playlist edit failed']).toContain(response2);
+  });
+  jest.setTimeout(10000);
+  test('(Auth)  E2E', async () => {
+    const playlistId = (await ytmusicAuth.createPlaylist(
+      'test',
+      'testDescription',
+      {
+        sourcePlaylist: 'OLAK5uy_lGQfnMNGvYCRdDq9ZLzJV2BJL2aHQsz9Y',
+      }
+    )) as unknown as string;
+    expect([34, 'Playlist creation failed']).toContain(playlistId.length);
+    const response = (await ytmusicAuth.addPlaylistItems(playlistId, {
+      videoIds: ['y0Hhvtmv0gk', sampleVideo],
+      sourcePlaylist: 'OLAK5uy_nvjTE32aFYdFN7HCyMv3cGqD3wqBb4Jow',
+      duplicates: true,
+    })) as unknown as Record<string, any>;
+    expect(['STATUS_SUCCEEDED', 'Adding playlist item failed']).toContain(
+      response['status']
+    );
+    expect(response['playlistEditResults'].length).toBeGreaterThan(0);
+    const playlist = (await ytmusicAuth.getPlaylist(
+      playlistId
+    )) as unknown as Record<string, any>;
+    expect(playlist['tracks'].length).toBe(46);
+    const response2 = (await ytmusicAuth.removePlaylistItems(
+      playlistId,
+      playlist['tracks']
+    )) as unknown as Record<string, any>;
+    expect(['STATUS_SUCCEEDED', 'Playlist item removal failed']).toContain(
+      response2
+    );
+    const response3 = (await ytmusicAuth.deletePlaylist(
+      playlistId
+    )) as unknown as Record<string, any>;
+    expect([playlistId, 'Playlist removal failed']).toContain(
+      response3['command']['handlePlaylistDeletionCommand']['playlistId']
+    );
+  });
 });
 
 /**

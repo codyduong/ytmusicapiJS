@@ -175,6 +175,8 @@ export const PlaylistsMixin = <TBase extends GConstructor<ExploreMixin>>(
           ];
         }
       }
+      //For some reason we are able to go over limit, so manually truncate at the end @codyduong TODO
+      playlist['tracks'] = playlist['tracks'].slice(0, limit);
       playlist['duration_seconds'] = sumTotalDuration(playlist);
       return playlist;
     }
@@ -208,8 +210,46 @@ export const PlaylistsMixin = <TBase extends GConstructor<ExploreMixin>>(
     /**
      * Creates a new empty playlist and returns its id.
      * @param title Playlist title.
-     * @param description Playlist description.
-     * @param privacyStatus Playlists can be 'PUBLIC', 'PRIVATE', or 'UNLISTED'. Default: 'PRIVATE'.
+     * @param options
+     * @param {string} [options.description] Optional. Playlist description.
+     * @param {string} [options.privacyStatus='PRIVATE'] Playlists can be 'PUBLIC', 'PRIVATE', or 'UNLISTED'. Default: 'PRIVATE'.
+     * @param {string[]} [options.videoIds] IDs of songs to create the playlist with.
+     * @param {string} [options.sourcePlaylist] Another playlist whose songs should be added to the new playlist.
+     * @returns ID of the YouTube playlist or full response if there was an error.
+     */
+    async createPlaylist(
+      title: string,
+      options?: {
+        description?: string;
+        privacyStatus?: pt.PrivacyStatus;
+        videoIds?: string[];
+        sourcePlaylist?: string;
+      }
+    ): Promise<string | Record<string, any>>;
+    /**
+     * Creates a new empty playlist and returns its id.
+     * @param title Playlist title.
+     * @param description Optional. Playlist description.
+     * @param options
+     * @param {string} [options.privacyStatus='PRIVATE'] Playlists can be 'PUBLIC', 'PRIVATE', or 'UNLISTED'. Default: 'PRIVATE'.
+     * @param {string[]} [options.videoIds] IDs of songs to create the playlist with.
+     * @param {string} [options.sourcePlaylist] Another playlist whose songs should be added to the new playlist.
+     * @returns ID of the YouTube playlist or full response if there was an error.
+     */
+    async createPlaylist(
+      title: string,
+      description?: string,
+      options?: {
+        privacyStatus?: pt.PrivacyStatus;
+        videoIds?: string[];
+        sourcePlaylist?: string;
+      }
+    ): Promise<string | Record<string, any>>;
+    /**
+     * Creates a new empty playlist and returns its id.
+     * @param title Playlist title.
+     * @param description Optional. Playlist description.
+     * @param {string} [privacyStatus='PRIVATE'] Playlists can be 'PUBLIC', 'PRIVATE', or 'UNLISTED'. Default: 'PRIVATE'.
      * @param options
      * @param {string[]} [options.videoIds] IDs of songs to create the playlist with.
      * @param {string} [options.sourcePlaylist] Another playlist whose songs should be added to the new playlist.
@@ -217,24 +257,57 @@ export const PlaylistsMixin = <TBase extends GConstructor<ExploreMixin>>(
      */
     async createPlaylist(
       title: string,
-      description: string,
-      privacyStatus: pt.PrivacyStatus,
-      options: { videoIds?: string[]; sourcePlaylist?: string }
+      description?:
+        | string
+        | {
+            description?: string;
+            privacyStatus?: pt.PrivacyStatus;
+            videoIds?: string[];
+            sourcePlaylist?: string;
+          },
+      privacyStatus?:
+        | {
+            privacyStatus?: pt.PrivacyStatus;
+            videoIds?: string[];
+            sourcePlaylist?: string;
+          }
+        | pt.PrivacyStatus,
+      options?: { videoIds?: string[]; sourcePlaylist?: string }
     ): Promise<string | Record<string, any>> {
       this._checkAuth();
-      const { videoIds, sourcePlaylist } = options;
-      const body: Record<string, any> = {
-        title: title,
-        description: htmlToText(description), // YT does not allow HTML tags
-        privacyStatus: privacyStatus,
-      };
-      if (videoIds) {
-        body['videoIds'] = videoIds;
+      let actualDescription,
+        actualPrivacyStatus,
+        actualVideoIds,
+        actualSourcePlaylist;
+      if (typeof description == 'object') {
+        actualDescription = description.description;
+        actualPrivacyStatus = description.privacyStatus;
+        actualVideoIds = description.videoIds;
+        actualSourcePlaylist = description.sourcePlaylist;
+      } else if (typeof privacyStatus == 'object') {
+        actualDescription = description;
+        actualPrivacyStatus = privacyStatus.privacyStatus;
+        actualVideoIds = privacyStatus.videoIds;
+        actualSourcePlaylist = privacyStatus.sourcePlaylist;
+      } else {
+        actualDescription = description;
+        actualPrivacyStatus = privacyStatus;
+        actualVideoIds = options?.videoIds;
+        actualSourcePlaylist = options?.sourcePlaylist;
       }
 
-      if (sourcePlaylist) {
+      const body: Record<string, any> = {
+        title: title,
+        description: htmlToText(actualDescription ?? ''), // YT does not allow HTML tags
+        privacyStatus: actualPrivacyStatus,
+      };
+      if (actualVideoIds) {
+        body['videoIds'] = actualVideoIds;
+      }
+
+      if (actualSourcePlaylist) {
         {
-          body['sourcePlaylistId'] = sourcePlaylist;
+          body['sourcePlaylistId'] = actualSourcePlaylist;
         }
       }
 
@@ -369,7 +442,7 @@ export const PlaylistsMixin = <TBase extends GConstructor<ExploreMixin>>(
         }
       }
       if (sourcePlaylist) {
-        body['actions'].append({
+        body['actions'].push({
           action: 'ACTION_ADD_PLAYLIST',
           addedFullListId: sourcePlaylist,
         });
@@ -377,7 +450,7 @@ export const PlaylistsMixin = <TBase extends GConstructor<ExploreMixin>>(
         // add an empty ACTION_ADD_VIDEO because otherwise
         // YTM doesn't return the dict that maps videoIds to their new setVideoIds
         if (!videoIds) {
-          body['actions'].append({
+          body['actions'].push({
             action: 'ACTION_ADD_VIDEO',
             addedVideoId: null,
           });
@@ -385,7 +458,7 @@ export const PlaylistsMixin = <TBase extends GConstructor<ExploreMixin>>(
       }
       const endpoint = 'browse/edit_playlist';
       const response = await this._sendRequest(endpoint, body);
-      if ('status' in response && 'SUCCEEDED' in response['status']) {
+      if ('status' in response && response['status'].includes('SUCCEEDED')) {
         const resultArray = [
           (response['playlistEditResults'] ?? []).map(
             (resultData: any) => resultData['playlistEditVideoAddedResultData']

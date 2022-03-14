@@ -160,7 +160,7 @@ export class Parser {
         } else {
           //artist or album result
           searchResult['browseId'] = browseId;
-          if ('artist' in searchResult['browseId']) {
+          if (searchResult['browseId'].includes('artist')) {
             searchResult['resultType'] = 'artist';
           } else {
             const flexItem2 = getFlexColumnItem(data, 1);
