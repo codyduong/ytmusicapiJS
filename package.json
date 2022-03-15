@@ -1,9 +1,9 @@
 {
   "name": "@codyduong/ytmusicapi",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Unofficial API for YouTube Music",
-  "main": "dist/ytmusic.js",
-  "types": "dist/ytmusic.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "yarn jest --verbose",
     "test:pylib": "yarn jest pylib --verbose",
