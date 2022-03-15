@@ -4,6 +4,7 @@
     "allowJs": false,
     "incremental": true,
     "target": "ES2021",
+    "module": "CommonJS",
     "moduleResolution": "Node",
     "types": ["jest", "node"],
     "esModuleInterop": true,

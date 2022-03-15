@@ -65,36 +65,6 @@ export const locale = {
   },
 };
 
-export const CaseInsensitiveObject = <T extends Record<string | symbol, any>>(
-  object: T
-): T => {
-  const lowercaseObject = {
-    ...(Object.fromEntries(
-      Object.entries(object).map(([k, v]) => [k.toLowerCase(), v])
-    ) as T),
-  };
-  const proxy = new Proxy(lowercaseObject, {
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    get(obj, prop, receiver) {
-      const newProp = typeof prop == 'string' ? prop.toLowerCase() : prop;
-      return Reflect.get(obj, newProp, receiver);
-    },
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    set(
-      obj: { [index: string | symbol]: any },
-      prop,
-      value,
-      _receiver
-    ): boolean {
-      const newProp = typeof prop == 'string' ? prop.toLowerCase() : prop;
-      obj[newProp] = value;
-      return true;
-    },
-  });
-
-  return proxy;
-};
-
 export class SimpleCookie {
   '__Secure-3PAPISID': any;
 

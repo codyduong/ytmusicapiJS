@@ -1,4 +1,5 @@
-import { CaseInsensitiveObject, json } from './pyLibraryMock';
+import CaseInsensitiveObject from 'case-insensitive-object';
+import { json } from './pyLibraryMock';
 import { YTM_BASE_API, YTM_PARAMS } from './constants';
 import * as fs from 'fs';
 
