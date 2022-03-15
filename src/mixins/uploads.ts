@@ -335,7 +335,7 @@ export const UploadsMixin = <TBase extends GConstructor<LibraryMixin>>(
       filepath: string
     ): Promise<'STATUS_SUCCEEDED' | Record<string, any>> {
       this._checkAuth();
-      if (existsSync(filepath)) {
+      if (!existsSync(filepath)) {
         throw new Error('The provided file does not exist.');
       }
       const supportedFiletypes = ['mp3', 'm4a', 'wma', 'flac', 'ogg'];
@@ -345,15 +345,15 @@ export const UploadsMixin = <TBase extends GConstructor<LibraryMixin>>(
             supportedFiletypes.join(', ')
         );
       }
-      const headers: Record<string, any> = this.headers;
+      const headers: any = this.headers;
       let uploadUrl = `https://upload.youtube.com/upload/usermusic/http?authuser=${headers['x-goog-authuser']}`;
       const filesize = statSync(filepath).size;
       const body = 'filename=' + utf8.encode(basename(filepath));
-      headers.pop('content-encoding', null);
+      delete headers['content-encoding'];
       headers['content-type'] =
         'application/x-www-form-urlencoded;charset=utf-8';
       headers['X-Goog-Upload-Command'] = 'start';
-      headers['X-Goog-Upload-Header-Content-Length'] = String(filesize);
+      headers['X-Goog-Upload-Header-Content-Length'] = filesize;
       headers['X-Goog-Upload-Protocol'] = 'resumable';
       const response = await axios.post(uploadUrl, body, {
         headers: headers,
@@ -361,17 +361,18 @@ export const UploadsMixin = <TBase extends GConstructor<LibraryMixin>>(
       });
       headers['X-Goog-Upload-Command'] = 'upload, finalize';
       headers['X-Goog-Upload-Offset'] = '0';
-      uploadUrl = response.headers['X-Goog-Upload-URL'];
+      uploadUrl =
+        response.headers['X-Goog-Upload-URL'] ??
+        response.headers['x-goog-upload-url'];
       const data = readFileSync(filepath);
-      const response2: any = axios.post(uploadUrl, data, {
+      const response2: any = await axios.post(uploadUrl, data, {
         headers: headers,
         proxy: this.proxies,
       });
-
-      if (response2.status_code == 200) {
+      if (response2.status == 200) {
         return 'STATUS_SUCCEEDED';
       } else {
-        return response;
+        return response2;
       }
     }
 

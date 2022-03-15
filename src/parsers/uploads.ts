@@ -6,11 +6,31 @@ import {
   THUMBNAILS,
 } from '.';
 import { parseDuration } from '../helpers';
-import { parseSongAlbum, parseSongArtists } from './songs';
+import { Rating } from '../mixins/library.types';
+import { thumbnails } from '../types';
+import {
+  parseSongAlbum,
+  parseSongAlbumReturn,
+  parseSongArtists,
+  parseSongArtistsReturn,
+} from './songs';
 import { getFixedColumnItem, getItemText, nav } from './utils';
 
-export function parseUploadedItems(results: any): Array<any> {
-  const songs = [];
+export type parseUploadedItemsReturn = {
+  entityId: string;
+  videoId: string;
+  title: string | null;
+  duration: string;
+  duration_seconds: number;
+  artists: parseSongArtistsReturn;
+  album: parseSongAlbumReturn;
+  likeStatus: Rating;
+  thumbnails: thumbnails;
+};
+export function parseUploadedItems(
+  results: any
+): Array<parseUploadedItemsReturn> {
+  const songs: parseUploadedItemsReturn[] = [];
   for (const result of results) {
     const data = result[MRLIR];
     if (!data['menu']) {

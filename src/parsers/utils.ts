@@ -381,24 +381,6 @@ export function findObjectByKey<T extends Array<Record<string, any>>>(
   return null;
 }
 
-//Ditto
-export function findObjectsByKey<T extends Array<Record<string, any>>>(
-  objectList: T,
-  key: string,
-  nested: null
-): any {
-  const objects = [];
-  for (let item of objectList) {
-    if (nested) {
-      item = item[nested];
-    }
-    if (key in item) {
-      objects.push(item);
-    }
-  }
-  return objects;
-}
-
 export function getDotSeperatorIndex(runs: Record<string, any>[]): number {
   let index = runs.length;
   // cheap workaround rather than deep equality

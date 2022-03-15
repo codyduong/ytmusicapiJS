@@ -4,3 +4,4 @@ headers_auth.json
 dist
 yarn-error.log
 coverage
+TEST_setup.json

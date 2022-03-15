@@ -10,7 +10,8 @@ import * as fs from 'fs';
 const _path = __filename;
 
 export function setup(filepath: any, headersRaw: string): string {
-  let contents = [];
+  const contents = [];
+  let userHeaders: Record<string, any> = {};
   if (!headersRaw) {
     const eof =
       // eslint-disable-next-line prettier/prettier
@@ -30,29 +31,30 @@ export function setup(filepath: any, headersRaw: string): string {
       }
       contents.push(line);
     }
-  } else {
-    contents = headersRaw.split('\n');
-  }
-  let userHeaders: Record<string, any> = {};
-  try {
-    for (const content of contents) {
-      const header = content?.split(': ') ?? [];
-      if (header.length == 1 || header[0] == ':') {
-        // nothing was split or chromium headers
-        continue;
+    try {
+      for (const content of contents) {
+        const header = content?.split(': ') ?? [];
+        if (header.length == 1 || header[0] == ':') {
+          // nothing was split or chromium headers
+          continue;
+        }
+        userHeaders[header[0].toLowerCase()] = header.slice(1).join(': ');
       }
-      userHeaders[header[0].toLowerCase()] = header.slice(1).join(': ');
+    } catch (e) {
+      throw new Error(
+        'Error parsing your input, please try again. Full error: ' + String(e)
+      );
     }
-  } catch (e) {
-    throw new Error(
-      'Error parsing your input, please try again. Full error: ' + String(e)
-    );
   }
 
+  userHeaders = json.load(headersRaw);
+  for (const key of Object.keys(userHeaders)) {
+    userHeaders[key.toLowerCase()] = userHeaders[key];
+  }
   const missing_headers = ['cookie', 'x-goog-authuser'].filter(
     (reqKey) => !(reqKey in userHeaders)
   );
-  if (missing_headers) {
+  if (missing_headers.length > 0) {
     throw new Error(
       `The following entries are missing in your headers: ${missing_headers.join(
         ', '
@@ -60,9 +62,16 @@ export function setup(filepath: any, headersRaw: string): string {
             Please try a different request (such as /browse) and make sure you are logged in.`
     );
   }
-  const ignore_headers = ['host', 'content-length', 'accept-encoding'];
+  const ignore_headers = [
+    'host',
+    'content-length',
+    'accept-encoding',
+    'Host',
+    'Content-Length',
+    'Accept-Encoding',
+  ];
   for (const i of ignore_headers) {
-    userHeaders.delete(i);
+    delete userHeaders[i];
   }
 
   const initHeaders = helpers.initializeHeaders();
@@ -77,7 +86,9 @@ export function setup(filepath: any, headersRaw: string): string {
         indent: 4,
       }),
       (err: any) => {
-        throw new Error(String(err));
+        if (err) {
+          throw new Error(String(err));
+        }
       }
     );
   }

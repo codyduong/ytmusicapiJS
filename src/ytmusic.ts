@@ -113,12 +113,12 @@ export class _YTMusic {
         )}\nYTMusicAPI will still work, but some functions such as search or get_artist may not work. See https://github.com/codyduong/ytmusicapiJS/tree/main/src/locales for more details.`
       );
     }
-    (async (): Promise<void> => {
-      if (i18next.isInitialized && i18next.language != language) {
-        throw new Error(
-          'Multiple instances of YTMusic are not supported with different languages, please use changeLangauge instance function instead!'
-        );
-      } else {
+    if (i18next.isInitialized && i18next.language != language) {
+      throw new Error(
+        'Multiple instances of YTMusic are not supported with different languages, please use changeLangauge instance function instead!'
+      );
+    } else {
+      (async (): Promise<void> => {
         await i18next.init({
           lng: language ?? 'en',
           //debug: true,
@@ -133,8 +133,9 @@ export class _YTMusic {
             zh_CN,
           },
         });
-      }
-    })();
+      })();
+    }
+
     this.parser = new Parser();
 
     if (user) {
@@ -198,6 +199,14 @@ export class _YTMusic {
       httpsAgent: this?._httpsAgent,
     });
     return response.data;
+  }
+
+  checkAuth(): this | null {
+    if (!this.#auth) {
+      return null;
+    } else {
+      return this;
+    }
   }
 
   _checkAuth(): void {

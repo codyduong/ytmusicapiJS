@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import ConfigParser from 'configparser';
 import YTMusic from '../src/index';
+import { json } from '../src/pyLibraryMock';
 
 const sampleAlbum = 'MPREb_4pL8gzRtw1p'; // Eminem - Revival
 const sampleVideo = 'ZrOKjDZOtkA'; // Oasis - Wonderwall (Remastered)
@@ -11,6 +13,7 @@ const config = new ConfigParser();
 const ytmusic = new YTMusic();
 let ytmusicAuth: InstanceType<typeof YTMusic>;
 let ytmusicBrand: InstanceType<typeof YTMusic>;
+let headersRaw = '';
 let playlistsOwn = '';
 if (process.env.CI !== 'true') {
   config.read(`${__dirname}/test.cfg`);
@@ -19,6 +22,7 @@ if (process.env.CI !== 'true') {
     auth: config.get('auth', 'headers'),
     user: config.get('auth', 'brand_account'),
   });
+  headersRaw = config.get('auth', 'headers') as string;
   playlistsOwn = config.get('private', 'brand_account_playlist') as string;
 } else {
   ytmusicAuth = new YTMusic({ auth: process.env.AUTH });
@@ -26,9 +30,44 @@ if (process.env.CI !== 'true') {
     auth: process.env.HEADERS,
     user: process.env.BRAND_ACCOUNT,
   });
+  headersRaw = process.env.HEADERS as string;
   playlistsOwn = process.env.PLAYLISTS_OWN as string;
 }
 
+/**
+ * SETUP
+ */
+describe('Setup', () => {
+  test('Write', () => {
+    YTMusic.setup({ filepath: 'TEST_setup.json', headersRaw });
+  });
+  test('No Write', () => {
+    YTMusic.setup({ headersRaw });
+  });
+  test('No Cookies', () => {
+    try {
+      const removeCookie = json.loads(headersRaw);
+      delete removeCookie.cookie;
+      const removedCookie = json.dumps(removeCookie);
+      YTMusic.setup({ filepath: 'TEST_setup.json', headersRaw: removedCookie });
+    } catch (e) {
+      expect(e instanceof Error).toBe(true);
+    }
+  });
+  test('No X-Goog-Authuser', () => {
+    try {
+      const removeAuthUser = json.loads(headersRaw);
+      delete removeAuthUser['x-goog-authuser'];
+      const removedAuthUser = json.dumps(removeAuthUser);
+      YTMusic.setup({
+        filepath: 'TEST_setup.json',
+        headersRaw: removedAuthUser,
+      });
+    } catch (e) {
+      expect(e instanceof Error).toBe(true);
+    }
+  });
+});
 /**
  * BROWSING
  */
@@ -695,7 +734,46 @@ describe('(Auth) Uploads', () => {
       expect(results.length).toBeGreaterThanOrEqual(0);
     });
   });
-  describe('Test Upload Song', () => {});
+  //These tests need to occur before we try to upload
+  //Otherwise YTM will throw 400
+  test('Get Library Upload Album', async () => {
+    const library = await ytmusicAuth.getLibraryUploadSongs();
+    const album = await ytmusicAuth.getLibraryUploadAlbum(library[0].album!.id);
+    expect(album.tracks.length).toBeGreaterThan(0);
+  });
+  test('Get Library Upload Artist', async () => {
+    const library = await ytmusicAuth.getLibraryUploadSongs();
+    const artist = await ytmusicAuth.getLibraryUploadArtist(
+      library[0].artists![0].id!
+    );
+    expect(artist.length).toBeGreaterThan(0);
+  });
+  describe('Test Upload Song', () => {
+    test('#1', async () => {
+      try {
+        await ytmusicAuth.uploadSong('songToUpload.mp3');
+      } catch (e) {
+        expect(e instanceof Error).toBe(true);
+      }
+    });
+    test('#2', async () => {
+      try {
+        await ytmusicAuth.uploadSong('tests/test.ts');
+      } catch (e) {
+        expect(e instanceof Error).toBe(true);
+      }
+    });
+    test('#3', async () => {
+      //Interestingly enough, this fails but the status is OK
+      //So nothing gets uploaded
+      const response = await ytmusicAuth.uploadSong('tests/empty.mp3');
+      if (typeof response == 'object') {
+        expect(response['status']).toBeTruthy();
+      } else {
+        expect(response).toBe('STATUS_SUCCEEDED');
+      }
+    });
+  });
   //Don't delete uploads
   test.skip('Delete Upload Entity', async () => {
     const results = await ytmusicAuth.getLibraryUploadSongs();
@@ -704,7 +782,4 @@ describe('(Auth) Uploads', () => {
     );
     expect(response).toBe('STATUS_SUCCEEDED');
   });
-  //@codyduong TODO
-  //test('Get Library Upload Album', async () => {});
-  //test('Get Library Upload Artist', async () => {});
 });

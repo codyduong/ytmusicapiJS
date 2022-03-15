@@ -16,12 +16,23 @@ const quickQuery = async (c: InstanceType<typeof YTMusic>) => {
   };
 };
 
+test('Multiple instances different languages', async () => {
+  try {
+    const _ = new YTMusic({ language: 'de' });
+  } catch (e) {
+    const error = e as any;
+    expect(error instanceof Error).toBe(true);
+    expect(error.message).toBe(
+      'Multiple instances of YTMusic are not supported with different languages, please use changeLangauge instance function instead!'
+    );
+  }
+});
 /**
  * LOCALE
  * Currently it's quite hard to test locale while using ytm class, maybe
  * better to mock the class. TODO @codyduong
  */
-describe.skip('Locales', () => {
+describe('Locales', () => {
   //artist
   //song
   //videos
@@ -34,7 +45,7 @@ describe.skip('Locales', () => {
     expect(video[0]['category'].toLowerCase()).toBe(i18next.t('videos'));
     //todo @codyduong test more locale keys
   });
-  test('es', async () => {
+  test.skip('es', async () => {
     await ytm.changeLanguage('es');
     const { video } = await quickQuery(ytm);
     //expect(artist[0]['category'].toLowerCase()).toBe(i18next.t('artist'));

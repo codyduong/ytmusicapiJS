@@ -11,7 +11,6 @@ export type Headers = {
   'content-type': string;
   'content-encoding': string;
   origin: string;
-
   'x-origin'?: string;
   'x-goog-visitor-id'?: string;
   authorization?: string;
