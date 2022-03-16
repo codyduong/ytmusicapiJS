@@ -1,6 +1,6 @@
 {
   "name": "@codyduong/ytmusicapi",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Unofficial API for YouTube Music",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -46,9 +46,11 @@
     "type-fest": "^2.12.0",
     "utf8": "^3.0.0"
   },
-  "directories": {
-    "test": "tests"
-  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/codyduong/ytmusicapiJS.git"
