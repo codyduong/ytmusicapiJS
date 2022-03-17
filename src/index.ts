@@ -10,8 +10,7 @@ import { UploadsMixin } from './mixins/uploads';
  * Allows automated interactions with YouTube Music by emulating the YouTube web client's requests.
  * Permits both authenticated and non-authenticated requests.
  * Authentication header data must be provided on initialization.
- * @class
- * @param {Object} [options=] Options object.
+ * @param {_YTMusicConstructorOptions} [options=] Options object.
  * @param {string | object} [options.auth=]  Provide a string (raw headers), object, or path (Node only!),
  * Authentication credentials are needed to manage your library.
  * Should be an adjusted version of `headers_auth.json.example` in the project root.
@@ -22,11 +21,11 @@ import { UploadsMixin } from './mixins/uploads';
  * Otherwise the default account is used. You can retrieve the user ID
  * by going to https://myaccount.google.com/brandaccounts and selecting your brand account.
  * The user ID will be in the URL: https://myaccount.google.com/b/user_id/
- * @param {any} [options.proxies] Optional. No usage in current API
+ * @param {} [options.httpsAgent] Optional. Define an HTTP proxy for your request.
+ * @param {AxiosProxyConfig} [options.proxies] Optional. Define an HTTP proxy for your request.
  * @param {string} [options.language] Optional. Can be used to change the language of returned data.
  * English will be used by default. Available languages can be checked in
- * the ytmusicapi/locales directory. A language that is not in the directory will still be
- * attempted to be translated, but results may not be the best.
+ * the ytmusicapi/locales directory.
  */
 const YTMusic = UploadsMixin(
   LibraryMixin(
