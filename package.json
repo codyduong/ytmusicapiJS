@@ -3,7 +3,7 @@
   "version": "0.3.0-rc0",
   "description": "Unofficial API for YouTube Music",
   "main": "dist/index.js",
-  "browser": "dist/main.browser.bundle.js",
+  "browser": "dist/index.browser.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "yarn jest --verbose",
