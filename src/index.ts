@@ -5,6 +5,40 @@ import { ExploreMixin } from './mixins/explore';
 import { LibraryMixin } from './mixins/library';
 import { PlaylistsMixin } from './mixins/playlists';
 import { UploadsMixin } from './mixins/uploads';
+import { isBrowser } from 'browser-or-node';
+
+//We have to make sure the user has installed shims if using browser.
+if (isBrowser) {
+  const requiredArray = [
+    'crypto-browserify',
+    'https-browserify',
+    'path-browserify',
+    'stream-browserify',
+    'stream-http',
+    'url',
+    'buffer',
+  ];
+  const definedArray = [];
+  for (const [i, required] of requiredArray.entries()) {
+    definedArray[i] = !!require(required);
+  }
+  if (definedArray.length > 0) {
+    const missing = definedArray
+      .map((v, i) => (v === false ? `${requiredArray[i]}` : undefined))
+      .filter((x): x is string => !!x);
+    const install = missing.reduce((p, c) => `${p} ${c}`, '');
+    throw new Error(
+      `You are missing required browser dependencies.\n${missing.reduce(
+        (p, c) => `${p}, ${c}`,
+        ''
+      )}\nInstall them now with:\n
+      npm install ${install}\n
+      OR\n
+      yarn add ${install}\n
+      `
+    );
+  }
+}
 
 /**
  * Allows automated interactions with YouTube Music by emulating the YouTube web client's requests.
