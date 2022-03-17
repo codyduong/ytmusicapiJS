@@ -1,5 +1,3 @@
-// import os
-// import platform
 import * as helpers from './helpers';
 import { json } from './pyLibraryMock';
 import * as fs from 'fs';
@@ -13,23 +11,27 @@ export function setup(filepath: any, headersRaw: string): string {
   const contents = [];
   let userHeaders: Record<string, any> = {};
   if (!headersRaw) {
-    const eof =
-      // eslint-disable-next-line prettier/prettier
-      process.platform != 'win32' ? 'Ctrl-D' : '\'Enter, Ctrl-Z, Enter\'';
-    console.log(
-      `Please paste the request headers from Firefox and press ${eof} to continue:`
-    );
-    // eslint-disable-next-line no-constant-condition
-    while (true) {
-      //@CODYDUONG TODO double-check setup behavior
-      let line;
-      try {
-        line = prompt('');
-      } catch (e: any) {
-        if (e) break;
-        else throw new Error(e.toString());
+    if (process) {
+      const eof =
+        // eslint-disable-next-line prettier/prettier
+        process.platform != 'win32' ? 'Ctrl-D' : '\'Enter, Ctrl-Z, Enter\'';
+      console.log(
+        `Please paste the request headers from Firefox and press ${eof} to continue:`
+      );
+      // eslint-disable-next-line no-constant-condition
+      while (true) {
+        //@CODYDUONG TODO double-check setup behavior
+        let line;
+        try {
+          line = prompt('');
+        } catch (e: any) {
+          if (e) break;
+          else throw new Error(e.toString());
+        }
+        contents.push(line);
       }
-      contents.push(line);
+    } else {
+      throw new Error('headersRaw must be provided in jsdom!');
     }
     try {
       for (const content of contents) {
@@ -79,18 +81,24 @@ export function setup(filepath: any, headersRaw: string): string {
   const headers = userHeaders;
 
   if (filepath) {
-    fs.writeFile(
-      filepath,
-      json.dump(headers, {
-        ensureAscii: true,
-        indent: 4,
-      }),
-      (err: any) => {
-        if (err) {
-          throw new Error(String(err));
+    if (fs) {
+      fs.writeFile(
+        filepath,
+        json.dump(headers, {
+          ensureAscii: true,
+          indent: 4,
+        }),
+        (err: any) => {
+          if (err) {
+            throw new Error(String(err));
+          }
         }
-      }
-    );
+      );
+    } else {
+      console.warn(
+        `Setup with filepath is not supported in jsdom! This parameter filepath: ${filepath} will not do anything.`
+      );
+    }
   }
 
   return json.dumps(headers);

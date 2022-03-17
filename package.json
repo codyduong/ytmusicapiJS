@@ -1,18 +1,21 @@
 {
   "name": "@codyduong/ytmusicapi",
-  "version": "0.2.3",
+  "version": "0.3.0-rc0",
   "description": "Unofficial API for YouTube Music",
   "main": "dist/index.js",
+  "browser": "dist/main.browser.bundle.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "yarn jest --verbose",
     "test:pylib": "yarn jest pylib --verbose",
-    "test:code": "yarn lint && yarn tsc --noEmit",
+    "test:code": "yarn lint && yarn tsc --noEmit && yarn build ",
     "docs": "yarn tsc && yarn jsdoc dist/ -r -c ./jsdoc.json --verbose",
     "ci": "yarn install --frozen-lockfile",
     "lint": "prettier \"./src/**/*{ts, tsx}\" && eslint \"./src/**/*{ts,tsx}\" -c \".eslintrc.js\"",
     "lint:fix": "prettier --write \"./src/**/*{ts, tsx}\" && eslint \"./src/**/*{ts,tsx}\" --fix -c \".eslintrc.js\"",
-    "prepublish": "tsc"
+    "dev": "webpack watch --config webpack.config.js --mode=development",
+    "build": "webpack build --config webpack.config.js --mode=production",
+    "prepublishOnly": "yarn build"
   },
   "author": "Cody Duong",
   "license": "MIT",
@@ -35,8 +38,18 @@
     "prettier": "^2.4.1",
     "prettier-eslint-cli": "^5.0.1",
     "ts-jest": "^27.1.3",
+    "ts-loader": "^9.2.8",
     "ts-node": "^10.5.0",
-    "typescript": "^4.6.2"
+    "typescript": "^4.6.2",
+    "webpack": "^5.70.0",
+    "webpack-cli": "^4.9.2",
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.0",
+    "https-browserify": "^1.0.0",
+    "path-browserify": "^1.0.1",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "url": "^0.11.0"
   },
   "dependencies": {
     "axios": "^0.26.0",

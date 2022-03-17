@@ -22,6 +22,10 @@ type _YTMusicConstructorOptions = {
 import i18next from 'i18next';
 import { en, de, es, it, fr, ja, ko, zh_CN } from './locales';
 
+if (typeof process != 'undefined') {
+  axios.defaults.adapter = require('axios/lib/adapters/http');
+}
+
 export class _YTMusic {
   #auth: string | null;
   _httpsAgent: https.Agent | undefined;
@@ -35,7 +39,7 @@ export class _YTMusic {
   /**
    * This is an internal class, please use {@link YTMusic}
    * @param {_YTMusicConstructorOptions} [options=] Options object.
-   * @param {string} [options.auth=]  Provide a string or path to file.
+   * @param {string | object} [options.auth=]  Provide a string (raw headers), object, or path (Node only!),
    * Authentication credentials are needed to manage your library.
    * Should be an adjusted version of `headers_auth.json.example` in the project root.
    * See `setup` for how to fill in the correct credentials.
@@ -80,7 +84,9 @@ export class _YTMusic {
     // prepare headers
 
     this.headers = helpers.initializeHeaders();
-    if (auth && fs.existsSync(auth)) {
+    if (typeof auth == 'object') {
+      this.headers = auth;
+    } else if (auth && fs && fs.existsSync(auth)) {
       const file = auth;
       const data = fs.readFileSync(file);
       this.headers = CaseInsensitiveObject<Headers>(json.load(data));

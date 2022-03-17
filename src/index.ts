@@ -12,7 +12,7 @@ import { UploadsMixin } from './mixins/uploads';
  * Authentication header data must be provided on initialization.
  * @class
  * @param {Object} [options=] Options object.
- * @param {string} [options.auth=]  Provide a string or path to file.
+ * @param {string | object} [options.auth=]  Provide a string (raw headers), object, or path (Node only!),
  * Authentication credentials are needed to manage your library.
  * Should be an adjusted version of `headers_auth.json.example` in the project root.
  * See `setup` for how to fill in the correct credentials.

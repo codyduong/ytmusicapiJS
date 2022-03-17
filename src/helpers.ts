@@ -1,7 +1,7 @@
 import { re, json, time, locale, SimpleCookie } from './pyLibraryMock';
 import * as utf8 from 'utf8';
 import * as constants from './constants';
-import * as crypto from 'crypto';
+import { createHash } from 'crypto';
 
 import type { Headers } from './types';
 
@@ -99,7 +99,7 @@ export function sapisidFromCookie(_rawCookie: any): any {
 // // SAPISID Hash reverse engineered by
 // // https://stackoverflow.com/a/32065323/5726546
 export function getAuthorization(auth: any): string {
-  const sha_1 = crypto.createHash('sha1');
+  const sha_1 = createHash('sha1');
   const unix_timestamp = Math.trunc(time.time()).toString();
   sha_1.update(utf8.encode(unix_timestamp + ' ' + auth));
   return 'SAPISIDHASH ' + unix_timestamp + '_' + sha_1.digest('hex');
