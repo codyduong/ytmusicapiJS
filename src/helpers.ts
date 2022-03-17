@@ -1,8 +1,7 @@
 import { re, json, time, locale, SimpleCookie } from './pyLibraryMock';
 import * as utf8 from 'utf8';
 import * as constants from './constants';
-import { createHash } from 'crypto';
-
+import { createHash } from './fallback/crypto';
 import type { Headers } from './types';
 
 // @CODYDUONG TODO type better
@@ -151,4 +150,13 @@ export function sumTotalDuration(item: any): number {
         track?.duration_seconds ?? 0
     )
   );
+}
+
+//Removes any headers controlled by browser
+export function clearUnsafeHeaders(o: Record<string, any>): void {
+  if (window) {
+    delete o['user-agent'];
+    delete o['accept-encoding'];
+    delete o['origin'];
+  }
 }

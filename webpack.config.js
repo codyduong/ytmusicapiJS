@@ -16,6 +16,7 @@ const moduleShared = {
 };
 
 const serverConfig = {
+  ...moduleShared,
   target: 'node',
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
@@ -30,33 +31,28 @@ const serverConfig = {
       type: 'umd',
     },
   },
-  ...moduleShared,
 };
 
 const clientConfig = {
+  ...moduleShared,
   target: 'web',
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
     fallback: {
-      crypto: require.resolve('crypto-browserify'),
       path: require.resolve('path-browserify'),
-      https: require.resolve('https-browserify'),
-      stream: require.resolve('stream-browserify'),
-      http: require.resolve('stream-http'),
+      https: false,
+      'https-browserify': false,
       url: require.resolve('url/'),
       buffer: require.resolve('buffer/'),
       fs: false,
     },
   },
-  externals: {
-    crypto: 'crypto-browserify',
-    path: 'path-browserify',
-    https: 'https-browserify',
-    stream: 'stream-browserify',
-    http: 'stream-http',
-    url: 'url',
-    buffer: 'buffer/',
-  },
+  // @codyduong TODO reenable when I'm not losing my sanity to webpack 5
+  // externals: {
+  //   path: 'path-browserify',
+  //   url: 'url',
+  //   buffer: 'buffer/',
+  // },
   output: {
     asyncChunks: true,
     path: path.resolve(__dirname, 'dist'),
@@ -70,7 +66,6 @@ const clientConfig = {
       type: 'umd',
     },
   },
-  ...moduleShared,
 };
 
 module.exports = [serverConfig, clientConfig];

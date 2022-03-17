@@ -131,7 +131,7 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
       const body = { browseId: 'FEmusic_home' };
       const response = await this._sendRequest(endpoint, body);
       const results = nav(response, [...SINGLE_COLUMN_TAB, ...SECTION_LIST]);
-      let home = [...this.parser.parseHome(results)];
+      let home = [...this._parser.parseHome(results)];
 
       const sectionList = nav(response, [
         ...SINGLE_COLUMN_TAB,
@@ -141,7 +141,7 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
         const requestFunc = async (additionalParams: any): Promise<any> =>
           await this._sendRequest(endpoint, body, additionalParams);
         const parseFunc = (contents: any): any =>
-          this.parser.parseHome(contents);
+          this._parser.parseHome(contents);
         home = [
           ...home,
           ...(await getContinuations(
@@ -441,7 +441,7 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
             : null;
           searchResults = [
             ...searchResults,
-            ...this.parser.parseSearchResults(
+            ...this._parser.parseSearchResults(
               resultsMusicShelfContents,
               type,
               category
@@ -456,7 +456,7 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
               await this._sendRequest(endpoint, body, additionalParams);
 
             const parseFunc = (contents: any): Record<string, any> =>
-              this.parser.parseSearchResults(contents, type, category);
+              this._parser.parseSearchResults(contents, type, category);
 
             searchResults = [
               ...searchResults,
@@ -636,7 +636,7 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
         //@ts-expect-error: We're overriding the shape here
         artist['songs']['results'] = parsePlaylistItems(musicShelf['contents']);
       }
-      artist = { ...artist, ...this.parser.parseArtistContents(results) };
+      artist = { ...artist, ...this._parser.parseArtistContents(results) };
       return artist;
     }
 
@@ -718,7 +718,7 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
           'musicVisualHeaderRenderer',
           ...TITLE_TEXT,
         ]) as string,
-        ...this.parser.parseArtistContents(results),
+        ...this._parser.parseArtistContents(results),
       };
       return user;
     }

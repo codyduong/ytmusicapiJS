@@ -345,7 +345,7 @@ export const UploadsMixin = <TBase extends GConstructor<LibraryMixin>>(
             supportedFiletypes.join(', ')
         );
       }
-      const headers: any = this.headers;
+      const headers: any = this._headers;
       let uploadUrl = `https://upload.youtube.com/upload/usermusic/http?authuser=${headers['x-goog-authuser']}`;
       const filesize = statSync(filepath).size;
       const body = 'filename=' + utf8.encode(basename(filepath));
@@ -357,7 +357,7 @@ export const UploadsMixin = <TBase extends GConstructor<LibraryMixin>>(
       headers['X-Goog-Upload-Protocol'] = 'resumable';
       const response = await axios.post(uploadUrl, body, {
         headers: headers,
-        proxy: this.proxies,
+        proxy: this._proxies,
       });
       headers['X-Goog-Upload-Command'] = 'upload, finalize';
       headers['X-Goog-Upload-Offset'] = '0';
@@ -367,7 +367,7 @@ export const UploadsMixin = <TBase extends GConstructor<LibraryMixin>>(
       const data = readFileSync(filepath);
       const response2: any = await axios.post(uploadUrl, data, {
         headers: headers,
-        proxy: this.proxies,
+        proxy: this._proxies,
       });
       if (response2.status == 200) {
         return 'STATUS_SUCCEEDED';

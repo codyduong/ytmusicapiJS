@@ -28,13 +28,13 @@ if (typeof process != 'undefined') {
 
 export class _YTMusic {
   #auth: string | null;
-  _httpsAgent: https.Agent | undefined;
-  proxies?: AxiosProxyConfig | false;
-  headers: Headers;
-  context: any;
-  language: string | undefined;
-  parser: Parser;
-  sapisid: any;
+  #httpsAgent: https.Agent | undefined;
+  _proxies?: AxiosProxyConfig | false;
+  _headers: Headers;
+  #context: any;
+  #language: string | undefined;
+  _parser: Parser;
+  #sapisid: any;
 
   /**
    * This is an internal class, please use {@link YTMusic}
@@ -67,51 +67,51 @@ export class _YTMusic {
 
     this.#auth = auth ?? null;
 
-    if (httpsAgent instanceof https.Agent) {
-      this._httpsAgent = httpsAgent;
-    } else {
+    if (typeof httpsAgent === 'boolean') {
       if (httpsAgent) {
-        this._httpsAgent = new https.Agent({
+        this.#httpsAgent = new https.Agent({
           timeout: 30000,
         });
       } else {
-        this._httpsAgent = undefined;
+        this.#httpsAgent = undefined;
       }
+    } else {
+      this.#httpsAgent = httpsAgent;
     }
 
-    this.proxies = proxies;
+    this._proxies = proxies;
 
     // prepare headers
 
-    this.headers = helpers.initializeHeaders();
+    this._headers = helpers.initializeHeaders();
     if (typeof auth == 'object') {
-      this.headers = auth;
+      this._headers = auth;
     } else if (auth && fs && fs.existsSync(auth)) {
       const file = auth;
       const data = fs.readFileSync(file);
-      this.headers = CaseInsensitiveObject<Headers>(json.load(data));
+      this._headers = CaseInsensitiveObject<Headers>(json.load(data));
     } else if (auth) {
-      this.headers = CaseInsensitiveObject<Headers>(json.loads(auth));
+      this._headers = CaseInsensitiveObject<Headers>(json.loads(auth));
     }
 
     //TODO check if the IIAFE breaks this or not...
-    if (!this.headers?.['x-goog-visitor-id']) {
+    if (!this._headers?.['x-goog-visitor-id']) {
       let helpersGetVisitorId: Record<string, any> = {};
       (async (): Promise<void> => {
         helpersGetVisitorId = await helpers.getVisitorId(this._sendGetRequest);
       })();
 
-      this.headers = {
-        ...this.headers,
+      this._headers = {
+        ...this._headers,
         ...helpersGetVisitorId,
       };
     }
 
     // prepare context
-    this.context = helpers.initializeContext();
-    this.context['context']['client']['hl'] = language;
+    this.#context = helpers.initializeContext();
+    this.#context['context']['client']['hl'] = language;
 
-    this.language = language;
+    this.#language = language;
     const supportedLanguages = ['en', 'de', 'es', 'fr', 'it', 'ja'];
     if (!supportedLanguages.includes(language)) {
       console.warn(
@@ -143,17 +143,17 @@ export class _YTMusic {
       })();
     }
 
-    this.parser = new Parser();
+    this._parser = new Parser();
 
     if (user) {
-      this.context['context']['user']['onBehalfOfUser'] = user;
+      this.#context['context']['user']['onBehalfOfUser'] = user;
     }
 
     // verify authentication credentials work
     if (auth) {
-      const cookie = this.headers.cookie;
+      const cookie = this._headers.cookie;
       if (cookie) {
-        this.sapisid = helpers.sapisidFromCookie(cookie);
+        this.#sapisid = helpers.sapisidFromCookie(cookie);
       } else {
         throw new Error(
           'Your cookie is missing the required value __Secure-3PAPISID'
@@ -167,26 +167,26 @@ export class _YTMusic {
     body: Record<string, any>,
     additionalParams = ''
   ): Promise<T> {
-    body = { ...body, ...this.context };
+    body = { ...body, ...this.#context };
 
     if (this.#auth) {
-      const origin = this.headers['origin'] ?? this.headers['x-origin'];
-      this.headers['authorization'] = helpers.getAuthorization(
-        this.sapisid + ' ' + origin
+      const origin = this._headers['origin'] ?? this._headers['x-origin'];
+      this._headers['authorization'] = helpers.getAuthorization(
+        this.#sapisid + ' ' + origin
       );
     }
 
     // console.log(YTM_BASE_API + endpoint + YTM_PARAMS + additionalParams, body, {
-    //   headers: this.headers,
-    //   proxy: this.proxies,
+    //   headers: this._headers,
+    //   proxy: this._proxies,
     // });
     const response = await axios.post(
       YTM_BASE_API + endpoint + YTM_PARAMS + additionalParams,
       JSON.stringify(body),
       {
-        headers: this.headers,
-        proxy: this.proxies,
-        httpsAgent: this?._httpsAgent,
+        headers: this._headers,
+        proxy: this._proxies,
+        httpsAgent: this.#httpsAgent,
       }
     );
     //console.log(response);
@@ -201,9 +201,9 @@ export class _YTMusic {
   ): Promise<string> {
     const response = await axios.get(url, {
       params: params,
-      headers: this?.headers,
-      proxy: this?.proxies,
-      httpsAgent: this?._httpsAgent,
+      headers: this?._headers,
+      proxy: this?._proxies,
+      httpsAgent: this.#httpsAgent,
     });
     return response.data;
   }
@@ -241,8 +241,8 @@ export class _YTMusic {
   }
 
   async changeLanguage(language: string): Promise<void> {
-    this.language = language;
-    this.context['context']['client']['hl'] = language;
+    this.#language = language;
+    this.#context['context']['client']['hl'] = language;
     const changeLanguage = new Promise<void>((resolve, reject) => {
       i18next.changeLanguage(language, (error) => {
         if (error) {
@@ -254,5 +254,13 @@ export class _YTMusic {
     });
 
     await changeLanguage;
+  }
+
+  getLanguage(): string | undefined {
+    return this.#language;
+  }
+
+  getProxy(): AxiosProxyConfig | boolean | undefined {
+    return this._proxies;
   }
 }
