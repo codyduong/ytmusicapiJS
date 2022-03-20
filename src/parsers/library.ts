@@ -42,7 +42,7 @@ export function parseArtists(results: any, uploaded = false): Array<any> {
       }
     }
 
-    artist['thumbnails'] = nav(data, THUMBNAILS, true);
+    artist['thumbnails'] = nav(data, THUMBNAILS, null);
     artists.push(artist);
   }
 
@@ -116,7 +116,7 @@ export function parseAlbums(results: any): parser_lt.parseAlbumsReturn {
         album['artists'] = [];
         album['artists'].push({
           name: subtitle['text'],
-          id: nav(subtitle, NAVIGATION_BROWSE_ID, true),
+          id: nav(subtitle, NAVIGATION_BROWSE_ID, null),
         });
       }
     }

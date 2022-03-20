@@ -55,7 +55,7 @@ export function parsePlaylistItems(
         ]['videoId'];
 
         if (data['menu']) {
-          like = nav(data, MENU_LIKE_STATUS, true);
+          like = nav(data, MENU_LIKE_STATUS, null);
         }
       }
       const title = getItemText(data, 0);
@@ -85,7 +85,7 @@ export function parsePlaylistItems(
           'MUSIC_ITEM_RENDERER_DISPLAY_POLICY_GREY_OUT';
       }
 
-      const isExplicit = !!nav(data, BADGE_LABEL, true);
+      const isExplicit = !!nav(data, BADGE_LABEL, null);
 
       const song: Record<string, any> = {
         videoId: videoId,

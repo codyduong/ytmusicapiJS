@@ -1,3 +1,4 @@
+import { nav } from '@codyduong/nav';
 import { MENU_ITEMS, NAVIGATION_BROWSE_ID } from './index';
 import { parsePlaylistItemsReturn } from './playlists.types';
 
@@ -10,14 +11,14 @@ export function parseMenuPlaylists(
   //   nav(data, MENU_ITEMS),
   //   'menuNavigationItemRenderer'
   // );
-  const watchMenu: Record<string, any> = nav(data, MENU_ITEMS)?.[ //this isn't nullable in pylib todo @codyduong discovery
+  const watchMenu: Record<string, any> = nav<any>(data, MENU_ITEMS)?.[ //this isn't nullable in pylib todo @codyduong discovery
     'menuNavigationItemRenderer'
   ];
   if (watchMenu) {
     for (const item of watchMenu.map(
       (x: Record<string, any>) => x['menuNavigationItemRenderer']
     )) {
-      const icon = nav<never, any>(item, ['icon', 'iconType']);
+      const icon = nav<any>(item, ['icon', 'iconType']);
       let watchKey;
       if (icon == 'MUSIC_SHUFFLE') {
         watchKey = 'shuffleId';
@@ -27,16 +28,16 @@ export function parseMenuPlaylists(
         continue;
       }
 
-      let watchId = nav<never, any>(
+      let watchId = nav<any>(
         item,
         ['navigationEndpoint', 'watchPlaylistEndpoint', 'playlistId'],
-        true
+        null
       );
       if (!watchId) {
-        watchId = nav<never, any>(
+        watchId = nav<any>(
           item,
           ['navigationEndpoint', 'watchEndpoint', 'playlistId'],
-          true
+          null
         );
       }
       if (watchId) {
@@ -48,7 +49,13 @@ export function parseMenuPlaylists(
 
 type FlexItem = {
   text: {
-    runs: { text: string }[];
+    runs: {
+      text: string;
+      navigationEndpoint: {
+        watchEndpoint: { videoId: string; playlistId: string };
+        browseEndpoint: { browseId: string };
+      };
+    }[];
   };
 };
 
@@ -189,7 +196,7 @@ export function getParsedContinuationItems(
 }
 
 function getContinuationParams(results: any, ctoken_path: string): string {
-  const ctoken = nav<never, any>(results, [
+  const ctoken = nav<any>(results, [
     'continuations',
     0,
     'next' + ctoken_path + 'ContinuationData',
@@ -259,107 +266,7 @@ export function validatePlaylistId(
     : playlistId.slice(2);
 }
 
-// Need so many goddamn support types
-// God bless: https://stackoverflow.com/questions/61624719/how-to-conditionally-detect-the-any-type-in-typescript
-type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
-  k: infer I
-) => void
-  ? I
-  : never;
-
-// If T is `any` a union of both side of the condition is returned.
-type UnionForAny<T> = T extends never ? 'A' : 'B';
-
-// Returns true if type is any, or false for any other type.
-// type IsStrictlyAny<T> = UnionToIntersection<UnionForAny<T>> extends never
-//   ? true
-//   : false;
-
-// Good enough recursive type... Correctly places all keys at correct depth,
-// but is still possible to call keys on the wrong values.
-// This is a limitation of the keyof T, which unions all the properties at that depth.
-type navNode<T> = UnionToIntersection<UnionForAny<T>> extends never
-  ? any
-  : T extends Array<infer Item>
-  ? //@ts-expect-error: This works
-    [number?, ...isNavNodeable<Item>]
-  : T extends Record<string, any>
-  ? [(keyof T)?, ...isNavNodeable<T[keyof T]>]
-  : [];
-type isNavNodeable<T> = T extends Array<any>
-  ? navNode<T>
-  : T extends Record<string, any>
-  ? navNode<T>
-  : unknown;
-
-type navNodeTestObj = {
-  matrix: [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
-  nestedObj: {
-    nestedObj2a: 'a';
-    nestedObj2b: 'b';
-  };
-  objectInArray: Array<{ object: { objectChild: 'deep!' } }>;
-  unknown: unknown;
-  arrayUnknown: [unknown];
-};
-type navNodeTest = navNode<navNodeTestObj>;
-const _navNodeTest1: navNodeTest = ['matrix', 1, 2];
-const _navNodeTest2: navNodeTest = ['nestedObj', 'nestedObj2a'];
-const _navNodeTest3: navNodeTest = [
-  'objectInArray',
-  1,
-  'object',
-  'objectChild',
-];
-
-export function nav<T extends Record<string, any> | Array<any>, U = any>(
-  root: T,
-  items: navNode<T>,
-  nullIfAbsent?: boolean
-): U;
-export function nav<_T extends never, U = any>(
-  root: any | null,
-  items: (string | number)[],
-  nullIfAbsent?: boolean
-): U;
-export function nav(
-  root: any | null,
-  items: (string | number)[],
-  nullIfAbsent?: boolean
-): any;
-export function nav<T extends Record<string, any> | Array<any> | never, U>(
-  root: T | null,
-  items: (string | number)[] | navNode<T>,
-  nullIfAbsent = false
-): U | null {
-  // """Access a nested object in root by item sequence."""
-  try {
-    if (root) {
-      for (const k of items) {
-        //Handle if a user accesses negative numbers
-        const accessor: typeof k =
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          typeof k == 'number' ? (k < 0 ? root!.length + k : k) : k;
-
-        //@ts-expect-error: There's no real good way to type this function
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        root = root![accessor];
-      }
-      return root as any;
-    }
-  } catch (e) {
-    if (
-      nullIfAbsent &&
-      (e instanceof ReferenceError || e instanceof TypeError)
-    ) {
-      return null;
-    } else {
-      throw e;
-    }
-  }
-
-  return null;
-}
+export { nav } from '@codyduong/nav';
 
 //These implementations are sketch...
 export function findObjectByKey<T extends Array<Record<string, any>>>(

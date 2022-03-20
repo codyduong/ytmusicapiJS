@@ -135,15 +135,12 @@ export const WatchMixin = <TBase extends GConstructor<BrowsingMixin>>(
       }
       const endpoint = 'next';
       const response = await this._sendRequest<wt.response>(endpoint, body);
-      const watchNextRenderer = nav<typeof response, wt.watchNextRenderer>(
-        response,
-        [
-          'contents',
-          'singleColumnMusicWatchNextResultsRenderer',
-          'tabbedRenderer',
-          'watchNextTabbedResultsRenderer',
-        ]
-      );
+      const watchNextRenderer = nav(response, [
+        'contents',
+        'singleColumnMusicWatchNextResultsRenderer',
+        'tabbedRenderer',
+        'watchNextTabbedResultsRenderer',
+      ] as const);
 
       let lyrics_browse_id = null;
       if (!('unselectable' in watchNextRenderer['tabs'][1]['tabRenderer'])) {
@@ -153,21 +150,19 @@ export const WatchMixin = <TBase extends GConstructor<BrowsingMixin>>(
           ]['browseId'];
       }
 
-      const results = nav<typeof watchNextRenderer, wt.results>(
-        watchNextRenderer,
-        [
-          ...TAB_CONTENT,
-          'musicQueueRenderer',
-          'content',
-          'playlistPanelRenderer',
-        ]
-      );
+      //Waiting on bugfix for nav nested arrays objects
+      const results = nav(watchNextRenderer, [
+        ...TAB_CONTENT,
+        'musicQueueRenderer',
+        'content',
+        'playlistPanelRenderer',
+      ]) as wt.results;
       const playlist = results['contents']
         .map((x) =>
-          nav<never, string | null>(
+          nav<any>(
             x,
             ['playlistPanelVideoRenderer', ...NAVIGATION_PLAYLIST_ID],
-            true
+            null
           )
         )
         .filter((x) => !!x)[0];

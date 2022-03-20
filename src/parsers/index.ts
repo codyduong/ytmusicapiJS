@@ -1,110 +1,104 @@
 //Equivalent to __init__.py
-export const RUN_TEXT: ['runs', 0, 'text'] = ['runs', 0, 'text'];
-export const TAB_CONTENT: ['tabs', number, 'tabRenderer', 'content'] = [
-  'tabs',
-  0,
-  'tabRenderer',
-  'content',
-];
-export const SINGLE_COLUMN_TAB: [
+export const RUN_TEXT = ['runs', 0, 'text'] as const;
+export const TAB_CONTENT = ['tabs', 0, 'tabRenderer', 'content'] as const;
+export const SINGLE_COLUMN_TAB = [
   'contents',
   'singleColumnBrowseResultsRenderer',
-  ...typeof TAB_CONTENT
-] = ['contents', 'singleColumnBrowseResultsRenderer', ...TAB_CONTENT];
-export const SECTION_LIST: ['sectionListRenderer', 'contents'] = [
-  'sectionListRenderer',
-  'contents',
-];
-export const SECTION_LIST_ITEM: ['sectionListRenderer', 'contents', 0] = [
+  ...TAB_CONTENT,
+] as const;
+export const SECTION_LIST = ['sectionListRenderer', 'contents'] as const;
+export const SECTION_LIST_ITEM = [
   'sectionListRenderer',
   'contents',
   0,
-];
-export const ITEM_SECTION = ['itemSectionRenderer', 'contents', 0];
-export const MUSIC_SHELF: ['musicShelfRenderer'] = ['musicShelfRenderer'];
-export const GRID: ['gridRenderer'] = ['gridRenderer'];
-export const GRID_ITEMS: [...typeof GRID, 'items'] = [...GRID, 'items'];
-export const MENU = ['menu', 'menuRenderer'];
-export const MENU_ITEMS = [...MENU, 'items'];
+] as const;
+export const ITEM_SECTION = ['itemSectionRenderer', 'contents', 0] as const;
+export const MUSIC_SHELF = ['musicShelfRenderer'] as const;
+export const GRID = ['gridRenderer'] as const;
+export const GRID_ITEMS = [...GRID, 'items'] as const;
+export const MENU = ['menu', 'menuRenderer'] as const;
+export const MENU_ITEMS = [...MENU, 'items'] as const;
 export const MENU_LIKE_STATUS = [
   ...MENU,
   ...['topLevelButtons', 0, 'likeButtonRenderer', 'likeStatus'],
-];
-export const MENU_SERVICE = ['menuServiceItemRenderer', 'serviceEndpoint'];
-export const TOGGLE_MENU = 'toggleMenuServiceItemRenderer';
+] as const;
+export const MENU_SERVICE = [
+  'menuServiceItemRenderer',
+  'serviceEndpoint',
+] as const;
+export const TOGGLE_MENU = 'toggleMenuServiceItemRenderer' as const;
 export const PLAY_BUTTON = [
   'overlay',
   'musicItemThumbnailOverlayRenderer',
   'content',
   'musicPlayButtonRenderer',
-];
-export const NAVIGATION_BROWSE = ['navigationEndpoint', 'browseEndpoint'];
-export const NAVIGATION_BROWSE_ID = [...NAVIGATION_BROWSE, 'browseId'];
+] as const;
+export const NAVIGATION_BROWSE = [
+  'navigationEndpoint',
+  'browseEndpoint',
+] as const;
+export const NAVIGATION_BROWSE_ID = [...NAVIGATION_BROWSE, 'browseId'] as const;
 export const PAGE_TYPE = [
   'browseEndpointContextSupportedConfigs',
   'browseEndpointContextMusicConfig',
   'pageType',
-];
-export const NAVIGATION_VIDEO_ID: [
+] as const;
+export const NAVIGATION_VIDEO_ID = [
   'navigationEndpoint',
   'watchEndpoint',
-  'videoId'
-] = ['navigationEndpoint', 'watchEndpoint', 'videoId'];
-export const NAVIGATION_PLAYLIST_ID: [
+  'videoId',
+] as const;
+export const NAVIGATION_PLAYLIST_ID = [
   'navigationEndpoint',
   'watchEndpoint',
-  'playlistId'
-] = ['navigationEndpoint', 'watchEndpoint', 'playlistId'];
-export const NAVIGATION_WATCH_PLAYLIST_ID: [
+  'playlistId',
+] as const;
+export const NAVIGATION_WATCH_PLAYLIST_ID = [
   'navigationEndpoint',
   'watchPlaylistEndpoint',
-  'playlistId'
-] = ['navigationEndpoint', 'watchPlaylistEndpoint', 'playlistId'];
-export const HEADER_DETAIL = ['header', 'musicDetailHeaderRenderer'];
-export const DESCRIPTION: ['description', ...typeof RUN_TEXT] = [
-  'description',
-  ...RUN_TEXT,
-];
-export const CAROUSEL: ['musicCarouselShelfRenderer'] = [
-  'musicCarouselShelfRenderer',
-];
-export const CAROUSEL_CONTENTS = [...CAROUSEL, 'contents'];
-export const CAROUSEL_TITLE: [
+  'playlistId',
+] as const;
+export const HEADER_DETAIL = ['header', 'musicDetailHeaderRenderer'] as const;
+export const DESCRIPTION = ['description', ...RUN_TEXT] as const;
+export const CAROUSEL = ['musicCarouselShelfRenderer'] as const;
+export const CAROUSEL_CONTENTS = [...CAROUSEL, 'contents'] as const;
+export const CAROUSEL_TITLE = [
   'header',
   'musicCarouselShelfBasicHeaderRenderer',
   'title',
   'runs',
-  number
-] = ['header', 'musicCarouselShelfBasicHeaderRenderer', 'title', 'runs', 0];
+  0,
+] as const;
 export const FRAMEWORK_MUTATIONS = [
   'frameworkUpdates',
   'entityBatchUpdate',
   'mutations',
 ];
-export const TITLE: ['title', 'runs', 0] = ['title', 'runs', 0];
-export const TITLE_TEXT: ['title', ...typeof RUN_TEXT] = ['title', ...RUN_TEXT];
-export const TEXT_RUNS: ['text', 'runs'] = ['text', 'runs'];
-export const TEXT_RUN: [...typeof TEXT_RUNS, number] = [...TEXT_RUNS, 0];
-export const TEXT_RUN_TEXT: [...typeof TEXT_RUN, 'text'] = [
-  ...TEXT_RUN,
-  'text',
-];
-export const SUBTITLE = ['subtitle', ...RUN_TEXT];
-export const SUBTITLE2 = ['subtitle', 'runs', 2, 'text'];
-export const SUBTITLE3 = ['subtitle', 'runs', 4, 'text'];
-export const THUMBNAIL = ['thumbnail', 'thumbnails'];
-export const THUMBNAILS = ['thumbnail', 'musicThumbnailRenderer', ...THUMBNAIL];
+export const TITLE = ['title', 'runs', 0] as const;
+export const TITLE_TEXT = ['title', ...RUN_TEXT] as const;
+export const TEXT_RUNS = ['text', 'runs'] as const;
+export const TEXT_RUN = [...TEXT_RUNS, 0] as const;
+export const TEXT_RUN_TEXT = [...TEXT_RUN, 'text'] as const;
+export const SUBTITLE = ['subtitle', ...RUN_TEXT] as const;
+export const SUBTITLE2 = ['subtitle', 'runs', 2, 'text'] as const;
+export const SUBTITLE3 = ['subtitle', 'runs', 4, 'text'] as const;
+export const THUMBNAIL = ['thumbnail', 'thumbnails'] as const;
+export const THUMBNAILS = [
+  'thumbnail',
+  'musicThumbnailRenderer',
+  ...THUMBNAIL,
+] as const;
 export const THUMBNAIL_RENDERER = [
   'thumbnailRenderer',
   'musicThumbnailRenderer',
   ...THUMBNAIL,
-];
+] as const;
 export const THUMBNAIL_CROPPED = [
   'thumbnail',
   'croppedSquareThumbnailRenderer',
   THUMBNAIL,
-];
-export const FEEDBACK_TOKEN = ['feedbackEndpoint', 'feedbackToken'];
+] as const;
+export const FEEDBACK_TOKEN = ['feedbackEndpoint', 'feedbackToken'] as const;
 export const BADGE_LABEL = [
   'badges',
   0,
@@ -112,23 +106,23 @@ export const BADGE_LABEL = [
   'accessibilityData',
   'accessibilityData',
   'label',
-];
+] as const;
 export const RELOAD_CONTINUATION = [
   'continuations',
   0,
   'reloadContinuationData',
   'continuation',
-];
+] as const;
 export const CATEGORY_TITLE = [
   'musicNavigationButtonRenderer',
   'buttonText',
   ...RUN_TEXT,
-];
+] as const;
 export const CATEGORY_PARAMS = [
   'musicNavigationButtonRenderer',
   'clickCommand',
   'browseEndpoint',
   'params',
-];
-export const MRLIR = 'musicResponsiveListItemRenderer';
-export const MTRIR = 'musicTwoRowItemRenderer';
+] as const;
+export const MRLIR = 'musicResponsiveListItemRenderer' as const;
+export const MTRIR = 'musicTwoRowItemRenderer' as const;

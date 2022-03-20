@@ -40,6 +40,7 @@ import {
 import * as bT from '../mixins/browsing.types';
 import * as parser_bT from './browsing.types';
 import _ from 'i18next';
+import { Filter } from '../types';
 
 export class Parser {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -51,7 +52,7 @@ export class Parser {
       | bT.resultType
       | bT.parseSearchResultsAdditionalResultTypes
       | null,
-    category: null
+    category: Filter | undefined
   ): Array<any> {
     const searchResults: Array<any> = [];
     const defaultOffset = !resultType ? 2 : 0;
@@ -99,7 +100,7 @@ export class Parser {
         const hasAuthor = flexItem?.length == defaultOffset + 3;
         searchResult['itemCount'] =
           flexItem &&
-          nav<typeof flexItem, string>(flexItem, [
+          nav<typeof flexItem, [number, 'text']>(flexItem, [
             defaultOffset + (hasAuthor ? 2 : 0),
             'text',
           ]).split(' ')[0];
@@ -107,16 +108,13 @@ export class Parser {
           ? null
           : nav(flexItem, [defaultOffset, 'text']);
       } else if (resultType == 'station') {
-        searchResult['videoId'] = nav<never, string>(data, NAVIGATION_VIDEO_ID);
-        searchResult['playlistId'] = nav<never, string>(
-          data,
-          NAVIGATION_PLAYLIST_ID
-        );
+        searchResult['videoId'] = nav(data, NAVIGATION_VIDEO_ID);
+        searchResult['playlistId'] = nav(data, NAVIGATION_PLAYLIST_ID);
       } else if (resultType == 'song') {
         searchResult['album'] = null;
         if ('menu' in data) {
           const toggleMenu = findObjectByKey(
-            nav(data, MENU_ITEMS, true), //@codyduong this isn't nullable in the py library? todo discovery why...
+            nav<any>(data, MENU_ITEMS, null), //@codyduong this isn't nullable in the py library? todo discovery why...
             TOGGLE_MENU
           );
           if (toggleMenu) {
@@ -126,23 +124,23 @@ export class Parser {
       } else if (resultType == 'video') {
         searchResult['views'] = null;
       } else if (resultType == 'upload') {
-        const browseId = nav(data, NAVIGATION_BROWSE_ID, true);
+        const browseId = nav(data, NAVIGATION_BROWSE_ID, null);
         if (!browseId) {
           // song result
           const flexItems = [0, 1].map((i) =>
-            nav(getFlexColumnItem(data, i), ['text', 'runs'], true)
+            nav<any>(getFlexColumnItem(data, i), ['text', 'runs'], null)
           );
 
           if (flexItems[0]) {
             searchResult['videoId'] = nav(
               flexItems[0][0],
               NAVIGATION_VIDEO_ID,
-              true
+              null
             );
             searchResult['playlistId'] = nav(
               flexItems[0][0],
               NAVIGATION_PLAYLIST_ID,
-              true
+              null
             );
           }
           if (flexItems[1]) {
@@ -186,7 +184,7 @@ export class Parser {
             'watchEndpoint',
             'videoId',
           ],
-          true
+          null
         );
       }
 
@@ -203,14 +201,14 @@ export class Parser {
       }
 
       if (['artist', 'album', 'playlist'].includes(resultType)) {
-        searchResult['browseId'] = nav(data, NAVIGATION_BROWSE_ID, true);
+        searchResult['browseId'] = nav(data, NAVIGATION_BROWSE_ID, null);
         if (!searchResult['browseId']) continue;
       }
 
       if (['song', 'album'].includes(resultType))
-        searchResult['isExplicit'] = nav(data, BADGE_LABEL, true) != null;
+        searchResult['isExplicit'] = nav(data, BADGE_LABEL, null) != null;
 
-      searchResult['thumbnails'] = nav(data, THUMBNAILS, true);
+      searchResult['thumbnails'] = nav(data, THUMBNAILS, null);
       searchResults.push(searchResult);
     }
     return searchResults;
@@ -241,10 +239,8 @@ export class Parser {
         .map((r) => {
           if (
             r['musicCarouselShelfRenderer'] &&
-            nav<typeof r, { text: string }>(r, [
-              ...CAROUSEL,
-              ...CAROUSEL_TITLE,
-            ])['text'].toLowerCase() == categories_local[i]
+            nav(r, [...CAROUSEL, ...CAROUSEL_TITLE])['text'].toLowerCase() ==
+              categories_local[i]
           )
             return r['musicCarouselShelfRenderer'];
         })
@@ -289,14 +285,14 @@ export class Parser {
         continue;
       }
       for (const result of results['contents']) {
-        let data = nav(result, [MTRIR], true);
+        let data = nav(result, [MTRIR], null);
         let content: parser_bT.parseHomeReturn[number]['contents'][number] =
           {} as any;
         if (data) {
           const page_type = nav(
             data,
             [...TITLE, ...NAVIGATION_BROWSE, ...PAGE_TYPE],
-            true
+            null
           );
           if (!page_type) {
             content = parseSong(data);
@@ -340,7 +336,7 @@ export class Parser {
 export function parseContentList<T>(
   results: Array<Record<string, any>>,
   parse_func: (arg0: any) => T,
-  key = MTRIR
+  key: string = MTRIR
 ): Array<T> {
   const contents = [];
   for (const result of results) {
@@ -352,8 +348,8 @@ export function parseContentList<T>(
 
 export function parseAlbum(result: any): parser_bT.parseAlbumReturn {
   return {
-    title: nav(result, TITLE_TEXT, true), //@codyduong this isn't nullable in the py library? todo discovery why...
-    year: nav(result, SUBTITLE2, true),
+    title: nav(result, TITLE_TEXT, null), //@codyduong this isn't nullable in the py library? todo discovery why...
+    year: nav(result, SUBTITLE2, null),
     browseId: nav(result, [...TITLE, ...NAVIGATION_BROWSE_ID]),
     thumbnails: nav(result, THUMBNAIL_RENDERER),
   };
@@ -362,7 +358,7 @@ export function parseAlbum(result: any): parser_bT.parseAlbumReturn {
 export function parseSingle(result: any): parser_bT.parseSingleReturn {
   return {
     title: nav(result, TITLE_TEXT),
-    year: nav(result, SUBTITLE, true),
+    year: nav(result, SUBTITLE, null),
     browseId: nav(result, [...TITLE, ...NAVIGATION_BROWSE_ID]),
     thumbnails: nav(result, THUMBNAIL_RENDERER),
   };
@@ -372,7 +368,7 @@ export function parseSong(result: any): parser_bT.parseSongReturn {
   return {
     title: nav(result, TITLE_TEXT),
     videoId: nav(result, NAVIGATION_VIDEO_ID),
-    playlistId: nav(result, NAVIGATION_PLAYLIST_ID, true),
+    playlistId: nav(result, NAVIGATION_PLAYLIST_ID, null),
     thumbnails: nav(result, THUMBNAIL_RENDERER),
     ...parseSongRuns(result['subtitle']['runs']),
   };
@@ -387,8 +383,8 @@ export function parseVideo(result: {
     title: nav(result, TITLE_TEXT),
     videoId: nav(result, NAVIGATION_VIDEO_ID),
     artists: parseSongArtistsRuns(runs.slice(0, artistsLen)),
-    playlistId: nav(result, NAVIGATION_PLAYLIST_ID, true),
-    thumbnails: nav(result, THUMBNAIL_RENDERER, true),
+    playlistId: nav(result, NAVIGATION_PLAYLIST_ID, null),
+    thumbnails: nav(result, THUMBNAIL_RENDERER, null),
   };
   video['views'] = runs[runs.length - 1]['text'].split(' ')[0];
   return video;
@@ -422,7 +418,7 @@ export function parsePlaylist(data: {
 export function parseRelatedArtist(
   data: any
 ): parser_bT.parseRelatedArtistReturn {
-  let subscribers = nav(data, SUBTITLE, true);
+  let subscribers = nav(data, SUBTITLE, null);
   if (subscribers) {
     subscribers = subscribers.split(' ')[0];
   }

@@ -91,22 +91,16 @@ export const ExploreMixin = <TBase extends GConstructor<WatchMixin>>(
         'browse',
         { browseId: 'FEmusic_moods_and_genres' }
       );
-      const naved = nav<typeof response, et.getMoodSectionNav>(response, [
-        ...SINGLE_COLUMN_TAB,
-        ...SECTION_LIST,
-      ]);
+      const naved = nav(response, [...SINGLE_COLUMN_TAB, ...SECTION_LIST]);
       for (const section of naved) {
-        const title = nav<typeof section, et.getMoodTitle>(section, [
+        const title = nav(section, [
           ...GRID,
           'header',
           'gridHeaderRenderer',
           ...TITLE_TEXT,
-        ]);
+        ] as const);
         sections[title] = [];
-        for (const category of nav<typeof section, et.getMoodGridItems>(
-          section,
-          GRID_ITEMS
-        )) {
+        for (const category of nav(section, GRID_ITEMS)) {
           sections[title].push({
             title: nav(category, CATEGORY_TITLE),
             params: nav(category, CATEGORY_PARAMS),
@@ -128,20 +122,25 @@ export const ExploreMixin = <TBase extends GConstructor<WatchMixin>>(
         browseId: 'FEmusic_moods_and_genres_category',
         params: params,
       });
-      for (const section of nav<typeof response, et.getMoodPlaylistsNav>(
-        response,
-        [...SINGLE_COLUMN_TAB, ...SECTION_LIST]
-      )) {
-        let path: Array<number | string> = [];
+      for (const section of nav(response, [
+        ...SINGLE_COLUMN_TAB,
+        ...SECTION_LIST,
+      ])) {
+        let results;
         if ('gridRenderer' in section) {
-          path = GRID_ITEMS;
+          // Cast as any since TS didn't detect this control flow discrimination...
+          results = nav<any>(section, GRID_ITEMS);
         } else if ('musicCarouselShelfRenderer' in section) {
-          path = CAROUSEL_CONTENTS;
+          // ditto
+          results = nav<any>(section, CAROUSEL_CONTENTS);
         } else if ('musicImmersiveCarouselShelfRenderer' in section) {
-          path = ['musicImmersiveCarouselShelfRenderer', 'contents'];
+          // ditto
+          results = nav<any>(section, [
+            'musicImmersiveCarouselShelfRenderer',
+            'contents',
+          ]);
         }
-        if (path.length) {
-          const results = nav(section, path);
+        if (results) {
           playlists = [
             ...playlists,
             ...parseContentList(results, parsePlaylist),
@@ -268,14 +267,11 @@ export const ExploreMixin = <TBase extends GConstructor<WatchMixin>>(
         'musicSortFilterButtonRenderer',
       ]);
       charts['countries']['selected'] = nav(menu, TITLE);
-      charts['countries']['options'] = nav<never, Array<any>>(
-        response,
-        FRAMEWORK_MUTATIONS
-      )
-        .map((m) =>
-          nav(m, ['payload', 'musicFormBooleanChoice', 'opaqueToken'], true)
+      charts['countries']['options'] = nav<any>(response, FRAMEWORK_MUTATIONS)
+        .map((m: any) =>
+          nav(m, ['payload', 'musicFormBooleanChoice', 'opaqueToken'], null)
         )
-        .filter((x) => x);
+        .filter((x: any) => x);
       const chartsCategories: (keyof typeof charts)[] = ['videos', 'artists'];
 
       const hasSongs = !!this.getAuth();
@@ -298,18 +294,18 @@ export const ExploreMixin = <TBase extends GConstructor<WatchMixin>>(
         key: string
       ) => {
         return parseContentList<ReturnType<T>>(
-          nav(results[i + (hasSongs ? 1 : 0)], CAROUSEL_CONTENTS, true),
+          nav(results[i + (hasSongs ? 1 : 0)], CAROUSEL_CONTENTS, null),
           parseFunc,
           key
         ).filter((x) => x);
       };
       for (const [i, c] of chartsCategories.entries()) {
-        //@ts-expect-error, we'll set the items later...
         charts[c] = {
+          //@ts-expect-error, we'll set the items later...
           playlist: nav(
             results[1 + i],
             [...CAROUSEL, ...CAROUSEL_TITLE, ...NAVIGATION_BROWSE_ID],
-            true
+            null
           ),
         };
       }

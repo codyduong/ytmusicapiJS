@@ -35,13 +35,14 @@ export type parseChartSongReturn = {
     }
 );
 export function parseChartSong(data: any): parseChartSongReturn {
-  const flex_0 = getFlexColumnItem(data, 0);
+  const flex_0: NonNullable<ReturnType<typeof getFlexColumnItem>> =
+    getFlexColumnItem(data, 0) as any;
   let parsed: parseChartSongReturn = {
     title: nav(flex_0, TEXT_RUN_TEXT),
-    videoId: nav(flex_0, [...TEXT_RUN, ...NAVIGATION_VIDEO_ID], true),
+    videoId: nav(flex_0, [...TEXT_RUN, ...NAVIGATION_VIDEO_ID], null),
     artists: parseSongArtists(data, 1),
     thumbnails: nav(data, THUMBNAILS),
-    isExplicit: nav(data, BADGE_LABEL, true) != null,
+    isExplicit: nav(data, BADGE_LABEL, null) != null,
   };
   const flex_2 = getFlexColumnItem(data, 2);
   if (flex_2 && 'navigationEndpoint' in nav(flex_2, TEXT_RUN)) {
@@ -66,16 +67,14 @@ export type parseChartArtistReturn = {
   thumbnails: thumbnails;
 };
 export function parseChartArtist(data: any): parseChartArtistReturn {
-  const flexItem = getFlexColumnItem(data, 1);
+  const flexItem: NonNullable<ReturnType<typeof getFlexColumnItem>> =
+    getFlexColumnItem(data, 1) as any;
   let subscribers: string | null = null;
   if (subscribers) {
-    subscribers = nav<typeof subscribers, string>(
-      flexItem,
-      TEXT_RUN_TEXT
-    ).split(' ')[0];
+    subscribers = nav(flexItem, TEXT_RUN_TEXT).split(' ')[0];
   }
   let parsed = {
-    title: nav(getFlexColumnItem(data, 0), TEXT_RUN_TEXT),
+    title: nav(getFlexColumnItem(data, 0) as any, TEXT_RUN_TEXT),
     browseId: nav(data, NAVIGATION_BROWSE_ID),
     subscribers: subscribers,
     thumbnails: nav(data, THUMBNAILS),
@@ -94,7 +93,8 @@ export type parseChartTrendingReturn = {
 } | null;
 export function parseChartTrending(data: any): parseChartTrendingReturn {
   if (data) {
-    const flex_0 = getFlexColumnItem(data, 0);
+    const flex_0: NonNullable<ReturnType<typeof getFlexColumnItem>> =
+      getFlexColumnItem(data, 0) as any;
     const artists = parseSongArtists(data, 1);
     if (artists) {
       const index = getDotSeperatorIndex(artists);
@@ -104,8 +104,8 @@ export function parseChartTrending(data: any): parseChartTrendingReturn {
 
       return {
         title: nav(flex_0, TEXT_RUN_TEXT),
-        videoId: nav(flex_0, [...TEXT_RUN, ...NAVIGATION_VIDEO_ID], true),
-        playlistId: nav(flex_0, [...TEXT_RUN, ...NAVIGATION_PLAYLIST_ID], true),
+        videoId: nav(flex_0, [...TEXT_RUN, ...NAVIGATION_VIDEO_ID], null),
+        playlistId: nav(flex_0, [...TEXT_RUN, ...NAVIGATION_PLAYLIST_ID], null),
         artists: artists,
         thumbnails: nav(data, THUMBNAILS),
         views: views,
@@ -124,12 +124,12 @@ export function parseRanking(data: any): Record<string, any> {
     ]),
     trend:
       TRENDS[
-        nav<never, keyof typeof TRENDS>(data, [
+        nav(data, [
           'customIndexColumn',
           'musicCustomIndexColumnRenderer',
           'icon',
           'iconType',
-        ])
+        ]) as keyof typeof TRENDS
       ],
   };
 }

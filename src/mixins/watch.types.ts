@@ -9,12 +9,12 @@ export type response = {
     };
   };
 };
-export type watchNextRenderer = {
+type watchNextRenderer = {
   tabs: tab[];
 };
-export type tab = {
+type tab = {
   tabRenderer: {
-    unselectable: unknown;
+    unselectable: any;
     endpoint: {
       browseEndpoint: {
         browseId: string;

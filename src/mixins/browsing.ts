@@ -406,10 +406,7 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
         results = response['contents'];
       }
 
-      const resultsNav = nav<typeof results, bt.searchResultsNav>(
-        results,
-        SECTION_LIST
-      );
+      const resultsNav = nav(results, SECTION_LIST);
 
       // no results
       if (
@@ -431,7 +428,7 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
           const resultsMusicShelfContents =
             res['musicShelfRenderer']['contents'];
           const original_filter = filter;
-          const category = nav(res, [...MUSIC_SHELF, ...TITLE_TEXT], true);
+          const category = nav(res, [...MUSIC_SHELF, ...TITLE_TEXT], null);
           if (!filter && scope == scopes[0]) {
             filter = category;
           }
@@ -444,7 +441,7 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
             ...this._parser.parseSearchResults(
               resultsMusicShelfContents,
               type,
-              category
+              category as any
             ),
           ];
           filter = original_filter;
@@ -456,7 +453,7 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
               await this._sendRequest(endpoint, body, additionalParams);
 
             const parseFunc = (contents: any): Record<string, any> =>
-              this._parser.parseSearchResults(contents, type, category);
+              this._parser.parseSearchResults(contents, type, category as any);
 
             searchResults = [
               ...searchResults,
@@ -568,10 +565,7 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
         endpoint,
         body
       );
-      const results = nav<typeof response, bt.getArtistResults>(response, [
-        ...SINGLE_COLUMN_TAB,
-        ...SECTION_LIST,
-      ]);
+      const results = nav(response, [...SINGLE_COLUMN_TAB, ...SECTION_LIST]);
       if (results.length == 1) {
         // not a YouTube Music Channel, a standard YouTube Channel ID with no music content was given
         throw new ReferenceError(
@@ -601,33 +595,28 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
       const subscriptionButton =
         header['subscriptionButton']['subscribeButtonRenderer'];
       artist['channelId'] = subscriptionButton['channelId'];
-      artist['shuffleId'] = nav<typeof header, bt.getArtistShuffleId>(
+      artist['shuffleId'] = nav(
         header,
         ['playButton', 'buttonRenderer', ...NAVIGATION_WATCH_PLAYLIST_ID],
-        true
+        null
       );
-      artist['radioId'] = nav<typeof header, bt.getArtistRadioId>(
+      artist['radioId'] = nav(
         header,
         ['startRadioButton', 'buttonRenderer', ...NAVIGATION_WATCH_PLAYLIST_ID],
-        true
+        null
       );
-      artist['subscribers'] = nav<
-        typeof subscriptionButton,
-        bt.getArtistSubscribers
-      >(subscriptionButton, ['subscriberCountText', 'runs', 0, 'text'], true);
+      artist['subscribers'] = nav(
+        subscriptionButton,
+        ['subscriberCountText', 'runs', 0, 'text'],
+        null
+      );
       artist['subscribed'] = subscriptionButton['subscribed'];
-      artist['thumbnails'] = nav(header, THUMBNAILS, true);
+      artist['thumbnails'] = nav(header, THUMBNAILS, null);
       artist['songs'] = { browseId: null };
       if ('musicShelfRenderer' in results[0]) {
         // API sometimes does not return songs
-        const musicShelf = nav<typeof results[0], bt.getArtistMusicShelf>(
-          results[0],
-          MUSIC_SHELF
-        );
-        if (
-          'navigationEndpoint' in
-          nav<typeof musicShelf, bt.getArtistRunTitle>(musicShelf, TITLE)
-        ) {
+        const musicShelf = nav(results[0], MUSIC_SHELF);
+        if ('navigationEndpoint' in nav(musicShelf, TITLE)) {
           artist['songs']['browseId'] = nav(musicShelf, [
             ...TITLE,
             ...NAVIGATION_BROWSE_ID,
@@ -1047,7 +1036,7 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
           'musicDescriptionShelfRenderer',
           ...DESCRIPTION,
         ],
-        true
+        null
       );
       lyrics['source'] = nav(
         response,
@@ -1058,7 +1047,7 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
           'footer',
           ...RUN_TEXT,
         ],
-        true
+        null
       );
 
       return lyrics as any;

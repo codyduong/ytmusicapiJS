@@ -114,7 +114,7 @@ export const PlaylistsMixin = <TBase extends GConstructor<ExploreMixin>>(
 
       playlist['title'] = nav(header, TITLE_TEXT);
       playlist['thumbnails'] = nav(header, THUMBNAIL_CROPPED);
-      playlist['description'] = nav(header, DESCRIPTION, true);
+      playlist['description'] = nav(header, DESCRIPTION, null);
       const runCount = header['subtitle']['runs'].length;
 
       if (runCount > 1) {
@@ -123,7 +123,7 @@ export const PlaylistsMixin = <TBase extends GConstructor<ExploreMixin>>(
           id: nav(
             header,
             ['subtitle', 'runs', 2, ...NAVIGATION_BROWSE_ID],
-            true
+            null
           ),
         };
         if (runCount == 5) {
@@ -149,7 +149,7 @@ export const PlaylistsMixin = <TBase extends GConstructor<ExploreMixin>>(
           ...MUSIC_SHELF,
           ...RELOAD_CONTINUATION,
         ],
-        true
+        null
       );
 
       playlist['tracks'] = [];
@@ -199,7 +199,7 @@ export const PlaylistsMixin = <TBase extends GConstructor<ExploreMixin>>(
       }
       const endpoint = 'browse';
       const additionalParams = getContinuationString(suggestionsToken);
-      const response = this._sendRequest(endpoint, {}, additionalParams);
+      const response = await this._sendRequest(endpoint, {}, additionalParams);
       const results = nav(response, [
         'continuationContents',
         'musicShelfContinuation',

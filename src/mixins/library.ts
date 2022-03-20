@@ -314,12 +314,12 @@ export const LibraryMixin = <TBase extends GConstructor<PlaylistsMixin>>(
       const results = nav(response, [...SINGLE_COLUMN_TAB, ...SECTION_LIST]);
       let songs: lt.getHistoryReturn = [];
       for (const content of results) {
-        const data = nav(content, [...MUSIC_SHELF, 'contents'], true);
+        const data = nav(content, [...MUSIC_SHELF, 'contents'], null);
         if (!data) {
           const error = nav(
             content,
             ['musicNotifierShelfRenderer', ...TITLE],
-            true
+            null
           );
           throw new Error(error);
         }

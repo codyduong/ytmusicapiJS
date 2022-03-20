@@ -41,19 +41,19 @@ export function parseAlbumHeader(
   album['audioPlaylistId'] = nav(
     toplevel,
     [0, 'buttonRenderer', ...NAVIGATION_WATCH_PLAYLIST_ID],
-    true
+    null
   );
   if (!album['audioPlaylistId']) {
     album['audioPlaylistId'] = nav(
       toplevel,
       [0, 'buttonRenderer', ...NAVIGATION_PLAYLIST_ID],
-      true
+      null
     );
   }
   const service = nav(
     toplevel,
     [1, 'buttonRenderer', 'defaultServiceEndpoint'],
-    true
+    null
   );
   if (service) {
     album['likeStatus'] = parseLikeStatus(service);

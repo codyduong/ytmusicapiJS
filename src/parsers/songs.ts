@@ -26,7 +26,7 @@ export function parseSongArtistsRuns(
   for (let j = 0; j < Math.trunc(runs.length / 2) + 1; j++) {
     artists.push({
       name: runs[j * 2]['text'],
-      id: nav(runs[j * 2], NAVIGATION_BROWSE_ID, true),
+      id: nav(runs[j * 2], NAVIGATION_BROWSE_ID, null),
     });
   }
   return artists;
@@ -48,7 +48,7 @@ export function parseSongRuns(runs: Array<any>): parseSongRunsReturn {
     if (run['navigationEndpoint']) {
       const item = {
         name: text,
-        id: nav(run, NAVIGATION_BROWSE_ID, true),
+        id: nav(run, NAVIGATION_BROWSE_ID, null),
       };
 
       if ((item.id && item.id.startsWith('MPRE')) || item.id.release_detail) {
@@ -97,12 +97,12 @@ export function parseSongMenuTokens(item: any): any {
   let libraryAddToken = nav(
     toggleMenu,
     ['defaultServiceEndpoint', ...FEEDBACK_TOKEN],
-    true
+    null
   );
   let libraryRemoveToken = nav(
     toggleMenu,
     ['toggledServiceEndpoint', ...FEEDBACK_TOKEN],
-    true
+    null
   );
 
   if (serviceType == 'LIBRARY_REMOVE') {

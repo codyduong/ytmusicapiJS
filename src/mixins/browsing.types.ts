@@ -1,5 +1,5 @@
 import { Except } from 'type-fest';
-import { FilterSingular, thumbnail, thumbnails as tb } from '../types';
+import { Filter, FilterSingular, thumbnail, thumbnails as tb } from '../types';
 import * as parser_bT from '../parsers/browsing.types';
 import { parsePlaylistItemsReturn } from '../parsers/playlists.types';
 import { parseAlbumHeaderReturn } from '../parsers/albums.types';
@@ -25,6 +25,11 @@ export type searchResults = {
 export type searchResultsNav = {
   musicShelfRenderer: {
     contents: searchContentsAndMusicShelfRenderer[];
+    title: {
+      runs: {
+        text: Filter;
+      }[];
+    };
   };
 }[];
 
@@ -43,6 +48,9 @@ export type searchResult = {
   musicResponsiveListItemRenderer: {
     navigationEndpoint: {
       watchEndpoint: { videoId: string; playlistId: string };
+      browseEndpoint: {
+        browseId: any;
+      };
     };
   };
 };
@@ -66,10 +74,10 @@ export type getArtistResponse = {
                 musicShelfRenderer: {
                   title: {
                     runs: Array<{
-                      navigationEndpoint: unknown;
+                      navigationEndpoint: any;
                     }>;
                   };
-                  contents: unknown;
+                  contents: any;
                 };
                 musicCarouselShelfRenderer: {
                   contents: any;
@@ -114,22 +122,18 @@ export type getArtistResponse = {
           navigationEndpoint: { watchPlaylistEndpoint: { playlistId: string } };
         };
       };
+      thumbnail: {
+        musicThumbnailRenderer: {
+          thumbnail: {
+            thumbnails: thumbnails;
+          };
+        };
+      };
     };
   };
 };
 export type getArtistResults =
   getArtistResponse['contents']['singleColumnBrowseResultsRenderer']['tabs'][number]['tabRenderer']['content']['sectionListRenderer']['contents'];
-export type getArtistMusicShelf =
-  getArtistResults[number]['musicShelfRenderer'];
-export type getArtistRunTitle = getArtistMusicShelf['title']['runs'][number];
-type getArtistHeader =
-  getArtistResponse['header']['musicImmersiveHeaderRenderer'];
-export type getArtistShuffleId =
-  getArtistHeader['playButton']['buttonRenderer']['navigationEndpoint']['watchPlaylistEndpoint']['playlistId'];
-export type getArtistRadioId =
-  getArtistHeader['startRadioButton']['buttonRenderer']['navigationEndpoint']['watchPlaylistEndpoint']['playlistId'];
-export type getArtistSubscribers =
-  getArtistHeader['subscriptionButton']['subscribeButtonRenderer']['subscriberCountText']['runs'][0]['text'];
 
 //Function parameters and returns
 /**

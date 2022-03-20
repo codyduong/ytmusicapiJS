@@ -34,14 +34,7 @@ export type getMoodCategoriesResponse = {
     };
   };
 };
-export type getMoodSectionNav =
-  getMoodCategoriesResponse['contents']['singleColumnBrowseResultsRenderer']['tabs'][number]['tabRenderer']['content']['sectionListRenderer']['contents'];
-export type getMoodTitle =
-  getMoodSectionNav[number]['gridRenderer']['header']['gridHeaderRenderer']['title']['runs'][number]['text'];
-export type getMoodGridItems =
-  getMoodSectionNav[number]['gridRenderer']['items'];
 export type getMoodPlaylists = getMoodCategoriesResponse;
-export type getMoodPlaylistsNav = getMoodSectionNav;
 
 export type getMoodCategoriesReturn = {
   [index: string]: [{ params: string; title: string }];

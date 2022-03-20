@@ -74,7 +74,7 @@ function parseWatchTrack(data: Record<string, any>): parseWatchTrackReturn {
   const track = {
     videoId: data['videoId'],
     title: nav(data, TITLE_TEXT),
-    length: nav(data, ['lengthText', 'runs', 0, 'text'], true),
+    length: nav(data, ['lengthText', 'runs', 0, 'text'], null),
     thumbnail: nav(data, THUMBNAIL),
     feedbackTokens: feedbackTokens,
     likeStatus: likeStatus,

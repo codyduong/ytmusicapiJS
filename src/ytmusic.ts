@@ -112,7 +112,16 @@ export class _YTMusic {
     this._context['context']['client']['hl'] = language;
 
     this.#language = language;
-    const supportedLanguages = ['en', 'de', 'es', 'fr', 'it', 'ja'];
+    const supportedLanguages = [
+      'en',
+      'de',
+      'es',
+      'fr',
+      'it',
+      'ja',
+      'ko',
+      'zh_CN',
+    ];
     if (!supportedLanguages.includes(language)) {
       console.warn(
         `The language '${language}' is not supported.\nSupported languages are ${supportedLanguages.join(
