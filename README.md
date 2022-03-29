@@ -129,7 +129,7 @@ results
 
 [Documentation](https://codyduong.github.io/ytmusicapiJS/)
 
-The API does support usage in browsers, however you will have to use a proxy since YTmusic does not have CORS support. 
+This API is for usage in Node only
 
 ## Contributing
 The library is intended to keep features within the same scope of the original Python 3 library. This may/may not change at my discretion.
