@@ -1,8 +1,8 @@
 import { re, json, time, locale, SimpleCookie } from './pyLibraryMock';
 import * as utf8 from 'utf8';
 import * as constants from './constants';
-import { createHash } from './fallback/crypto';
 import type { Headers } from './types';
+import { createHash } from 'crypto';
 
 // @CODYDUONG TODO type better
 export function prepareLikeEndpoint(rating: any): string | null {

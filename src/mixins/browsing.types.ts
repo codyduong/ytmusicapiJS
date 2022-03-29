@@ -52,6 +52,35 @@ export type searchResult = {
         browseId: any;
       };
     };
+    overlay: {
+      musicItemThumbnailOverlayRenderer: {
+        content: {
+          musicPlayButtonRenderer: {
+            playNavigationEndpoint: {
+              watchEndpoint: {
+                videoId: string;
+              };
+            };
+          };
+        };
+      };
+    };
+    badges: {
+      musicInlineBadgeRenderer: {
+        accessibilityData: {
+          accessibilityData: {
+            label: string;
+          };
+        };
+      };
+    }[];
+    thumbnail: {
+      musicThumbnailRenderer: {
+        thumbnail: {
+          thumbnails: thumbnails;
+        };
+      };
+    };
   };
 };
 export type resultType = FilterSingular;
@@ -84,7 +113,14 @@ export type getArtistResponse = {
                   header: {
                     musicCarouselShelfBasicHeaderRenderer: {
                       title: {
-                        runs: Array<{ text: string }>;
+                        runs: Array<{
+                          text: string;
+                          navigationEndpoint: {
+                            browseEndpoint: {
+                              browseId: string;
+                            };
+                          };
+                        }>;
                       };
                     };
                   };

@@ -597,17 +597,25 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
       artist['channelId'] = subscriptionButton['channelId'];
       artist['shuffleId'] = nav(
         header,
-        ['playButton', 'buttonRenderer', ...NAVIGATION_WATCH_PLAYLIST_ID],
+        [
+          'playButton',
+          'buttonRenderer',
+          ...NAVIGATION_WATCH_PLAYLIST_ID,
+        ] as const,
         null
       );
       artist['radioId'] = nav(
         header,
-        ['startRadioButton', 'buttonRenderer', ...NAVIGATION_WATCH_PLAYLIST_ID],
+        [
+          'startRadioButton',
+          'buttonRenderer',
+          ...NAVIGATION_WATCH_PLAYLIST_ID,
+        ] as const,
         null
       );
       artist['subscribers'] = nav(
         subscriptionButton,
-        ['subscriberCountText', 'runs', 0, 'text'],
+        ['subscriberCountText', 'runs', 0, 'text'] as const,
         null
       );
       artist['subscribed'] = subscriptionButton['subscribed'];

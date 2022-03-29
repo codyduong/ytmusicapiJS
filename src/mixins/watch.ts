@@ -156,10 +156,10 @@ export const WatchMixin = <TBase extends GConstructor<BrowsingMixin>>(
         'musicQueueRenderer',
         'content',
         'playlistPanelRenderer',
-      ]) as wt.results;
+      ] as const);
       const playlist = results['contents']
         .map((x) =>
-          nav<any>(
+          nav(
             x,
             ['playlistPanelVideoRenderer', ...NAVIGATION_PLAYLIST_ID],
             null
