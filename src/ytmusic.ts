@@ -101,10 +101,10 @@ export class _YTMusic {
         helpersGetVisitorId = await helpers.getVisitorId(this._sendGetRequest);
       })();
 
-      this._headers = {
+      this._headers = CaseInsensitiveObject<Headers>({
         ...this._headers,
         ...helpersGetVisitorId,
-      };
+      });
     }
 
     // prepare context
