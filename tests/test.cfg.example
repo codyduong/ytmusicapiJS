@@ -1,5 +1,5 @@
 [auth]
-brand_account = 101234229123420379537
+brand_account = 
 headers = headers_auth_json_as_string
 headers_file = ./tests/headers_auth.json
 
