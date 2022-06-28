@@ -85,7 +85,7 @@ export class _YTMusic {
 
     this._headers = helpers.initializeHeaders();
     if (typeof auth == 'object') {
-      this._headers = auth;
+      this._headers = CaseInsensitiveObject<Headers>(auth);
     } else if (auth && fs && fs.existsSync(auth)) {
       const file = auth;
       const data = fs.readFileSync(file);

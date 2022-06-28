@@ -1248,10 +1248,10 @@ caniuse-lite@^1.0.30001312:
   resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001312.tgz"
   integrity sha512-Wiz1Psk2MEK0pX3rUzWaunLTZzqS2JYZFzNKqAiJGiuxIjRPLgV6+VDPOg6lQOUxmDwhTlh198JsTTi8Hzw6aQ==
 
-case-insensitive-object@^0.1.3:
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/case-insensitive-object/-/case-insensitive-object-0.1.3.tgz#935b9330bff64c3d36cdd0274d62859dd3624fa1"
-  integrity sha512-f+5KchNLjkZXGlIlHi2ke4+zhrPGgc109CC2F4UoBuvHc+RTvLbqwigQ/zOf6lk5yu/e56eXUG44zPjCh52zzA==
+case-insensitive-object@^0.1.4:
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/case-insensitive-object/-/case-insensitive-object-0.1.5.tgz#9351ff24c874b479b5b272b8d4a83795ab8860ce"
+  integrity sha512-8vhj6sezC3/VQPt3sD81TKMAWkqhMfLa0PLJMHmwwvmH2z4YTKV6Kg2sAmJSsMmzO2+iTgzE29qq0x1Ru4UXMw==
 
 catharsis@^0.9.0:
   version "0.9.0"
