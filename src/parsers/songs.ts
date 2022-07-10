@@ -1,7 +1,7 @@
-import { FEEDBACK_TOKEN, NAVIGATION_BROWSE_ID, TOGGLE_MENU } from '.';
+import { FEEDBACK_TOKEN, NAVIGATION_BROWSE_ID, TOGGLE_MENU, nav } from '.';
 import { parseDuration } from '../helpers';
 import { re } from '../pyLibraryMock';
-import { getBrowseId, getFlexColumnItem, getItemText, nav } from './utils';
+import { getBrowseId, getFlexColumnItem, getItemText } from './utils';
 
 export type parseSongArtistsReturn = ReturnType<
   typeof parseSongArtistsRuns

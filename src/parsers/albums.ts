@@ -6,10 +6,10 @@ import {
   SUBTITLE,
   THUMBNAIL_CROPPED,
   TITLE_TEXT,
+  nav,
 } from '.';
 import { toInt } from '../helpers';
 import { parseLikeStatus, parseSongRuns } from './songs';
-import { nav } from './utils';
 import * as parser_aT from './albums.types';
 
 export function parseAlbumHeader(

@@ -235,6 +235,13 @@ describe('Browsing', () => {
       expect(results?.length).toBeGreaterThan(0);
     });
   });
+  describe('Get Song Related Content', () => {
+    test('#1', async () => {
+      const song = await ytmusic.getWatchPlaylist({ videoId: sampleVideo });
+      const song2 = await ytmusic.getSongRelated(song['related']);
+      expect(song2.length).toBe(5);
+    });
+  });
   describe('(Auth) Get Artist Singles', () => {
     // @codyduong TODO investigate this failure
     test.skip('#1', async () => {
@@ -290,7 +297,7 @@ describe('Browsing', () => {
     test('(Auth) #1', async () => {
       const song = await ytmusicAuth.getSong('AjXQiKP5kMs');
       expect(Object.keys(song).length).toBe(1);
-      expect(song.playabilityStatus.status).toBe('ERROR');
+      expect(song.playabilityStatus.status).toBe('LOGIN_REQUIRED');
     });
     test('(Auth) #2', async () => {
       //Actually a public song.

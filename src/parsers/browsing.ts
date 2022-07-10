@@ -20,21 +20,25 @@ import {
   TITLE_TEXT,
   NAVIGATION_BROWSE,
   PAGE_TYPE,
+  findObjectByKey,
+  nav,
+  DESCRIPTION_SHELF,
+  RUN_TEXT,
+  DESCRIPTION,
+  NAVIGATION_VIDEO_TYPE,
   TEXT_RUN,
-  TEXT_RUNS,
   TEXT_RUN_TEXT,
 } from './index';
 import {
+  parseSongArtists,
   parseSongArtistsRuns,
   parseSongMenuTokens,
   parseSongRuns,
 } from './songs';
 import {
-  findObjectByKey,
   getDotSeperatorIndex,
   getFlexColumnItem,
   getItemText,
-  nav,
   parseMenuPlaylists,
 } from './utils';
 import * as bT from '../mixins/browsing.types';
@@ -186,6 +190,11 @@ export class Parser {
           ],
           null
         );
+        searchResult['videoType'] = nav(
+          data,
+          [...PLAY_BUTTON, 'playNavigationEndpoint', ...NAVIGATION_VIDEO_TYPE],
+          null
+        );
       }
 
       if (['song', 'video', 'album'].includes(resultType)) {
@@ -272,62 +281,47 @@ export class Parser {
     return artist;
   }
 
-  parseHome(rows: any): parser_bT.parseHomeReturn {
+  parseMixedContent(rows: any): parser_bT.parseHomeReturn {
     const items: parser_bT.parseHomeReturn = [];
     for (const row of rows) {
-      const contents = [];
-      let results;
-      if (row[CAROUSEL[0]]) {
-        results = nav(row, CAROUSEL);
-      } else if ('musicImmersiveCarouselShelfRenderer' in row) {
-        results = row['musicImmersiveCarouselShelfRenderer'];
+      let [title, contents] = ['', [] as any[]];
+      if (DESCRIPTION_SHELF[0] in row) {
+        const results = nav(row, DESCRIPTION_SHELF);
+        title = nav(results, ['header', ...RUN_TEXT]);
+        contents = nav(results, DESCRIPTION);
       } else {
-        continue;
-      }
-      for (const result of results['contents']) {
-        let data = nav(result, [MTRIR], null);
-        let content: parser_bT.parseHomeReturn[number]['contents'][number] =
-          {} as any;
-        if (data) {
-          const page_type = nav(
-            data,
-            [...TITLE, ...NAVIGATION_BROWSE, ...PAGE_TYPE],
-            null
-          );
-          if (!page_type) {
-            content = parseSong(data);
-          } else if (page_type == 'MUSIC_PAGE_TYPE_ALBUM') {
-            content = parseAlbum(data);
-          } else if (page_type == 'MUSIC_PAGE_TYPE_ARTIST') {
-            content = parseRelatedArtist(data);
-          } else if (page_type == 'MUSIC_PAGE_TYPE_PLAYLIST') {
-            content = parsePlaylist(data);
-          }
-        } else {
-          data = nav(result, [MRLIR]);
-          const columns: any[] = [];
-          for (let i = 0; i < data['flexColumns'].length; i++) {
-            columns.push(getFlexColumnItem(data, i));
-          }
-          content = {
-            title: nav(columns[0], TEXT_RUN_TEXT),
-            videoId: nav(columns[0], [...TEXT_RUN, ...NAVIGATION_VIDEO_ID]),
-            thumbnails: nav(data, THUMBNAILS) as bT.thumbnails,
-            ...parseSongRuns(nav(columns[1], TEXT_RUNS)),
-          };
-          if (columns.length > 2 && columns[2]) {
-            content['album'] = {
-              title: nav(columns[2], TEXT_RUN_TEXT),
-              browseId: nav(columns[2], [...TEXT_RUN, ...NAVIGATION_BROWSE_ID]),
-            };
-          }
+        const results: any = Object.values(row)[0];
+        if (!('contents' in results)) {
+          continue;
         }
-        Object.keys(content).length > 0 && contents.push(content);
+        title = nav(results, [...CAROUSEL_TITLE, 'text']) as string;
+        contents = [];
+        for (const result of results['contents']) {
+          const data = nav(result, [MTRIR], null);
+          let content = null;
+          if (data) {
+            const pageType = nav(
+              data,
+              [...TITLE, ...NAVIGATION_BROWSE, ...PAGE_TYPE],
+              null
+            );
+            if (pageType === null) {
+              content = parseSong(data);
+            } else if (pageType === 'MUSIC_PAGE_TYPE_ALBUM') {
+              content = parseAlbum(data);
+            } else if (pageType === 'MUSIC_PAGE_TYPE_ARTIST') {
+              content = parseRelatedArtist(data);
+            } else if (pageType === 'MUSIC_PAGE_TYPE_PLAYLIST') {
+              content = parsePlaylist(data);
+            }
+          } else {
+            const data2 = nav(result, [MTRIR]);
+            content = parseSongFlat(data2);
+          }
+          contents.push(content);
+        }
       }
-      items.push({
-        title: nav(results, [...CAROUSEL_TITLE, 'text']),
-        contents: contents,
-      });
+      items.push({ title: title, contents: contents });
     }
     return items;
   }
@@ -346,7 +340,7 @@ export function parseContentList<T>(
   return contents;
 }
 
-export function parseAlbum(result: any): parser_bT.parseAlbumReturn {
+function parseAlbum(result: any): parser_bT.parseAlbumReturn {
   return {
     title: nav(result, TITLE_TEXT, null), //@codyduong this isn't nullable in the py library? todo discovery why...
     year: nav(result, SUBTITLE2, null),
@@ -355,7 +349,7 @@ export function parseAlbum(result: any): parser_bT.parseAlbumReturn {
   };
 }
 
-export function parseSingle(result: any): parser_bT.parseSingleReturn {
+function parseSingle(result: any): parser_bT.parseSingleReturn {
   return {
     title: nav(result, TITLE_TEXT),
     year: nav(result, SUBTITLE, null),
@@ -364,7 +358,7 @@ export function parseSingle(result: any): parser_bT.parseSingleReturn {
   };
 }
 
-export function parseSong(result: any): parser_bT.parseSongReturn {
+function parseSong(result: any): parser_bT.parseSongReturn {
   return {
     title: nav(result, TITLE_TEXT),
     videoId: nav(result, NAVIGATION_VIDEO_ID),
@@ -372,6 +366,33 @@ export function parseSong(result: any): parser_bT.parseSongReturn {
     thumbnails: nav(result, THUMBNAIL_RENDERER),
     ...parseSongRuns(result['subtitle']['runs']),
   };
+}
+
+export function parseSongFlat(
+  data: any
+): Omit<parser_bT.parseSongFlatReturn, 'playlistId'> {
+  const columns = (data?.['flexColumns'] ?? []).map((_: never, i: number) =>
+    getFlexColumnItem(data, i)
+  );
+  const song = {
+    title: nav(columns[0], TEXT_RUN_TEXT),
+    videoId: nav(columns[0], [...TEXT_RUN, ...NAVIGATION_VIDEO_ID], null),
+    artists: parseSongArtists(data, 1),
+    thumbnails: nav(data, THUMBNAILS),
+    isExplicit: nav(data, BADGE_LABEL, null) !== null,
+    album: null as any,
+  };
+  if (
+    columns.length > 2 &&
+    columns[2] !== null &&
+    'navigationEndpoint' in nav(columns[2], TEXT_RUN)
+  ) {
+    song['album'] = {
+      name: nav(columns[2], TEXT_RUN_TEXT),
+      id: nav(columns[2], [...TEXT_RUN, ...NAVIGATION_BROWSE_ID]),
+    };
+  }
+  return song;
 }
 
 export function parseVideo(result: {

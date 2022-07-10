@@ -2,7 +2,7 @@ import {
   prepareLikeEndpoint,
   prepareOrderParams,
   validateOrderParameters,
-} from '../helpers';
+} from './_utils';
 import {
   SINGLE_COLUMN_TAB,
   SECTION_LIST,
@@ -13,6 +13,8 @@ import {
   MENU_SERVICE,
   FEEDBACK_TOKEN,
   TITLE_TEXT,
+  findObjectByKey,
+  nav,
 } from '../parsers';
 import { parseContentList, parsePlaylist } from '../parsers/browsing';
 import {
@@ -23,12 +25,10 @@ import {
 import { parsePlaylistItems } from '../parsers/playlists';
 import {
   validateResponse as validateResponseFunc,
-  findObjectByKey,
   getContinuations,
-  nav,
   resendRequestUntilParsedResponseIsValid,
   getValidatedContinuations,
-} from '../parsers/utils';
+} from '../parsers/continuations';
 import { GConstructor, Mixin } from './.mixin.helper';
 import { PlaylistsMixin } from './playlists';
 

@@ -1,7 +1,8 @@
-import { htmlToText, sumTotalDuration, toInt } from '../helpers';
+import { sumTotalDuration, toInt } from '../helpers';
 import {
   DESCRIPTION,
   MUSIC_SHELF,
+  nav,
   NAVIGATION_BROWSE_ID,
   RELOAD_CONTINUATION,
   SECTION_LIST_ITEM,
@@ -11,17 +12,17 @@ import {
   THUMBNAIL_CROPPED,
   TITLE_TEXT,
 } from '../parsers';
-import { parsePlaylistItems } from '../parsers/playlists';
 import {
   getContinuations,
   getContinuationString,
-  nav,
-  validatePlaylistId,
-} from '../parsers/utils';
+} from '../parsers/continuations';
+import { parsePlaylistItems } from '../parsers/playlists';
+import { validatePlaylistId } from '../parsers/utils';
 import { GConstructor, Mixin } from './.mixin.helper';
 import { ExploreMixin } from './explore';
 
 import * as pt from './playlists.types';
+import { htmlToText } from './_utils';
 
 export type PlaylistsMixin = Mixin<typeof PlaylistsMixin>;
 

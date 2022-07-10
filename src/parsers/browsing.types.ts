@@ -1,6 +1,7 @@
 import { Except } from 'type-fest';
 import * as bT from '../mixins/browsing.types';
 import {
+  parseSongArtists,
   parseSongArtistsRuns,
   parseSongRuns,
   parseSongRunsReturn,
@@ -26,6 +27,18 @@ export type parseSongReturn = {
   playlistId: string;
   thumbnails: bT.thumbnails;
 } & ReturnType<typeof parseSongRuns>;
+
+export type parseSongFlatReturn = {
+  title: string;
+  videoId: string;
+  thumbnails: bT.thumbnails;
+  artists: ReturnType<typeof parseSongArtists>;
+  isExplicit: boolean;
+  album: {
+    name: string;
+    id: string;
+  };
+};
 
 export type parseVideoReturn = {
   title: string;

@@ -15,6 +15,7 @@ import {
   SINGLE_COLUMN_TAB,
   TITLE,
   TITLE_TEXT,
+  nav,
 } from '../parsers';
 import {
   parseContentList,
@@ -27,7 +28,6 @@ import {
   parseChartSong,
   parseChartTrending,
 } from '../parsers/explore';
-import { nav } from '../parsers/utils';
 import { GConstructor, Mixin } from './.mixin.helper';
 
 import * as et from './explore.types';

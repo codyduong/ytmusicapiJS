@@ -7,10 +7,11 @@ import {
   MENU_LIKE_STATUS,
   THUMBNAILS,
   BADGE_LABEL,
+  nav,
 } from '.';
 import { parseDuration } from '../helpers';
 import { parseSongAlbum, parseSongArtists, parseSongMenuTokens } from './songs';
-import { getFixedColumnItem, getItemText, nav } from './utils';
+import { getFixedColumnItem, getItemText } from './utils';
 import * as parser_pT from './playlists.types';
 
 export function parsePlaylistItems(

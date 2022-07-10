@@ -2,22 +2,20 @@
  * @module Uploads
  */
 
-import {
-  prepareOrderParams,
-  sumTotalDuration,
-  validateOrderParameters,
-} from '../helpers';
+import { sumTotalDuration } from '../helpers';
 import {
   SINGLE_COLUMN_TAB,
   SECTION_LIST,
   ITEM_SECTION,
   MUSIC_SHELF,
   SECTION_LIST_ITEM,
+  findObjectByKey,
+  nav,
 } from '../parsers';
 import { parseAlbumHeader } from '../parsers/albums';
 import { parseLibraryArtists, parseLibraryAlbums } from '../parsers/library';
 import { parseUploadedItems } from '../parsers/uploads';
-import { findObjectByKey, getContinuations, nav } from '../parsers/utils';
+import { getContinuations } from '../parsers/continuations';
 import { GConstructor, Mixin } from './.mixin.helper';
 import { existsSync, readFileSync, statSync } from 'fs';
 import { extname, basename } from 'path';
@@ -26,6 +24,7 @@ import * as ut from './uploads.types';
 import utf8 from 'utf8';
 import axios from 'axios';
 import { LibraryMixin } from './library';
+import { validateOrderParameters, prepareOrderParams } from './_utils';
 
 export type UploadsMixin = Mixin<typeof UploadsMixin>;
 

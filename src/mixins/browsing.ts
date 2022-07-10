@@ -5,8 +5,11 @@ import type { GConstructor, Mixin } from './.mixin.helper';
 
 import {
   DESCRIPTION,
+  DESCRIPTION_SHELF,
+  findObjectByKey,
   GRID_ITEMS,
   MUSIC_SHELF,
+  nav,
   NAVIGATION_BROWSE_ID,
   NAVIGATION_WATCH_PLAYLIST_ID,
   RUN_TEXT,
@@ -24,14 +27,12 @@ import { parseAlbumHeader } from '../parsers/albums';
 import { parseContentList, parsePlaylist } from '../parsers/browsing';
 import { parseAlbums } from '../parsers/library';
 import { parsePlaylistItems } from '../parsers/playlists';
-import { getSearchParams } from '../parsers/searchParams';
-import { findObjectByKey, getContinuations, nav } from '../parsers/utils';
-
-import type { Filter, FilterSingular, Scope } from '../types';
 import * as bt from './browsing.types';
 import * as parser_bT from '../parsers/browsing.types';
 import * as parser_lT from '../parsers/library.types';
 import { _YTMusic } from '../ytmusic';
+import { getDatestamp } from './_utils';
+import { getContinuations } from '../parsers/continuations';
 
 export type BrowsingMixin = Mixin<typeof BrowsingMixin>;
 
@@ -106,8 +107,8 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
      *           }],
      *         "thumbnails": [...],
      *         "album": {
-     *           "title": "Gravity",
-     *           "browseId": "MPREb_D6bICFcuuRY"
+     *           "name": "Gravity",
+     *           "id": "MPREb_D6bICFcuuRY"
      *         }
      *       },
      *       { //video quick pick
@@ -131,7 +132,7 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
       const body = { browseId: 'FEmusic_home' };
       const response = await this._sendRequest(endpoint, body);
       const results = nav(response, [...SINGLE_COLUMN_TAB, ...SECTION_LIST]);
-      let home = [...this._parser.parseHome(results)];
+      let home = [...this._parser.parseMixedContent(results)];
 
       const sectionList = nav(response, [
         ...SINGLE_COLUMN_TAB,
@@ -141,7 +142,7 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
         const requestFunc = async (additionalParams: any): Promise<any> =>
           await this._sendRequest(endpoint, body, additionalParams);
         const parseFunc = (contents: any): any =>
-          this._parser.parseHome(contents);
+          this._parser.parseMixedContent(contents);
         home = [
           ...home,
           ...(await getContinuations(
@@ -154,322 +155,6 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
         ];
       }
       return home;
-    }
-
-    /**
-     * Search YouTube music.
-     * Returns results within the provided category.
-     * @param {string} query Query string, i.e. 'Oasis Wonderwall'
-     * @param {options} [options=]
-     * @param {'songs'|'videos'|'albums'|'artists'|'playlists'|'community_playlists'|'featured_playlists'} [options.filter=] Filter for item types.
-     *    @default: Default search, including all types of items.
-     * @param {'libary'|'uploads'} [options.scope=] Search scope.
-     *    @default: Search the public YouTube Music catalogue.
-     * @param {number} [options.limit=20] Number of search results to return
-     * @param {boolean} [ignoreSpelling=false] Whether to ignore YTM spelling suggestions.
-     * If true, the exact search term will be searched for, and will not be corrected.
-     * This does not have any effect when the filter is set to ``uploads``.
-     * Default: false, will use YTM's default behavior of autocorrecting the search.
-     * @return List of results depending on filter.
-     * resultType specifies the type of item (important for default search).
-     * albums, artists and playlists additionally contain a browseId, corresponding to
-     * albumId, channelId and playlistId (browseId=``VL``+playlistId)
-     * @example <caption> list for default search with one result per resultType for brevity. Normally
-     * there are 3 results per resultType and an additional ``thumbnails`` key. </caption>
-     * [
-     *   {
-     *     "category": "Top result",
-     *     "resultType": "video",
-     *     "videoId": "vU05Eksc_iM",
-     *     "title": "Wonderwall",
-     *     "artists": [
-     *       {
-     *         "name": "Oasis",
-     *         "id": "UCmMUZbaYdNH0bEd1PAlAqsA"
-     *       }
-     *     ],
-     *     "views": "1.4M",
-     *     "duration": "4:38",
-     *     "duration_seconds": 278
-     *   },
-     *   {
-     *     "category": "Songs",
-     *     "resultType": "song",
-     *     "videoId": "ZrOKjDZOtkA",
-     *     "title": "Wonderwall",
-     *     "artists": [
-     *       {
-     *         "name": "Oasis",
-     *         "id": "UCmMUZbaYdNH0bEd1PAlAqsA"
-     *       }
-     *     ],
-     *     "album": {
-     *       "name": "(What's The Story) Morning Glory? (Remastered)",
-     *       "id": "MPREb_9nqEki4ZDpp"
-     *     },
-     *     "duration": "4:19",
-     *     "duration_seconds": 259
-     *     "isExplicit": false,
-     *     "feedbackTokens": {
-     *       "add": null,
-     *       "remove": null
-     *     }
-     *   },
-     *   {
-     *     "category": "Albums",
-     *     "resultType": "album",
-     *     "browseId": "MPREb_9nqEki4ZDpp",
-     *     "title": "(What's The Story) Morning Glory? (Remastered)",
-     *     "type": "Album",
-     *     "artist": "Oasis",
-     *     "year": "1995",
-     *     "isExplicit": false
-     *   },
-     *   {
-     *     "category": "Community playlists",
-     *     "resultType": "playlist",
-     *     "browseId": "VLPLK1PkWQlWtnNfovRdGWpKffO1Wdi2kvDx",
-     *     "title": "Wonderwall - Oasis",
-     *     "author": "Tate Henderson",
-     *     "itemCount": "174"
-     *   },
-     *   {
-     *     "category": "Videos",
-     *     "resultType": "video",
-     *     "videoId": "bx1Bh8ZvH84",
-     *     "title": "Wonderwall",
-     *     "artists": [
-     *       {
-     *         "name": "Oasis",
-     *         "id": "UCmMUZbaYdNH0bEd1PAlAqsA"
-     *       }
-     *     ],
-     *     "views": "386M",
-     *     "duration": "4:38",
-     *     "duration_seconds": 278
-     *   },
-     *   {
-     *     "category": "Artists",
-     *     "resultType": "artist",
-     *     "browseId": "UCmMUZbaYdNH0bEd1PAlAqsA",
-     *     "artist": "Oasis",
-     *     "shuffleId": "RDAOkjHYJjL1a3xspEyVkhHAsg",
-     *     "radioId": "RDEMkjHYJjL1a3xspEyVkhHAsg"
-     *   }
-     * ]
-     */
-    async search(
-      query: string,
-      options?: {
-        filter?: undefined;
-        scope?: Scope;
-        limit?: number;
-        ignoreSpelling?: boolean;
-      }
-    ): Promise<bt.searchReturn<'null'>>;
-    async search(
-      query: string,
-      options?: {
-        filter?: 'songs';
-        scope?: Scope;
-        limit?: number;
-        ignoreSpelling?: boolean;
-      }
-    ): Promise<bt.searchReturn<'songs'>>;
-    async search(
-      query: string,
-      options?: {
-        filter?: 'videos';
-        scope?: Scope;
-        limit?: number;
-        ignoreSpelling?: boolean;
-      }
-    ): Promise<bt.searchReturn<'videos'>>;
-    async search(
-      query: string,
-      options?: {
-        filter?: 'albums';
-        scope?: Scope;
-        limit?: number;
-        ignoreSpelling?: boolean;
-      }
-    ): Promise<bt.searchReturn<'albums'>>;
-    async search(
-      query: string,
-      options?: {
-        filter?: 'artists';
-        scope?: Scope;
-        limit?: number;
-        ignoreSpelling?: boolean;
-      }
-    ): Promise<bt.searchReturn<'artists'>>;
-    async search(
-      query: string,
-      options?: {
-        filter?: 'playlists';
-        scope?: Scope;
-        limit?: number;
-        ignoreSpelling?: boolean;
-      }
-    ): Promise<bt.searchReturn<'playlists'>>;
-    async search(
-      query: string,
-      options?: {
-        filter?: 'community_playlists';
-        scope?: Scope;
-        limit?: number;
-        ignoreSpelling?: boolean;
-      }
-    ): Promise<bt.searchReturn<'community_playlists'>>;
-    async search(
-      query: string,
-      options?: {
-        filter?: 'featured_playlists';
-        scope?: Scope;
-        limit?: number;
-        ignoreSpelling?: boolean;
-      }
-    ): Promise<bt.searchReturn<'featured_playlists'>>;
-    async search(
-      query: string,
-      options?: {
-        filter?: 'uploads';
-        scope?: Scope;
-        limit?: number;
-        ignoreSpelling?: boolean;
-      }
-    ): Promise<bt.searchReturn<'uploads'>>;
-    async search<T extends Filter | 'null' = 'null'>(
-      query: string,
-      options?: {
-        filter?: Exclude<Filter, 'null'>;
-        scope?: Scope;
-        limit?: number;
-        ignoreSpelling?: boolean;
-      }
-    ): Promise<bt.searchReturn<T>> {
-      const _options = options ?? {};
-      let { filter } = _options;
-      const { scope, limit = 20, ignoreSpelling } = _options;
-      const body: Record<string, any> = { query: query };
-      const endpoint = 'search';
-      let searchResults: bt.searchReturn<T> = [];
-      const filters = [
-        'albums',
-        'artists',
-        'playlists',
-        'community_playlists',
-        'featured_playlists',
-        'songs',
-        'videos',
-      ];
-      if (filter && !filters.includes(filter)) {
-        throw new Error(
-          `Invalid filter provided. Please use one of the following filters or leave out the parameter: ${filters.join(
-            ', '
-          )}`
-        );
-      }
-
-      const scopes: Scope[] = ['library', 'uploads'];
-      if (scope && !scopes.includes(scope)) {
-        throw new Error(
-          `Invalid scope provided. Please use one of the following scopes or leave out the parameter: ${scopes.join(
-            ', '
-          )}`
-        );
-      }
-      const params = getSearchParams(filter, scope, ignoreSpelling);
-      if (params) {
-        body['params'] = params;
-      }
-
-      const response = await this._sendRequest<bt.searchResponse>(
-        endpoint,
-        body
-      );
-
-      // no results
-      if (!response['contents']) {
-        return searchResults;
-      }
-
-      let results: bt.searchResults;
-      if ('tabbedSearchResultsRenderer' in response.contents) {
-        //0 if not scope or filter else scopes.index(scope) + 1
-        const tab_index = !scope || filter ? 0 : scopes.indexOf(scope) + 1;
-        results =
-          response['contents']['tabbedSearchResultsRenderer']['tabs'][
-            tab_index
-          ]['tabRenderer']['content'];
-      } else {
-        results = response['contents'];
-      }
-
-      const resultsNav = nav(results, SECTION_LIST);
-
-      // no results
-      if (
-        !resultsNav ||
-        (resultsNav.length == 1 && 'itemSectionRenderer' in resultsNav)
-      ) {
-        return searchResults;
-      }
-
-      //set filter for parser
-      if (filter && filter.split('_').includes('playlists')) {
-        filter = 'playlists';
-      } else if (scope == 'uploads') {
-        filter = 'uploads';
-      }
-
-      for (const res of resultsNav) {
-        if ('musicShelfRenderer' in res) {
-          const resultsMusicShelfContents =
-            res['musicShelfRenderer']['contents'];
-          const original_filter = filter;
-          const category = nav(res, [...MUSIC_SHELF, ...TITLE_TEXT], null);
-          if (!filter && scope == scopes[0]) {
-            filter = category;
-          }
-
-          const type: FilterSingular | null = filter
-            ? (filter.slice(undefined, -1).toLowerCase() as FilterSingular)
-            : null;
-          searchResults = [
-            ...searchResults,
-            ...this._parser.parseSearchResults(
-              resultsMusicShelfContents,
-              type,
-              category as any
-            ),
-          ];
-          filter = original_filter;
-
-          if ('continuations' in res['musicShelfRenderer']) {
-            const requestFunc = async (
-              additionalParams: string
-            ): Promise<Record<string, any>> =>
-              await this._sendRequest(endpoint, body, additionalParams);
-
-            const parseFunc = (contents: any): Record<string, any> =>
-              this._parser.parseSearchResults(contents, type, category as any);
-
-            searchResults = [
-              ...searchResults,
-              ...(await getContinuations(
-                res['musicShelfRenderer'],
-                'musicShelfContinuation',
-                limit - searchResults.length,
-                requestFunc,
-                parseFunc
-              )),
-            ];
-          }
-        }
-      }
-
-      return searchResults;
     }
 
     /**
@@ -581,7 +266,7 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
       artist['name'] = nav(header, TITLE_TEXT);
       const descriptionShelf = findObjectByKey(
         results,
-        'musicDescriptionShelfRenderer',
+        DESCRIPTION_SHELF[0],
         undefined,
         true
       );
@@ -742,6 +427,89 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
       const userPlaylists = parseContentList(results, parsePlaylist);
 
       return userPlaylists;
+    }
+
+    /**
+     * Gets related content for a song. Equivalent to the content
+     * shown in the "Related" tab of the watch panel.
+     *
+     * @param browseId The `related` key in the `get_watch_playlist` response.
+     * @example
+     * [
+     *  {
+     *    "title": "You might also like",
+     *    "contents": [
+     *      {
+     *        "title": "High And Dry",
+     *        "videoId": "7fv84nPfTH0",
+     *        "artists": [{
+     *            "name": "Radiohead",
+     *            "id": "UCr_iyUANcn9OX_yy9piYoLw"
+     *          }],
+     *        "thumbnails": [
+     *          {
+     *            "url": "https://lh3.googleusercontent.com/TWWT47cHLv3yAugk4h9eOzQ46FHmXc_g-KmBVy2d4sbg_F-Gv6xrPglztRVzp8D_l-yzOnvh-QToM8s=w60-h60-l90-rj",
+     *            "width": 60,
+     *            "height": 60
+     *          }
+     *        ],
+     *        "isExplicit": false,
+     *        "album": {
+     *          "name": "The Bends",
+     *          "id": "MPREb_xsmDKhqhQrG"
+     *        }
+     *      }
+     *    ]
+     *  },
+     *  {
+     *    "title": "Recommended playlists",
+     *    "contents": [
+     *      {
+     *        "title": "'90s Alternative Rock Hits",
+     *        "playlistId": "RDCLAK5uy_m_h-nx7OCFaq9AlyXv78lG0AuloqW_NUA",
+     *        "thumbnails": [...],
+     *        "description": "Playlist • YouTube Music"
+     *      }
+     *    ]
+     *  },
+     *  {
+     *    "title": "Similar artists",
+     *    "contents": [
+     *      {
+     *        "title": "Noel Gallagher",
+     *        "browseId": "UCu7yYcX_wIZgG9azR3PqrxA",
+     *        "subscribers": "302K",
+     *        "thumbnails": [...]
+     *      }
+     *    ]
+     *  },
+     *  {
+     *    "title": "Oasis",
+     *    "contents": [
+     *      {
+     *        "title": "Shakermaker",
+     *        "year": "2014",
+     *        "browseId": "MPREb_WNGQWp5czjD",
+     *        "thumbnails": [...]
+     *      }
+     *    ]
+     *  },
+     *  {
+     *    "title": "About the artist",
+     *    "contents": "Oasis were a rock band consisting of Liam Gallagher, Paul ... (full description shortened for documentation)"
+     *  }
+     * ]
+     */
+    async getSongRelated(browseId: string): Promise<any[]> {
+      if (!browseId) {
+        throw new Error('Invalid browseId provided');
+      }
+
+      const response = await this._sendRequest('browse', {
+        browseId: browseId,
+      });
+      const sections = nav(response, ['contents', ...SECTION_LIST] as const);
+      return this._parser.parseMixedContent(sections);
     }
 
     /**
@@ -983,7 +751,7 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
     ): Promise<bt.getSongRequest<typeof videoId>> {
       const endpoint = 'player';
       if (!signatureTimestamp) {
-        signatureTimestamp = helpers.getDatestamp() - 1;
+        signatureTimestamp = getDatestamp() - 1;
       }
 
       const params = {
@@ -1038,12 +806,7 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
       });
       lyrics['lyrics'] = nav(
         response,
-        [
-          'contents',
-          ...SECTION_LIST_ITEM,
-          'musicDescriptionShelfRenderer',
-          ...DESCRIPTION,
-        ],
+        ['contents', ...SECTION_LIST_ITEM, DESCRIPTION_SHELF, ...DESCRIPTION],
         null
       );
       lyrics['source'] = nav(
@@ -1051,7 +814,7 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
         [
           'contents',
           ...SECTION_LIST_ITEM,
-          'musicDescriptionShelfRenderer',
+          DESCRIPTION_SHELF,
           'footer',
           ...RUN_TEXT,
         ],

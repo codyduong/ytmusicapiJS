@@ -5,6 +5,7 @@ import { ExploreMixin } from './mixins/explore';
 import { LibraryMixin } from './mixins/library';
 import { PlaylistsMixin } from './mixins/playlists';
 import { UploadsMixin } from './mixins/uploads';
+import { SearchMixin } from './mixins/search';
 
 /**
  * Allows automated interactions with YouTube Music by emulating the YouTube web client's requests.
@@ -29,7 +30,9 @@ import { UploadsMixin } from './mixins/uploads';
  */
 const YTMusic = UploadsMixin(
   LibraryMixin(
-    PlaylistsMixin(ExploreMixin(WatchMixin(BrowsingMixin(_YTMusic))))
+    PlaylistsMixin(
+      ExploreMixin(WatchMixin(BrowsingMixin(SearchMixin(_YTMusic))))
+    )
   )
 );
 

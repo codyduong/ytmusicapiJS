@@ -58,9 +58,19 @@ export const NAVIGATION_WATCH_PLAYLIST_ID = [
   'watchPlaylistEndpoint',
   'playlistId',
 ] as const;
+export const NAVIGATION_VIDEO_TYPE = [
+  'watchEndpoint',
+  'watchEndpointMusicSupportedConfigs',
+  'watchEndpointMusicConfig',
+  'musicVideoType',
+] as const;
 export const HEADER_DETAIL = ['header', 'musicDetailHeaderRenderer'] as const;
+export const DESCRIPTION_SHELF = ['musicDescriptionShelfRenderer'] as const;
 export const DESCRIPTION = ['description', ...RUN_TEXT] as const;
 export const CAROUSEL = ['musicCarouselShelfRenderer'] as const;
+export const IMMERSIVE_CAROUSEL = [
+  'musicImmersiveCarouselShelfRenderer',
+] as const;
 export const CAROUSEL_CONTENTS = [...CAROUSEL, 'contents'] as const;
 export const CAROUSEL_TITLE = [
   'header',
@@ -126,3 +136,46 @@ export const CATEGORY_PARAMS = [
 ] as const;
 export const MRLIR = 'musicResponsiveListItemRenderer' as const;
 export const MTRIR = 'musicTwoRowItemRenderer' as const;
+
+export { nav } from '@codyduong/nav';
+
+//These implementations are sketch...
+export function findObjectByKey<T extends Array<Record<string, any>>>(
+  objectList: T | null,
+  key: string,
+  nested?: string,
+  isKey = false
+): any {
+  if (objectList) {
+    for (let item of objectList) {
+      if (nested) {
+        item = item[nested];
+      }
+      if (key in item) {
+        return isKey ? item[key] : item;
+      }
+    }
+  }
+  return null;
+}
+
+/** @deprecated Unused? */
+// export function findObjectsByKey<T extends Array<Record<string, any>>>(
+//   objectList: T | null,
+//   key: string,
+//   nested?: string
+// ): Array<any> | null {
+//   if (objectList) {
+//     const objects = [];
+//     for (let item of objectList) {
+//       if (nested) {
+//         item = item[nested];
+//       }
+//       if (key in item) {
+//         objects.push(item);
+//       }
+//     }
+//     return objects;
+//   }
+//   return null;
+// }

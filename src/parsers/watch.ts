@@ -1,4 +1,4 @@
-import { MENU_ITEMS, THUMBNAIL, TITLE_TEXT, TOGGLE_MENU } from '.';
+import { MENU_ITEMS, nav, THUMBNAIL, TITLE_TEXT, TOGGLE_MENU } from '.';
 import { thumbnail } from '../types';
 import {
   parseLikeStatus,
@@ -8,7 +8,6 @@ import {
   parseSongRuns,
   parseSongRunsReturn,
 } from './songs';
-import { nav } from './utils';
 
 export type parseWatchPlaylistReturn = (parseWatchTrackReturn & {
   counterpart?: parseWatchTrackReturn;
@@ -81,4 +80,17 @@ function parseWatchTrack(data: Record<string, any>): parseWatchTrackReturn {
     ...songInfo,
   };
   return track;
+}
+
+export function getTabBrowseId(
+  watchNextRenderer: any,
+  tab_id: any
+): null | any {
+  if (!('unselectable' in watchNextRenderer['tabs'][tab_id]['tabRenderer'])) {
+    return watchNextRenderer['tabs'][tab_id]['tabRenderer']['endpoint'][
+      'browseEndpoint'
+    ]['browseId'];
+  } else {
+    return null;
+  }
 }

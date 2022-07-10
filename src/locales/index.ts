@@ -7,4 +7,5 @@ import ja from './ja.json';
 import ko from './ko.json';
 import zh_CN from './zh_CN.json';
 
-export { en, de, es, fr, it, ja, ko, zh_CN };
+const resources = { en, de, es, fr, it, ja, ko, zh_CN };
+export default resources;

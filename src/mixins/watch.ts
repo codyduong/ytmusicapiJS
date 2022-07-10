@@ -4,12 +4,13 @@
 
 import { GConstructor, Mixin } from './.mixin.helper';
 
-import { NAVIGATION_PLAYLIST_ID, TAB_CONTENT } from '../parsers';
-import { getContinuations, nav, validatePlaylistId } from '../parsers/utils';
-import { parseWatchPlaylist } from '../parsers/watch';
+import { nav, NAVIGATION_PLAYLIST_ID, TAB_CONTENT } from '../parsers';
+import { validatePlaylistId } from '../parsers/utils';
+import { getTabBrowseId, parseWatchPlaylist } from '../parsers/watch';
 
 import * as wt from './watch.types';
 import { BrowsingMixin } from './browsing';
+import { getContinuations } from '../parsers/continuations';
 
 export type WatchMixin = Mixin<typeof WatchMixin>;
 
@@ -142,13 +143,8 @@ export const WatchMixin = <TBase extends GConstructor<BrowsingMixin>>(
         'watchNextTabbedResultsRenderer',
       ] as const);
 
-      let lyrics_browse_id = null;
-      if (!('unselectable' in watchNextRenderer['tabs'][1]['tabRenderer'])) {
-        lyrics_browse_id =
-          watchNextRenderer['tabs'][1]['tabRenderer']['endpoint'][
-            'browseEndpoint'
-          ]['browseId'];
-      }
+      const lyricsBrowseId = getTabBrowseId(watchNextRenderer, 1);
+      const relatedBrowseId = getTabBrowseId(watchNextRenderer, 1);
 
       //Waiting on bugfix for nav nested arrays objects
       const results = nav(watchNextRenderer, [
@@ -187,7 +183,12 @@ export const WatchMixin = <TBase extends GConstructor<BrowsingMixin>>(
           )),
         ];
       }
-      return { tracks: tracks, playlistId: playlist, lyrics: lyrics_browse_id };
+      return {
+        tracks: tracks,
+        playlistId: playlist,
+        lyrics: lyricsBrowseId,
+        related: relatedBrowseId,
+      };
     }
 
     /**

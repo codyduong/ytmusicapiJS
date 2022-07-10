@@ -3,13 +3,14 @@ import {
   TEXT_RUN,
   NAVIGATION_VIDEO_ID,
   THUMBNAILS,
-  BADGE_LABEL,
   NAVIGATION_BROWSE_ID,
   NAVIGATION_PLAYLIST_ID,
+  nav,
 } from '.';
 import { thumbnails } from '../types';
+import { parseSongFlat } from './browsing';
 import { parseSongArtists, parseSongArtistsReturn } from './songs';
-import { getDotSeperatorIndex, getFlexColumnItem, nav } from './utils';
+import { getDotSeperatorIndex, getFlexColumnItem } from './utils';
 
 const TRENDS = {
   ARROW_DROP_UP: 'up',
@@ -35,27 +36,7 @@ export type parseChartSongReturn = {
     }
 );
 export function parseChartSong(data: any): parseChartSongReturn {
-  const flex_0: NonNullable<ReturnType<typeof getFlexColumnItem>> =
-    getFlexColumnItem(data, 0) as any;
-  let parsed: parseChartSongReturn = {
-    title: nav(flex_0, TEXT_RUN_TEXT),
-    videoId: nav(flex_0, [...TEXT_RUN, ...NAVIGATION_VIDEO_ID], null),
-    artists: parseSongArtists(data, 1),
-    thumbnails: nav(data, THUMBNAILS),
-    isExplicit: nav(data, BADGE_LABEL, null) != null,
-  };
-  const flex_2 = getFlexColumnItem(data, 2);
-  if (flex_2 && 'navigationEndpoint' in nav(flex_2, TEXT_RUN)) {
-    parsed['album'] = {
-      name: nav(flex_2, TEXT_RUN_TEXT),
-      id: nav(flex_2, [...TEXT_RUN, ...NAVIGATION_BROWSE_ID]),
-    };
-  } else {
-    const flex_1 = getFlexColumnItem(data, 1);
-    //const _ = nav(flex_1, ['text', 'runs']);
-    //@ts-expect-error: TS doesn't discriminate flow correctly here?
-    parsed['views'] = nav(flex_1, ['text', 'runs', -1, 'text']).split(' ')[0];
-  }
+  let parsed = parseSongFlat(data);
   parsed = { ...parsed, ...parseRanking(data) };
   return parsed;
 }

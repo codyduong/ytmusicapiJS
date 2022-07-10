@@ -20,7 +20,7 @@ type _YTMusicConstructorOptions = {
 };
 
 import i18next from 'i18next';
-import { en, de, es, it, fr, ja, ko, zh_CN } from './locales';
+import resources from './locales';
 
 if (typeof process != 'undefined') {
   axios.defaults.adapter = require('axios/lib/adapters/http');
@@ -35,6 +35,7 @@ export class _YTMusic {
   #language: string | undefined;
   _parser: Parser;
   _sapisid: any;
+  _cookies: Record<string, any>;
 
   /**
    * This is an internal class, please use {@link YTMusic}
@@ -80,6 +81,7 @@ export class _YTMusic {
     }
 
     this._proxies = proxies;
+    this._cookies = { CONSENT: 'YES+1' };
 
     // prepare headers
 
@@ -138,16 +140,7 @@ export class _YTMusic {
         await i18next.init({
           lng: language ?? 'en',
           //debug: true,
-          resources: {
-            en,
-            de,
-            es,
-            fr,
-            it,
-            ja,
-            ko,
-            zh_CN,
-          },
+          resources: resources,
         });
       })();
     }
@@ -196,6 +189,7 @@ export class _YTMusic {
         headers: this._headers,
         proxy: this._proxies,
         httpsAgent: this?._httpsAgent,
+        // cookies: this._cookies,
       }
     );
     //console.log(response);

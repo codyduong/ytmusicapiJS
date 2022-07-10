@@ -79,4 +79,5 @@ export type getWatchPlaylistReturn = {
   tracks: parseWatchPlaylistReturn;
   playlistId: string | null;
   lyrics: string | null;
+  related: string;
 };

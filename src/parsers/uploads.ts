@@ -4,6 +4,7 @@ import {
   MENU_SERVICE,
   MRLIR,
   THUMBNAILS,
+  nav,
 } from '.';
 import { parseDuration } from '../helpers';
 import { Rating } from '../mixins/library.types';
@@ -14,7 +15,7 @@ import {
   parseSongArtists,
   parseSongArtistsReturn,
 } from './songs';
-import { getFixedColumnItem, getItemText, nav } from './utils';
+import { getFixedColumnItem, getItemText } from './utils';
 
 export type parseUploadedItemsReturn = {
   entityId: string;
