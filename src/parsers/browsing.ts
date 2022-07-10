@@ -13,6 +13,7 @@ import {
   CAROUSEL_TITLE,
   CAROUSEL,
   MTRIR,
+  MRLIR,
   SUBTITLE,
   SUBTITLE2,
   THUMBNAIL_RENDERER,
@@ -315,7 +316,7 @@ export class Parser {
               content = parsePlaylist(data);
             }
           } else {
-            const data2 = nav(result, [MTRIR]);
+            const data2 = nav(result, [MRLIR]);
             content = parseSongFlat(data2);
           }
           contents.push(content);
