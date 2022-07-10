@@ -53,6 +53,7 @@
     "dist/**.*.ts",
     "dist/**.js",
     "dist/*/**.js",
+    "dist/locales/**.json",
     "LICENSE",
     "README.md"
   ],
