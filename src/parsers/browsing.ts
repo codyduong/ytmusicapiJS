@@ -294,6 +294,9 @@ export class Parser {
         const results: any = (function* () {
           yield* Object.values(row);
         })().next().value;
+        if (!('contents' in results)) {
+          continue;
+        }
         title = nav(results, [...CAROUSEL_TITLE, 'text']) as string;
         contents = [];
         for (const result of results['contents']) {
