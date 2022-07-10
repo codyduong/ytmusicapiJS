@@ -13,63 +13,6 @@ This library is intended to carry the same functionality as the library it is in
 # Features
 See API here https://codyduong.github.io/ytmusicapiJS/
 
-<details title="Feature Parity">
-<summary>Feature Parity</summary>
-
-✅ - Implemented
-
-🐣 - Partially implemented
-
-❌ - Not implemented
-
-<table style="overflow: hidden;">
-    <thead>
-        <tr>
-            <th>Feature</tH>
-            <th>Implementation Status</tH>
-            <th>ytmusicapi version parity</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td colspan=3 align="center">Browsing</td>
-        </tr>
-        <tr><td>search (w/ filters)</td><td>✅</td><td>0.21.0</td></tr>
-        <tr><td>get artist info</td><td>✅</td><td>0.21.0</td></tr>
-        <tr><td>get user info</td><td>✅</td><td>0.21.0</td></tr>
-        <tr><td>get albums</td><td>✅</td><td>0.21.0</td></tr>
-        <tr><td>get song metadata</td><td>✅</td><td>0.21.0</td></tr>
-        <tr><td>get watch playlists</td><td>✅</td><td>0.21.0</td></tr>
-        <tr><td>get song lyrics</td><td>✅</td><td>0.21.0</td></tr>
-        <tr>
-            <td colspan=3 align="center">Exploring</td>
-        </tr>
-        <tr><td>get moods/genres playlists</td><td>✅</td><td>0.21.0</td></tr>
-        <tr><td>get latest charts</td><td>✅</td><td>0.21.0</td></tr>
-        <tr>
-            <td colspan=3 align="center">Library Management</td>
-        </tr>
-        <tr><td>get library contents</td><td>✅</td><td>0.21.0</td></tr>
-        <tr><td>add/remove library content</td><td>✅</td><td>0.21.0</td></tr>
-        <tr>
-            <td colspan=3 align="center">Playlists</td>
-        </tr>
-        <tr><td>create/delete playlists</td><td>✅</td><td>0.21.0</td></tr>
-        <tr><td>modify playlists</td><td>✅</td><td>0.21.0</td></tr>
-        <tr><td>get playlist contents</td><td>✅</td><td>0.21.0</td></tr>
-        <tr>
-            <td colspan=3 align="center">Uploads</td>
-        </tr>
-        <tr><td>upload/remove songs</td><td>✅</td><td>0.21.0</td></tr>
-        <tr><td>list uploaded songs</td><td>✅</td><td>0.21.0</td></tr>
-        <tr>
-            <td colspan=3 align="center">Other</td>
-        </tr>
-        <tr><td>locale</td><td>✅</td><td>0.21.0</td></tr>
-    </tbody>
-</table>
-</details>
-
 # Setup and Usage
 | npm  | yarn |
 | ------------- | ------------- |
