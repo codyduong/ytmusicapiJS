@@ -290,10 +290,10 @@ export class Parser {
         title = nav(results, ['header', ...RUN_TEXT]);
         contents = nav(results, DESCRIPTION);
       } else {
-        const results: any = Object.values(row)[0];
-        if (!('contents' in results)) {
-          continue;
-        }
+        // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+        const results: any = (function* () {
+          yield* Object.values(row);
+        })().next().value;
         title = nav(results, [...CAROUSEL_TITLE, 'text']) as string;
         contents = [];
         for (const result of results['contents']) {
@@ -374,7 +374,7 @@ export function parseSongFlat(
   const columns = (data?.['flexColumns'] ?? []).map((_: never, i: number) =>
     getFlexColumnItem(data, i)
   );
-  const song = {
+  const song: parser_bT.parseSongFlatReturn = {
     title: nav(columns[0], TEXT_RUN_TEXT),
     videoId: nav(columns[0], [...TEXT_RUN, ...NAVIGATION_VIDEO_ID], null),
     artists: parseSongArtists(data, 1),
@@ -391,6 +391,8 @@ export function parseSongFlat(
       name: nav(columns[2], TEXT_RUN_TEXT),
       id: nav(columns[2], [...TEXT_RUN, ...NAVIGATION_BROWSE_ID]),
     };
+  } else {
+    song['views'] = nav(columns[1], ['text', 'runs', -1, 'text']).split(' ')[0];
   }
   return song;
 }

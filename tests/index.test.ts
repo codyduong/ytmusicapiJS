@@ -297,7 +297,7 @@ describe('Browsing', () => {
     test('(Auth) #1', async () => {
       const song = await ytmusicAuth.getSong('AjXQiKP5kMs');
       expect(Object.keys(song).length).toBe(1);
-      expect(song.playabilityStatus.status).toBe('LOGIN_REQUIRED');
+      expect(song.playabilityStatus.status).toBe('ERROR');
     });
     test('(Auth) #2', async () => {
       //Actually a public song.

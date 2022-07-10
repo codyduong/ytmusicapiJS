@@ -38,6 +38,7 @@ export type parseSongFlatReturn = {
     name: string;
     id: string;
   };
+  views?: string;
 };
 
 export type parseVideoReturn = {
