@@ -28,6 +28,7 @@ import {
   NAVIGATION_VIDEO_TYPE,
   TEXT_RUN,
   TEXT_RUN_TEXT,
+  NAVIGATION_WATCH_PLAYLIST_ID,
 } from './index';
 import {
   parseSongArtists,
@@ -309,7 +310,11 @@ export class Parser {
               null
             );
             if (pageType === null) {
-              content = parseSong(data);
+              if (nav(data, NAVIGATION_WATCH_PLAYLIST_ID, true) != null) {
+                content = parseWatchPlaylist(data);
+              } else {
+                content = parseSong(data);
+              }
             } else if (pageType === 'MUSIC_PAGE_TYPE_ALBUM') {
               content = parseAlbum(data);
             } else if (pageType === 'MUSIC_PAGE_TYPE_ARTIST') {
@@ -397,6 +402,7 @@ export function parseSongFlat(
   } else {
     song['views'] = nav(columns[1], ['text', 'runs', -1, 'text']).split(' ')[0];
   }
+
   return song;
 }
 
@@ -405,15 +411,14 @@ export function parseVideo(result: {
 }): parser_bT.parseVideoReturn {
   const runs: Array<Record<string, any>> = result['subtitle']['runs'];
   const artistsLen = getDotSeperatorIndex(runs);
-  const video: parser_bT.parseVideoReturn = {
+  return {
     title: nav(result, TITLE_TEXT),
     videoId: nav(result, NAVIGATION_VIDEO_ID),
     artists: parseSongArtistsRuns(runs.slice(0, artistsLen)),
     playlistId: nav(result, NAVIGATION_PLAYLIST_ID, null),
     thumbnails: nav(result, THUMBNAIL_RENDERER, null),
+    views: runs[runs.length - 1]['text'].split(' ')[0],
   };
-  video['views'] = runs[runs.length - 1]['text'].split(' ')[0];
-  return video;
 }
 
 export function parsePlaylist(data: {
@@ -452,6 +457,14 @@ export function parseRelatedArtist(
     title: nav(data, TITLE_TEXT),
     browseId: nav(data, [...TITLE, ...NAVIGATION_BROWSE_ID]),
     subscribers: subscribers,
+    thumbnails: nav(data, THUMBNAIL_RENDERER),
+  };
+}
+
+function parseWatchPlaylist(data: any): any {
+  return {
+    title: nav(data, TITLE_TEXT),
+    playlistId: nav(data, [TITLE, ...NAVIGATION_BROWSE_ID]),
     thumbnails: nav(data, THUMBNAIL_RENDERER),
   };
 }

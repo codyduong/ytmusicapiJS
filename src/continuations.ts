@@ -4,7 +4,7 @@ import { parsePlaylistItemsReturn } from './parsers/playlists.types';
 export async function getContinuations(
   results: any,
   continuation_type: string | number,
-  limit: number | undefined,
+  limit: number | undefined | null,
   requestFunc: (arg1: any) => Promise<Record<string, any>>,
   parse_func: (arg1: any) => any,
   ctokenPath = ''

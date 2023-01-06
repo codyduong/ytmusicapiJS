@@ -62,7 +62,7 @@ export function getAuthorization(auth: any): string {
   return 'SAPISIDHASH ' + unix_timestamp + '_' + sha_1.digest('hex');
 }
 
-export function toInt(string: string): any {
+export function toInt(string: string): number {
   const numberString = re.sub(/^\\d/, '', string);
   let intValue: number;
   try {

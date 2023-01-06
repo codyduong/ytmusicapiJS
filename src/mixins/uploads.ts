@@ -36,7 +36,7 @@ export const UploadsMixin = <TBase extends GConstructor<LibraryMixin>>(
     /**
      * Returns a list of uploaded songs
      * @param {ut.uploadsOptions} [options=] Options object.
-     * @param {number} [options.limit=25] How many songs to return.
+     * @param {number} [options.limit=25] How many songs to return. `null` retrieves them all.
      * @param {ut.Order} [options.order] Order of songs to return.
      * @return Array of uploaded songs.
      * @example <caption>Each item is in the following format</caption>
@@ -58,7 +58,7 @@ export const UploadsMixin = <TBase extends GConstructor<LibraryMixin>>(
     ): Promise<ut.getLibraryUploadSongsReturn>;
     /**
      * Returns a list of uploaded songs
-     * @param {number} [limit=25] How many songs to return.
+     * @param {number} [limit=25] How many songs to return. `null` retrives them all.
      * @param {ut.Order} [order=] Order of songs to return.
      * @return Array of uploaded songs.
      * @example <caption>Each item is in the following format</caption>
@@ -76,16 +76,18 @@ export const UploadsMixin = <TBase extends GConstructor<LibraryMixin>>(
      * }
      */
     async getLibraryUploadSongs(
-      limit?: number,
+      limit?: number | null,
       order?: ut.Order
     ): Promise<ut.getLibraryUploadSongsReturn>;
     async getLibraryUploadSongs(
-      options?: ut.uploadsOptions | number,
+      options?: ut.uploadsOptions | number | null,
       order?: never
     ): Promise<ut.getLibraryUploadSongsReturn> {
       this._checkAuth();
       const { limit = 25, order: _order } =
-        typeof options == 'object' ? options : { limit: options, order: order };
+        typeof options == 'object'
+          ? options ?? { limit: null }
+          : { limit: options, order: order };
       const endpoint = 'browse';
       const body: Record<string, any> = {
         browseId: 'FEmusic_library_privately_owned_tracks',
@@ -113,12 +115,13 @@ export const UploadsMixin = <TBase extends GConstructor<LibraryMixin>>(
       if ('continuations' in results) {
         const requestFunc = async (additionalParams: string): Promise<any> =>
           await this._sendRequest(endpoint, body, additionalParams);
+        const remainingLimit = limit === null ? null : limit - songs.length;
         songs = [
           ...songs,
           ...(await getContinuations(
             results,
             'musicShelfContinuation',
-            limit - songs.length,
+            remainingLimit,
             requestFunc,
             parseUploadedItems
           )),
@@ -183,21 +186,23 @@ export const UploadsMixin = <TBase extends GConstructor<LibraryMixin>>(
     ): Promise<ut.getLibraryUploadArtistsReturn>;
     /**
      * Gets the artists of uploaded songs in the user's library.
-     * @param {number} [limit=25] How many albums  to return.
-     * @param {ut.Order} [order=] Order of albums  to return.
+     * @param {number} [limit=25] How many albums to return. `null` retrives them all.
+     * @param {ut.Order} [order=] Order of albums to return.
      * @return Array of albums as returned by `getLibraryAlbums`
      */
     async getLibraryUploadArtists(
-      limit?: number,
+      limit?: number | null,
       order?: ut.Order
     ): Promise<ut.getLibraryUploadArtistsReturn>;
     async getLibraryUploadArtists(
-      options?: ut.uploadsOptions | number,
+      options?: ut.uploadsOptions | number | null,
       order?: never
     ): Promise<ut.getLibraryUploadArtistsReturn> {
       this._checkAuth();
       const { limit = 25, order: _order } =
-        typeof options == 'object' ? options : { limit: options, order: order };
+        typeof options == 'object'
+          ? options ?? { limit: null }
+          : { limit: options, order: order };
       const body: Record<string, any> = {
         browseId: 'FEmusic_library_privately_owned_artists',
       };
@@ -218,7 +223,7 @@ export const UploadsMixin = <TBase extends GConstructor<LibraryMixin>>(
     /**
      * Returns a list of uploaded tracks for the artist.
      * @param {string} [browseId] Browse id of the upload artist, i.e. from `get_library_upload_songs`.
-     * @param {number} [limit=25]  Number of songs to return (increments of 25).
+     * @param {number | null} [limit=25]  Number of songs to return (increments of 25). `null` retrives them all.
      * @example
      * [
      *   {
@@ -239,7 +244,7 @@ export const UploadsMixin = <TBase extends GConstructor<LibraryMixin>>(
      */
     async getLibraryUploadArtist(
       browseId: string,
-      limit = 25
+      limit: number | null = 25
     ): Promise<ut.getLibraryUploadArtistReturn> {
       this._checkAuth();
       const body = { browseId: browseId };
@@ -260,12 +265,13 @@ export const UploadsMixin = <TBase extends GConstructor<LibraryMixin>>(
         const requestFunc = async (additionalParams: string): Promise<any> =>
           await this._sendRequest(endpoint, body, additionalParams);
         const parseFunc = (contents: any): any => parseUploadedItems(contents);
+        const remainingLimit = limit === null ? null : limit - items.length;
         items = [
           ...items,
           ...(await getContinuations(
             results,
             'musicShelfContinuation',
-            limit,
+            remainingLimit,
             requestFunc,
             parseFunc
           )),
@@ -294,13 +300,13 @@ export const UploadsMixin = <TBase extends GConstructor<LibraryMixin>>(
      *       "title": "Feel So Close",
      *       "duration": "4:15",
      *       "duration_seconds": 255,
-     *       "artists": None,
+     *       "artists": undefined,
      *       "album": {
      *         "name": "18 Months",
      *         "id": "FEmusic_library_privately_owned_release_detailb_po_55chars"
      *       },
      *       "likeStatus": "INDIFFERENT",
-     *       "thumbnails": None
+     *       "thumbnails": undefined
      *     }
      *   ]
      * }

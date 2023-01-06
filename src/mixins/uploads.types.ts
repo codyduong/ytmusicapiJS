@@ -8,7 +8,7 @@ import { parseUploadedItemsReturn } from '../parsers/uploads';
 
 export type Order = _Order;
 export type uploadsOptions = {
-  limit?: number;
+  limit?: number | null;
   order?: Order;
 };
 

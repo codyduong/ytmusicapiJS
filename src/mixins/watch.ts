@@ -107,9 +107,10 @@ export const WatchMixin = <TBase extends GConstructor<BrowsingMixin>>(
       const body: Record<string, any> = {
         enablePersistentPlaylistPanel: true,
         isAudioOnly: true,
+        tunerSettingValue: 'AUTOMIX_SETTING_NORMAL',
       };
       if (!videoId && !playlistId) {
-        throw new Error(
+        throw TypeError(
           'You must provide either a video id, a playlist id, or both'
         );
       }
@@ -146,7 +147,7 @@ export const WatchMixin = <TBase extends GConstructor<BrowsingMixin>>(
       const lyricsBrowseId = getTabBrowseId(watchNextRenderer, 1);
       const relatedBrowseId = getTabBrowseId(watchNextRenderer, 1);
 
-      //Waiting on bugfix for nav nested arrays objects
+      // Waiting on bugfix for nav nested arrays objects
       const results = nav(watchNextRenderer, [
         ...TAB_CONTENT,
         'musicQueueRenderer',
@@ -154,12 +155,13 @@ export const WatchMixin = <TBase extends GConstructor<BrowsingMixin>>(
         'playlistPanelRenderer',
       ] as const);
       const playlist = results['contents']
-        .map((x) =>
-          nav(
-            x,
-            ['playlistPanelVideoRenderer', ...NAVIGATION_PLAYLIST_ID],
-            null
-          )
+        .map(
+          (x) =>
+            nav(
+              x,
+              ['playlistPanelVideoRenderer', ...NAVIGATION_PLAYLIST_ID],
+              null
+            ) as unknown as string | null
         )
         .filter((x) => !!x)[0];
       let tracks = parseWatchPlaylist(results['contents']);
