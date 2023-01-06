@@ -12,10 +12,7 @@ import {
   THUMBNAIL_CROPPED,
   TITLE_TEXT,
 } from '../parsers';
-import {
-  getContinuations,
-  getContinuationString,
-} from '../continuations';
+import { getContinuations, getContinuationString } from '../continuations';
 import { parsePlaylistItems } from '../parsers/playlists';
 import { validatePlaylistId } from '../parsers/utils';
 import { GConstructor, Mixin } from './.mixin.helper';
