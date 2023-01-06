@@ -15,7 +15,7 @@ import {
 import { parseAlbumHeader } from '../parsers/albums';
 import { parseLibraryArtists, parseLibraryAlbums } from '../parsers/library';
 import { parseUploadedItems } from '../parsers/uploads';
-import { getContinuations } from '../parsers/continuations';
+import { getContinuations } from '../continuations';
 import { GConstructor, Mixin } from './.mixin.helper';
 import { existsSync, readFileSync, statSync } from 'fs';
 import { extname, basename } from 'path';

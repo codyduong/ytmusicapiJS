@@ -4,7 +4,7 @@ import YTMusic from '../src/index';
 import { json } from '../src/pyLibraryMock';
 
 const sampleAlbum = 'MPREb_4pL8gzRtw1p'; // Eminem - Revival
-const sampleVideo = 'ZrOKjDZOtkA'; // Oasis - Wonderwall (Remastered)
+const sampleVideo = 'tGWs0xKwhag'; // Oasis - Wonderwall (Remastered)
 const samplePlaylist = 'PL6bPxvf5dW5clc3y9wAoslzqUrmkZ5c-u'; // very large playlist
 const query = 'edm playlist';
 

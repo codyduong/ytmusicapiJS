@@ -19,6 +19,8 @@ import {
   THUMBNAILS,
   TITLE,
   TITLE_TEXT,
+  TASTE_PROFILE_ITEMS,
+  TASTE_PROFILE_ARTIST,
 } from '../parsers/index';
 import * as helpers from '../helpers';
 import { re } from '../pyLibraryMock';
@@ -32,7 +34,7 @@ import * as parser_bT from '../parsers/browsing.types';
 import * as parser_lT from '../parsers/library.types';
 import { _YTMusic } from '../ytmusic';
 import { getDatestamp } from './_utils';
-import { getContinuations } from '../parsers/continuations';
+import { getContinuations } from '../continuations';
 
 export type BrowsingMixin = Mixin<typeof BrowsingMixin>;
 
@@ -806,19 +808,24 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
       });
       lyrics['lyrics'] = nav(
         response,
-        ['contents', ...SECTION_LIST_ITEM, DESCRIPTION_SHELF, ...DESCRIPTION],
-        null
+        [
+          'contents',
+          ...SECTION_LIST_ITEM,
+          ...DESCRIPTION_SHELF,
+          ...DESCRIPTION,
+        ],
+        true
       );
       lyrics['source'] = nav(
         response,
         [
           'contents',
           ...SECTION_LIST_ITEM,
-          DESCRIPTION_SHELF,
+          ...DESCRIPTION_SHELF,
           'footer',
           ...RUN_TEXT,
         ],
-        null
+        true
       );
 
       return lyrics as any;
@@ -843,7 +850,7 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
      * @param url Optional. Provide the URL of the `base.js` script. If this isn't specified a call will be made to {@link https://codyduong.github.io/ytmusicapiJS/module-Browsing.html#getBaseJSUrl | getBaseJSUrl}.
      * @returns `signatureTimestamp` string
      */
-    async getSignatureTimestamp(url?: string): Promise<number | null> {
+    async getSignatureTimestamp(url?: string): Promise<number> {
       if (!url) {
         url = await this.getBaseJSUrl();
       }
@@ -853,10 +860,79 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
         throw new Error('Unable to identify the signatureTimestamp.');
       }
 
-      if (match && match.groups) {
-        return Math.round(Number(match[1]));
+      return Math.round(Number(match[1]));
+    }
+
+    /**
+     * Fetches suggested artists from taste profile (music.youtube.com/tasteprofile).
+     * Tasteprofile allows users to pick artists to update their recommendations.
+     * Only returns a list of suggested artists, not the actual list of selected entries
+     * @return Object with artist and their selection & impression value
+     * @exanple
+     *     {
+     *         "Drake": {
+     *             "selectionValue": "tastebuilder_selection=/m/05mt_q"
+     *             "impressionValue": "tastebuilder_impression=/m/05mt_q"
+     *         }
+     *     }
+     */
+    async getTasteprofile(): Promise<bt.getTasteProfileReturn> {
+      const response = await this._sendRequest('browse', {
+        browseId: 'FEmusic_tastebuilder',
+      });
+      const profiles = nav(response, TASTE_PROFILE_ITEMS);
+
+      const taste_profiles: Record<string, any> = {};
+      for (const itemList of profiles) {
+        for (const item of itemList['tastebuilderItemListRenderer'][
+          'contents'
+        ]) {
+          const artist = nav(
+            item['tastebuilderItemRenderer'],
+            TASTE_PROFILE_ARTIST
+          )[0]['text'];
+          taste_profiles[artist] = {
+            selectionValue:
+              item['tastebuilderItemRenderer']['selectionFormValue'],
+            impressionValue:
+              item['tastebuilderItemRenderer']['impressionFormValue'],
+          };
+        }
       }
-      return null;
+      return taste_profiles;
+    }
+
+    /**
+     * Favorites artists to see more recommendations from the artist.
+     * Use get_tasteprofile() to see which artists are available to be recommended
+     *
+     * @param artists A List with names of artists, must be contained in the tasteprofile
+     * @param tasteProfile tasteprofile result from {@link https://codyduong.github.io/ytmusicapiJS/module-Browsing.html#getTasteprofile | getTasteprofile}.
+     *    Pass this if you call {@link https://codyduong.github.io/ytmusicapiJS/module-Browsing.html#getTasteprofile | getTasteprofile} anyway to save an extra request.
+     */
+    async setTasteprofile(
+      artists: string[],
+      tasteProfile?: bt.getTasteProfileReturn
+    ): Promise<void> {
+      const newTasteProfile = tasteProfile ?? (await this.getTasteprofile());
+      const formData = {
+        impressionValues: Object.keys(newTasteProfile).map(
+          (profile) => newTasteProfile[profile]['impressionValue']
+        ),
+        selectedValues: [] as string[],
+      };
+
+      for (const artist of artists) {
+        if (!(artist in newTasteProfile)) {
+          throw TypeError(`The artist, ${artist}, was not present in taste!`);
+        }
+        formData['selectedValues'].push(
+          newTasteProfile[artist]['selectionValue']
+        );
+      }
+
+      const body = { browseId: 'FEmusic_home', formData: formData };
+      await this._sendRequest('browse', body);
     }
   };
 };

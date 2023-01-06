@@ -10,7 +10,7 @@ import { getTabBrowseId, parseWatchPlaylist } from '../parsers/watch';
 
 import * as wt from './watch.types';
 import { BrowsingMixin } from './browsing';
-import { getContinuations } from '../parsers/continuations';
+import { getContinuations } from '../continuations';
 
 export type WatchMixin = Mixin<typeof WatchMixin>;
 

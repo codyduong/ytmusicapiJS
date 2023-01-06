@@ -324,3 +324,14 @@ export type getLyricsReturn = {
 /**
  * getSignatureTimestamp
  */
+
+/**
+ * getTasteProfile
+ */
+export type getTasteProfileReturn = Record<
+  string,
+  {
+    selectionValue: `tastebuilder_selection=${string}`;
+    impressionValue: `tastebuilder_impression=${string}`;
+  }
+>;

@@ -1,7 +1,7 @@
 import { nav } from '@codyduong/nav';
 import { SECTION_LIST, MUSIC_SHELF, TITLE_TEXT } from '../parsers';
 import { getSearchParams } from '../parsers/searchParams';
-import { getContinuations } from '../parsers/continuations';
+import { getContinuations } from '../continuations';
 import { Scope, Filter, FilterSingular } from '../types';
 import { _YTMusic } from '../ytmusic';
 import { GConstructor, Mixin } from './.mixin.helper';

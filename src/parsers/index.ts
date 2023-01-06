@@ -136,6 +136,12 @@ export const CATEGORY_PARAMS = [
 ] as const;
 export const MRLIR = 'musicResponsiveListItemRenderer' as const;
 export const MTRIR = 'musicTwoRowItemRenderer' as const;
+export const TASTE_PROFILE_ITEMS = [
+  'contents',
+  'tastebuilderRenderer',
+  'contents',
+] as const;
+export const TASTE_PROFILE_ARTIST = ['title', 'runs'] as const;
 
 export { nav } from '@codyduong/nav';
 

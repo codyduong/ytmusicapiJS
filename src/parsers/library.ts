@@ -20,7 +20,7 @@ import { isDigit } from '../pyLibraryMock';
 import { parsePlaylistItems } from './playlists';
 import { getItemText, parseMenuPlaylists } from './utils';
 import * as parser_lt from './library.types';
-import { getContinuations } from './continuations';
+import { getContinuations } from '../continuations';
 
 export function parseArtists(results: any, uploaded = false): Array<any> {
   const artists: Array<any> = [];

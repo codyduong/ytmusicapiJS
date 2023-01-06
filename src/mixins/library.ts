@@ -28,7 +28,7 @@ import {
   getContinuations,
   resendRequestUntilParsedResponseIsValid,
   getValidatedContinuations,
-} from '../parsers/continuations';
+} from '../continuations';
 import { GConstructor, Mixin } from './.mixin.helper';
 import { PlaylistsMixin } from './playlists';
 

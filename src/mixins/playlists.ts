@@ -15,7 +15,7 @@ import {
 import {
   getContinuations,
   getContinuationString,
-} from '../parsers/continuations';
+} from '../continuations';
 import { parsePlaylistItems } from '../parsers/playlists';
 import { validatePlaylistId } from '../parsers/utils';
 import { GConstructor, Mixin } from './.mixin.helper';
