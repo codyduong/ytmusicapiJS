@@ -40,28 +40,13 @@ export type results = {
     };
   }[];
 };
-export type getWatchPlaylistOptions =
-  | {
-      videoId: string;
-      playlistId: string;
-      limit?: number;
-      radio?: boolean;
-      shuffle?: boolean;
-    }
-  | {
-      videoId?: string;
-      playlistId: string;
-      limit?: number;
-      radio?: boolean;
-      shuffle?: boolean;
-    }
-  | {
-      videoId: string;
-      playlistId?: string;
-      limit?: number;
-      radio?: boolean;
-      shuffle?: false;
-    };
+export type getWatchPlaylistOptions = {
+  videoId?: string;
+  playlistId?: string;
+  limit?: number;
+  radio?: boolean;
+  shuffle?: boolean;
+};
 
 export type getWatchPlaylistReturn = {
   tracks: parseWatchPlaylistReturn;

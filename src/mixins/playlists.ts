@@ -122,13 +122,13 @@ export const PlaylistsMixin = <TBase extends GConstructor<ExploreMixin>>(
      * }
      */
     async getPlaylist(
-      options: pt.getPlaylistOptions
-    ): Promise<pt.getPlaylistReturn>;
-    async getPlaylist(
       options: string,
-      limit: number | null,
+      limit?: number | null,
       related?: boolean,
       suggestionsLimit?: number
+    ): Promise<pt.getPlaylistReturn>;
+    async getPlaylist(
+      options: pt.getPlaylistOptions | string
     ): Promise<pt.getPlaylistReturn>;
     async getPlaylist(
       options: string | pt.getPlaylistOptions,

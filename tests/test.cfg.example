@@ -3,11 +3,17 @@ brand_account =
 headers = headers_auth_json_as_string
 headers_file = ./tests/headers_auth.json
 
-# These require private videos/albums/etc for auth testing
-[private]
-brand_account_playlist = owned_playlist_id
+[playlists]
+own = owned_playlist_id
 
 [uploads]
 file = song_in_tests_directory.mp3
 private_album_id = sample_id_of_private_album
 private_artist_id = sample_id_of_private_artist
+private_upload_id = sample_video_id_of_private_upload
+
+[limits]
+library_playlists = 100
+library_songs = 200
+library_artists = 300
+library_subscriptions = 50
