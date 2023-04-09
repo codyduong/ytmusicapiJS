@@ -5,15 +5,16 @@
 import { sumTotalDuration } from '../helpers';
 import {
   SINGLE_COLUMN_TAB,
-  SECTION_LIST,
-  ITEM_SECTION,
   MUSIC_SHELF,
   SECTION_LIST_ITEM,
-  findObjectByKey,
   nav,
 } from '../parsers';
 import { parseAlbumHeader } from '../parsers/albums';
-import { parseLibraryArtists, parseLibraryAlbums } from '../parsers/library';
+import {
+  parseLibraryArtists,
+  parseLibraryAlbums,
+  getLibraryContents,
+} from '../parsers/library';
 import { parseUploadedItems } from '../parsers/uploads';
 import { getContinuations } from '../continuations';
 import { GConstructor, Mixin } from './.mixin.helper';
@@ -97,20 +98,11 @@ export const UploadsMixin = <TBase extends GConstructor<LibraryMixin>>(
         body['params'] = prepareOrderParams(_order);
       }
       const response = await this._sendRequest(endpoint, body);
-      let results = findObjectByKey(
-        nav(response, [...SINGLE_COLUMN_TAB, ...SECTION_LIST]),
-        'itemSectionRenderer'
-      );
-      results = nav(results, ITEM_SECTION);
-      if (!results['musicShelfRenderer']) {
+      const results = getLibraryContents(response, MUSIC_SHELF);
+      if (!results) {
         return [];
-      } else {
-        results = results['musicShelfRenderer'];
       }
-
-      let songs = [];
-
-      songs = [...parseUploadedItems(results['contents'].slice(1))];
+      let songs = parseUploadedItems(results['contents'].slice(1));
 
       if ('continuations' in results) {
         const requestFunc = async (additionalParams: string): Promise<any> =>

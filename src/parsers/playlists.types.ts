@@ -15,6 +15,7 @@ export type parsePlaylistItemsReturn = {
   thumbnails: thumbnails;
   isAvailable: boolean;
   isExplicit: boolean;
+  videoType: string;
   feedbackTokens: parseSongMenuTokensReturn;
   setVideoId?: string;
 }[];

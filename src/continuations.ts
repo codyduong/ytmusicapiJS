@@ -7,11 +7,14 @@ export async function getContinuations(
   limit: number | undefined | null,
   requestFunc: (arg1: any) => Promise<Record<string, any>>,
   parse_func: (arg1: any) => any,
-  ctokenPath = ''
+  ctokenPath = '',
+  reloadable = false
 ): Promise<Array<any>> {
   let items: any[] = [];
   while ('continuations' in results && (!limit || items.length < limit)) {
-    const additionalParams = getContinuationParams(results, ctokenPath);
+    const additionalParams = reloadable
+      ? getReloadableContinuationParams(results)
+      : getContinuationParams(results, ctokenPath);
     const response = await requestFunc(additionalParams);
     if ('continuationContents' in response) {
       results = response['continuationContents'][continuation_type];
@@ -69,7 +72,7 @@ export function getParsedContinuationItems(
   };
 }
 
-function getContinuationParams(results: any, ctoken_path: string): string {
+export function getContinuationParams(results: any, ctoken_path = ''): string {
   const ctoken = nav<any>(results, [
     'continuations',
     0,
@@ -79,11 +82,21 @@ function getContinuationParams(results: any, ctoken_path: string): string {
   return getContinuationString(ctoken);
 }
 
+function getReloadableContinuationParams(results: any): string {
+  const ctoken = nav(results, [
+    'continuations',
+    0,
+    'reloadContinuationData',
+    'continuation',
+  ]);
+  return getContinuationString(ctoken);
+}
+
 export function getContinuationString(ctoken: string): string {
   return `&ctoken=${ctoken}&continuation=${ctoken}`;
 }
 
-function getContinuationContents<T extends Record<string, any>>(
+export function getContinuationContents<T extends Record<string, any>>(
   continuation: T,
   parseFunc: (arg0: any) => T
 ): T | null {

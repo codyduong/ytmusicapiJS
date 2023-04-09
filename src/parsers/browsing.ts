@@ -29,6 +29,7 @@ import {
   TEXT_RUN,
   TEXT_RUN_TEXT,
   NAVIGATION_WATCH_PLAYLIST_ID,
+  SUBTITLE_BADGE_LABEL,
 } from './index';
 import {
   parseSongArtists,
@@ -348,12 +349,13 @@ export function parseContentList<T>(
   return contents;
 }
 
-function parseAlbum(result: any): parser_bT.parseAlbumReturn {
+export function parseAlbum(result: any): parser_bT.parseAlbumReturn {
   return {
-    title: nav(result, TITLE_TEXT, null), //@codyduong this isn't nullable in the py library? todo discovery why...
+    title: nav(result, TITLE_TEXT, null), // @codyduong this isn't nullable in the py library? todo discovery why...
     year: nav(result, SUBTITLE2, null),
     browseId: nav(result, [...TITLE, ...NAVIGATION_BROWSE_ID]),
     thumbnails: nav(result, THUMBNAIL_RENDERER),
+    isExplicit: nav(result, SUBTITLE_BADGE_LABEL, null) ?? true,
   };
 }
 
@@ -464,7 +466,7 @@ export function parseRelatedArtist(
 function parseWatchPlaylist(data: any): any {
   return {
     title: nav(data, TITLE_TEXT),
-    playlistId: nav(data, [TITLE, ...NAVIGATION_BROWSE_ID]),
+    playlistId: nav(data, NAVIGATION_WATCH_PLAYLIST_ID),
     thumbnails: nav(data, THUMBNAIL_RENDERER),
   };
 }

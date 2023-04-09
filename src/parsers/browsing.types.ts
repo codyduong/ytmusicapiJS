@@ -12,6 +12,7 @@ export type parseAlbumReturn = {
   year: string;
   browseId: string;
   thumbnails: bT.thumbnails;
+  isExplicit: boolean;
 };
 
 export type parseSingleReturn = {

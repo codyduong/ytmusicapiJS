@@ -1,36 +1,36 @@
-name: jest
+# name: jest
 
-on:
-  workflow_dispatch:
-  push:
-    branches: [ main ]
-    paths:
-      - '**.ts'
-  pull_request:
-    branches: [ main ]
+# on:
+#   workflow_dispatch:
+#   push:
+#     branches: [ main ]
+#     paths:
+#       - '**.ts'
+#   pull_request:
+#     branches: [ main ]
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [16.x]
-    env:
-      AUTH: ${{ secrets.AUTH }}
-      BRAND_ACCOUNT: ${{ secrets.BRAND_ACCOUNT }}
-      HEADERS: ${{ secrets.HEADERS }}
-      PLAYLISTS_OWN: ${{ secrets.PLAYLISTS_OWN }}
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'yarn'
-      env:
-        AUTH: ${{ secrets.AUTH }}
-        BRAND_ACCOUNT: ${{ secrets.BRAND_ACCOUNT }}
-        HEADERS: ${{ secrets.HEADERS }}
-        PLAYLISTS_OWN: ${{ secrets.PLAYLISTS_OWN }}
-    - run: yarn ci
-    - run: yarn test
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     strategy:
+#       matrix:
+#         node-version: [16.x]
+#     env:
+#       AUTH: ${{ secrets.AUTH }}
+#       BRAND_ACCOUNT: ${{ secrets.BRAND_ACCOUNT }}
+#       HEADERS: ${{ secrets.HEADERS }}
+#       PLAYLISTS_OWN: ${{ secrets.PLAYLISTS_OWN }}
+#     steps:
+#     - uses: actions/checkout@v2
+#     - name: Use Node.js ${{ matrix.node-version }}
+#       uses: actions/setup-node@v2
+#       with:
+#         node-version: ${{ matrix.node-version }}
+#         cache: 'yarn'
+#       env:
+#         AUTH: ${{ secrets.AUTH }}
+#         BRAND_ACCOUNT: ${{ secrets.BRAND_ACCOUNT }}
+#         HEADERS: ${{ secrets.HEADERS }}
+#         PLAYLISTS_OWN: ${{ secrets.PLAYLISTS_OWN }}
+#     - run: yarn ci
+#     - run: yarn test

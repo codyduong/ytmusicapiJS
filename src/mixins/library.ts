@@ -6,18 +6,17 @@ import {
 import {
   SINGLE_COLUMN_TAB,
   SECTION_LIST,
-  ITEM_SECTION,
   GRID,
   MUSIC_SHELF,
   TITLE,
   MENU_SERVICE,
   FEEDBACK_TOKEN,
   TITLE_TEXT,
-  findObjectByKey,
   nav,
 } from '../parsers';
 import { parseContentList, parsePlaylist } from '../parsers/browsing';
 import {
+  getLibraryContents,
   parseLibraryAlbums,
   parseLibraryArtists,
   parseLibrarySongs,
@@ -69,11 +68,7 @@ export const LibraryMixin = <TBase extends GConstructor<PlaylistsMixin>>(
       const endpoint = 'browse';
       const response = await this._sendRequest(endpoint, body);
 
-      let results = findObjectByKey(
-        nav(response, [...SINGLE_COLUMN_TAB, ...SECTION_LIST]),
-        'itemSectionRenderer'
-      );
-      results = nav(results, [...ITEM_SECTION, ...GRID]);
+      const results = getLibraryContents(response, GRID);
       let playlists = parseContentList(
         results['items'].slice(1),
         parsePlaylist
@@ -212,6 +207,7 @@ export const LibraryMixin = <TBase extends GConstructor<PlaylistsMixin>>(
      * @example <caption>Each item is in the following format</caption>
      * {
      *   "browseId": "MPREb_G8AiyN7RvFg",
+     *   "playlistId": "OLAK5uy_lKgoGvlrWhX0EIPavQUXxyPed8Cj38AWc"
      *   "title": "Beautiful",
      *   "type": "Album",
      *   "thumbnails": [...],

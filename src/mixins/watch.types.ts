@@ -40,41 +40,14 @@ export type results = {
     };
   }[];
 };
-export type getWatchPlaylistOptions =
-  | {
-      videoId: string;
-      playlistId: string;
-      limit?: number;
-      params?: string;
-    }
-  | {
-      videoId?: string;
-      playlistId: string;
-      limit?: number;
-      params?: string;
-    }
-  | {
-      videoId: string;
-      playlistId?: string;
-      limit?: number;
-      params?: string;
-    };
-export type getWatchPlaylistShuffleOptions =
-  | {
-      videoId: string;
-      playlistId: string;
-      limit?: number;
-    }
-  | {
-      videoId?: string;
-      playlistId: string;
-      limit?: number;
-    }
-  | {
-      videoId: string;
-      playlistId?: string;
-      limit?: number;
-    };
+export type getWatchPlaylistOptions = {
+  videoId?: string;
+  playlistId?: string;
+  limit?: number;
+  radio?: boolean;
+  shuffle?: boolean;
+};
+
 export type getWatchPlaylistReturn = {
   tracks: parseWatchPlaylistReturn;
   playlistId: string | null;
