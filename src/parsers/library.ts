@@ -15,6 +15,9 @@ import {
   THUMBNAILS,
   findObjectByKey,
   nav,
+  SECTION_LIST_ITEM,
+  MUSIC_SHELF,
+  MENU_PLAYLIST_ID,
 } from '.';
 import { isDigit } from '../pyLibraryMock';
 import { parsePlaylistItems } from './playlists';
@@ -51,15 +54,10 @@ export async function parseLibraryAlbums(
   requestFunc: any,
   limit?: number | null
 ): Promise<any> {
-  let results = findObjectByKey(
-    nav(response, [...SINGLE_COLUMN_TAB, ...SECTION_LIST]),
-    'itemSectionRenderer'
-  );
-  results = nav(results, ITEM_SECTION);
-  if (!results['gridRenderer']) {
+  const results = getLibraryContents(response, GRID);
+  if (!results) {
     return [];
   }
-  results = nav(results, GRID);
   let albums = parseAlbums(results['items']);
 
   if ('continuations' in results) {
@@ -86,6 +84,7 @@ export function parseAlbums(results: any): parser_lt.parseAlbumsReturn {
     const data = result[MTRIR];
     const album: parser_lt.parseAlbumsReturn[number] = {} as any;
     album['browseId'] = nav(data, [...TITLE, ...NAVIGATION_BROWSE_ID]);
+    album['playlistId'] = nav(data, MENU_PLAYLIST_ID, null) ?? undefined;
     album['title'] = nav(data, TITLE_TEXT);
     album['thumbnails'] = nav(data, THUMBNAIL_RENDERER);
 
@@ -128,13 +127,10 @@ export async function parseLibraryArtists(
   requestFunc: (arg1: any) => Promise<Record<string, any>>,
   limit?: number | null
 ): Promise<parser_lt.parseLibraryArtistsReturn> {
-  let results = findObjectByKey(
-    nav(response, [...SINGLE_COLUMN_TAB, ...SECTION_LIST]),
-    'itemSectionRenderer'
-  );
-  results = nav(results, ITEM_SECTION);
-  if (!results['musicShelfRenderer']) return [];
-  results = results['musicShelfRenderer'];
+  const results = getLibraryContents(response, MUSIC_SHELF);
+  if (!results) {
+    return [];
+  }
   let artists = parseArtists(results['contents']);
 
   if (results['continuations']) {
@@ -157,15 +153,30 @@ export async function parseLibraryArtists(
 export function parseLibrarySongs(
   response: any
 ): parser_lt.parseLibarySongsReturn {
-  let results = findObjectByKey(
-    nav(response, [...SINGLE_COLUMN_TAB, ...SECTION_LIST]),
-    'itemSectionRenderer'
-  );
-  results = nav(results, ITEM_SECTION);
-  const songs: parser_lt.parseLibarySongsReturn = { results: [], parsed: [] };
-  if (results['musicShelfRenderer']) {
-    songs['results'] = results['musicShelfRenderer'];
-    songs['parsed'] = parsePlaylistItems(songs['results']['contents'].slice(1));
+  const results = getLibraryContents(response, MUSIC_SHELF);
+  return {
+    results: results,
+    parsed: parsePlaylistItems(results['contents'].slice(1)),
+  };
+}
+
+export function getLibraryContents(
+  response: any,
+  renderer: Readonly<(number | string)[]>
+): null | any {
+  const contents = nav(response, [...SINGLE_COLUMN_TAB, ...SECTION_LIST], true);
+  if (!contents) {
+    // empty library
+    return null;
   }
-  return songs;
+  const results = findObjectByKey(contents, 'itemSectionRenderer');
+  if (!results) {
+    return nav(
+      response,
+      [...SINGLE_COLUMN_TAB, ...SECTION_LIST_ITEM, renderer],
+      true
+    );
+  } else {
+    return nav(results, [...ITEM_SECTION, ...renderer]);
+  }
 }

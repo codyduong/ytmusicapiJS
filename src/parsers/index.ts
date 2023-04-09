@@ -1,4 +1,5 @@
 //Equivalent to __init__.py
+export const CONTENT = ['contents', 0] as const;
 export const RUN_TEXT = ['runs', 0, 'text'] as const;
 export const TAB_CONTENT = ['tabs', 0, 'tabRenderer', 'content'] as const;
 export const SINGLE_COLUMN_TAB = [
@@ -7,12 +8,8 @@ export const SINGLE_COLUMN_TAB = [
   ...TAB_CONTENT,
 ] as const;
 export const SECTION_LIST = ['sectionListRenderer', 'contents'] as const;
-export const SECTION_LIST_ITEM = [
-  'sectionListRenderer',
-  'contents',
-  0,
-] as const;
-export const ITEM_SECTION = ['itemSectionRenderer', 'contents', 0] as const;
+export const SECTION_LIST_ITEM = ['sectionListRenderer', ...CONTENT] as const;
+export const ITEM_SECTION = ['itemSectionRenderer', ...CONTENT] as const;
 export const MUSIC_SHELF = ['musicShelfRenderer'] as const;
 export const GRID = ['gridRenderer'] as const;
 export const GRID_ITEMS = [...GRID, 'items'] as const;
@@ -109,14 +106,15 @@ export const THUMBNAIL_CROPPED = [
   THUMBNAIL,
 ] as const;
 export const FEEDBACK_TOKEN = ['feedbackEndpoint', 'feedbackToken'] as const;
-export const BADGE_LABEL = [
-  'badges',
+export const BADGE_PATH = [
   0,
   'musicInlineBadgeRenderer',
   'accessibilityData',
   'accessibilityData',
   'label',
 ] as const;
+export const BADGE_LABEL = ['badges', ...BADGE_PATH] as const;
+export const SUBTITLE_BADGE_LABEL = ['subtitleBadges', ...BADGE_PATH] as const;
 export const RELOAD_CONTINUATION = [
   'continuations',
   0,
@@ -142,6 +140,16 @@ export const TASTE_PROFILE_ITEMS = [
   'contents',
 ] as const;
 export const TASTE_PROFILE_ARTIST = ['title', 'runs'] as const;
+export const SECTION_LIST_CONTINUATION = [
+  'continuationContents',
+  'sectionListContinuation',
+] as const;
+export const MENU_PLAYLIST_ID = [
+  ...MENU_ITEMS,
+  0,
+  'menuNavigationItemRenderer',
+  ...NAVIGATION_WATCH_PLAYLIST_ID,
+] as const;
 
 export { nav } from '@codyduong/nav';
 

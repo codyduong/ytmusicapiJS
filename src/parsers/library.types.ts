@@ -3,6 +3,7 @@ import { parsePlaylistItemsReturn } from './playlists.types';
 
 export type parseAlbumsReturn = {
   browseId: string;
+  playlistId: string | null;
   title: string;
   thumbnails: string;
   year?: string | undefined;
