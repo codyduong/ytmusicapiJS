@@ -10,7 +10,7 @@ It emulates YouTube Music web client requests using the user's cookie data for a
 
 This library is intended to carry the same functionality as the library it is inspired by. As such, unless the need becomes great enough for a specific feature in this library, I recommend all API specific changes be directed to [`ytmusicapi`](https://github.com/sigma67/ytmusicapi) instead. 
 
-##### **Alternatively, check out**: [vixalien/muse](https://github.com/vixalien/muse) for Deno/browser/or by CDN
+##### **Alternatively, check out**: [vixalien/muse](https://github.com/vixalien/muse) which targets more JS/TS environments (NodeJS/Deno/Browser)
 
 # Features
 See API here https://codyduong.github.io/ytmusicapiJS/
