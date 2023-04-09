@@ -72,7 +72,7 @@ export function getParsedContinuationItems(
   };
 }
 
-function getContinuationParams(results: any, ctoken_path: string): string {
+function getContinuationParams(results: any, ctoken_path = ''): string {
   const ctoken = nav<any>(results, [
     'continuations',
     0,
