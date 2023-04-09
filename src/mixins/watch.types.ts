@@ -45,36 +45,24 @@ export type getWatchPlaylistOptions =
       videoId: string;
       playlistId: string;
       limit?: number;
-      params?: string;
+      radio?: boolean;
+      shuffle?: boolean;
     }
   | {
       videoId?: string;
       playlistId: string;
       limit?: number;
-      params?: string;
+      radio?: boolean;
+      shuffle?: boolean;
     }
   | {
       videoId: string;
       playlistId?: string;
       limit?: number;
-      params?: string;
+      radio?: boolean;
+      shuffle?: false;
     };
-export type getWatchPlaylistShuffleOptions =
-  | {
-      videoId: string;
-      playlistId: string;
-      limit?: number;
-    }
-  | {
-      videoId?: string;
-      playlistId: string;
-      limit?: number;
-    }
-  | {
-      videoId: string;
-      playlistId?: string;
-      limit?: number;
-    };
+
 export type getWatchPlaylistReturn = {
   tracks: parseWatchPlaylistReturn;
   playlistId: string | null;

@@ -26,10 +26,12 @@ export const WatchMixin = <TBase extends GConstructor<BrowsingMixin>>(
      * endpoint may be either `INDIFFERENT` or `DISLIKE`, due to ambiguous data
      * returned by YouTube Music.
      *
-     * @param videoId {string} videoId of the played video
-     * @param playlistId {string} playlistId of the played playlist or album
-     * @param limit {number} minimum number of watch playlist items to return
-     * @param params only used internally by `getWatchPlaylistShuffle`
+     * @param {string} videoId videoId of the played video
+     * @param {string} playlistId playlistId of the played playlist or album
+     * @param {number} [limit=25] minimum number of watch playlist items to return
+     * @param {boolean} [radio=false] get a radio playlist (changes each time)
+     * @param {boolean} [shuffle=false] shuffle the input playlist. only works when the playlistId parameter.
+     *   is set at the same time. does not work if radio=True
      * @return List of watch playlist items. The counterpart key is optional and only
      * appears if a song has a corresponding video counterpart (UI song/video switcher).
      * @example
@@ -103,7 +105,12 @@ export const WatchMixin = <TBase extends GConstructor<BrowsingMixin>>(
       watchPlaylist: wt.getWatchPlaylistOptions
     ): Promise<wt.getWatchPlaylistReturn> {
       let { playlistId } = watchPlaylist;
-      const { videoId, limit = 25, params } = watchPlaylist;
+      const {
+        videoId,
+        limit = 25,
+        radio = false,
+        shuffle = false,
+      } = watchPlaylist;
       const body: Record<string, any> = {
         enablePersistentPlaylistPanel: true,
         isAudioOnly: true,
@@ -119,7 +126,7 @@ export const WatchMixin = <TBase extends GConstructor<BrowsingMixin>>(
         if (!playlistId) {
           playlistId = 'RDAMVM' + videoId;
         }
-        if (!params) {
+        if (!(radio || shuffle)) {
           body['watchEndpointMusicSupportedConfigs'] = {
             watchEndpointMusicConfig: {
               hasPersistentPlaylistPanel: true,
@@ -132,8 +139,11 @@ export const WatchMixin = <TBase extends GConstructor<BrowsingMixin>>(
       const isPlaylist =
         body['playlistId'].startsWith('PL') ||
         body['playlistId'].startsWith('OLA');
-      if (params) {
-        body['params'] = params;
+      if (shuffle && playlistId) {
+        body['params'] = 'wAEB8gECKAE%3D';
+      }
+      if (radio) {
+        body['params'] = 'wAEB';
       }
       const endpoint = 'next';
       const response = await this._sendRequest<wt.response>(endpoint, body);
@@ -191,22 +201,6 @@ export const WatchMixin = <TBase extends GConstructor<BrowsingMixin>>(
         lyrics: lyricsBrowseId,
         related: relatedBrowseId,
       };
-    }
-
-    /**
-     * Shuffle any playlist
-     * @param videoId {string} Optional video id of the first video in the shuffled playlist
-     * @param playlistId {string} Playlist id
-     * @param limit {number} The number of watch playlist items to return @default 50
-     * @returns A list of watch playlist items
-     */
-    async getWatchPlaylistShuffle(
-      options: wt.getWatchPlaylistShuffleOptions
-    ): Promise<ReturnType<typeof this.getWatchPlaylist>> {
-      return this.getWatchPlaylist({
-        ...options,
-        params: 'wAEB8gECKAE%3D',
-      });
     }
   };
 };
