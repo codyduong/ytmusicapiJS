@@ -14,6 +14,13 @@ export type AddPlaylistItemsOptions =
       duplicates?: boolean;
     };
 
+export type getPlaylistOptions = {
+  playlistId: string;
+  limit?: number | null;
+  related?: boolean;
+  suggestionsLimit?: number;
+};
+
 export type getPlaylistReturn = {
   id: string;
   privacy: PrivacyStatus;
@@ -27,6 +34,8 @@ export type getPlaylistReturn = {
   suggestions_token: any | null;
   tracks: parsePlaylistItemsReturn;
   duration_seconds: number;
+  suggestions?: parsePlaylistItemsReturn;
+  related?: any;
 };
 export type addPlaylistItemsReturn =
   | {

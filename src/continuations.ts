@@ -72,7 +72,7 @@ export function getParsedContinuationItems(
   };
 }
 
-function getContinuationParams(results: any, ctoken_path = ''): string {
+export function getContinuationParams(results: any, ctoken_path = ''): string {
   const ctoken = nav<any>(results, [
     'continuations',
     0,
@@ -96,7 +96,7 @@ export function getContinuationString(ctoken: string): string {
   return `&ctoken=${ctoken}&continuation=${ctoken}`;
 }
 
-function getContinuationContents<T extends Record<string, any>>(
+export function getContinuationContents<T extends Record<string, any>>(
   continuation: T,
   parseFunc: (arg0: any) => T
 ): T | null {

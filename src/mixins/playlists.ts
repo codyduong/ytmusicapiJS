@@ -1,10 +1,13 @@
 import { sumTotalDuration, toInt } from '../helpers';
 import {
+  CAROUSEL,
+  CONTENT,
   DESCRIPTION,
   MUSIC_SHELF,
   nav,
   NAVIGATION_BROWSE_ID,
   RELOAD_CONTINUATION,
+  SECTION_LIST_CONTINUATION,
   SECTION_LIST_ITEM,
   SINGLE_COLUMN_TAB,
   SUBTITLE2,
@@ -12,7 +15,12 @@ import {
   THUMBNAIL_CROPPED,
   TITLE_TEXT,
 } from '../parsers';
-import { getContinuations, getContinuationString } from '../continuations';
+import {
+  getContinuationContents,
+  getContinuationParams,
+  getContinuations,
+  getContinuationString,
+} from '../continuations';
 import { parsePlaylistItems } from '../parsers/playlists';
 import { validatePlaylistId } from '../parsers/utils';
 import { GConstructor, Mixin } from './.mixin.helper';
@@ -20,6 +28,9 @@ import { ExploreMixin } from './explore';
 
 import * as pt from './playlists.types';
 import { htmlToText } from './_utils';
+import { parseContentList, parsePlaylist } from '../parsers/browsing';
+import { parsePlaylistReturn } from '../parsers/browsing.types';
+import { parsePlaylistItemsReturn } from '../parsers/playlists.types';
 
 export type PlaylistsMixin = Mixin<typeof PlaylistsMixin>;
 
@@ -36,6 +47,10 @@ export const PlaylistsMixin = <TBase extends GConstructor<ExploreMixin>>(
      * Return a list of playlist items.
      * @param {string} [playlistId] Playlist id.
      * @param {number} [limit = 100] How many songs to return. `null` retrieves them all.
+     * @param {boolean} [related = False] Whether to fetch 10 related playlists or not.
+     * @param {boolean} [suggestionsLimit = 0] How many suggestions to return. The result is a list of
+     *   suggested playlist items (videos) contained in a "suggestions" key.
+     *   7 items are retrieved in each internal request.
      * @example <caption>Each item is in the following format</caption>
      * {
      *   "id": "PLQwVIlKxHM6qv-o99iX9R85og7IzF9YS_",
@@ -48,6 +63,35 @@ export const PlaylistsMixin = <TBase extends GConstructor<ExploreMixin>>(
      *   "duration": "6+ hours",
      *   "duration_seconds": 52651,
      *   "trackCount": 237,
+     *   "suggestions": [
+     *       {
+     *         "videoId": "HLCsfOykA94",
+     *         "title": "Mambo (GATTÜSO Remix)",
+     *         "artists": [{
+     *             "name": "Nikki Vianna",
+     *             "id": "UCMW5eSIO1moVlIBLQzq4PnQ"
+     *           }],
+     *         "album": {
+     *           "name": "Mambo (GATTÜSO Remix)",
+     *           "id": "MPREb_jLeQJsd7U9w"
+     *         },
+     *         "likeStatus": "LIKE",
+     *         "thumbnails": [...],
+     *         "isAvailable": true,
+     *         "isExplicit": false,
+     *         "duration": "3:32",
+     *         "duration_seconds": 212,
+     *         "setVideoId": "to_be_updated_by_client"
+     *       }
+     *   ],
+     *   "related": [
+     *       {
+     *         "title": "Presenting MYRNE",
+     *         "playlistId": "RDCLAK5uy_mbdO3_xdD4NtU1rWI0OmvRSRZ8NH4uJCM",
+     *         "thumbnails": [...],
+     *         "description": "Playlist • YouTube Music"
+     *       }
+     *   ],
      *   "tracks": [
      *     {
      *       "videoId": "bjGppZKiuFE",
@@ -71,6 +115,7 @@ export const PlaylistsMixin = <TBase extends GConstructor<ExploreMixin>>(
      *     "thumbnails": [...],
      *     "isAvailable": True,
      *     "isExplicit": False,
+     *     "videoType": "MUSIC_VIDEO_TYPE_OMV"
      *     "feedbackTokens": {
      *       "add": "AB9zfpJxtvrU...",
      *       "remove": "AB9zfpKTyZ..."
@@ -79,9 +124,34 @@ export const PlaylistsMixin = <TBase extends GConstructor<ExploreMixin>>(
      * }
      */
     async getPlaylist(
-      playlistId: string,
-      limit: number | null = 100
+      options: pt.getPlaylistOptions
+    ): Promise<pt.getPlaylistReturn>;
+    async getPlaylist(
+      options: string,
+      limit: number | null,
+      related: boolean,
+      suggestionsLimit: number
+    ): Promise<pt.getPlaylistReturn>;
+    async getPlaylist(
+      options: string | pt.getPlaylistOptions,
+      limit: number | null = 100,
+      related = false,
+      suggestionsLimit = 0
     ): Promise<pt.getPlaylistReturn> {
+      const {
+        playlistId,
+        limit: limitI = 100,
+        related: relatedI = false,
+        suggestionsLimit: suggestionsLimitI = 0,
+      } = typeof options == 'object'
+        ? options
+        : {
+            playlistId: options,
+            limit: limit,
+            related: related,
+            suggestionsLimit: suggestionsLimit,
+          };
+
       const browseId = !playlistId.startsWith('VL')
         ? `VL${playlistId}`
         : playlistId;
@@ -137,33 +207,65 @@ export const PlaylistsMixin = <TBase extends GConstructor<ExploreMixin>>(
       }
 
       playlist['trackCount'] = songCount;
-      playlist['suggestions_token'] = nav(
-        response,
-        [
-          ...SINGLE_COLUMN_TAB,
-          'sectionListRenderer',
-          'contents',
-          1,
-          ...MUSIC_SHELF,
-          ...RELOAD_CONTINUATION,
-        ],
-        null
-      );
 
-      playlist['tracks'] = [];
+      const requestFunc = async (
+        additionalParams: any
+      ): Promise<Record<string, any>> =>
+        await this._sendRequest(endpoint, body, additionalParams);
+      const section_list = nav(response, [
+        ...SINGLE_COLUMN_TAB,
+        'sectionListRenderer',
+      ]);
+      if ('continuations' in section_list) {
+        let additionalParams = getContinuationParams(section_list);
+        if (ownPlaylist && (suggestionsLimitI > 0 || relatedI)) {
+          const parseFunc = (
+            results: any
+          ): ReturnType<typeof parsePlaylistItems> =>
+            parsePlaylistItems(results);
+          const suggested = await requestFunc(additionalParams);
+          const continuation = nav(suggested, SECTION_LIST_CONTINUATION);
+          additionalParams = getContinuationParams(continuation);
+          const suggestions_shelf = nav(continuation, [
+            ...CONTENT,
+            ...MUSIC_SHELF,
+          ]);
+          playlist['suggestions'] = getContinuationContents(
+            suggestions_shelf,
+            parseFunc
+          );
+
+          playlist['suggestions'] = playlist['suggestions']?.concat(
+            await getContinuations(
+              suggestions_shelf,
+              'musicShelfContinuation',
+              suggestionsLimitI - playlist['suggestions'].length,
+              requestFunc,
+              parseFunc,
+              '',
+              true
+            )
+          );
+        }
+        if (relatedI) {
+          const response = await requestFunc(additionalParams);
+          const continuation = nav(response, SECTION_LIST_CONTINUATION);
+          const parse_func = (results: any): parsePlaylistReturn[] =>
+            parseContentList(results, parsePlaylist);
+          playlist['related'] = getContinuationContents(
+            nav(continuation, [...CONTENT, ...CAROUSEL]),
+            parse_func
+          );
+        }
+      }
       if (songCount > 0) {
-        playlist['tracks'] = [
-          ...playlist['tracks'],
-          ...parsePlaylistItems(results['contents']),
-        ];
-        const newLimit = limit === null ? songCount : limit;
+        playlist['tracks'] = parsePlaylistItems(results['contents']);
+        const newLimit = limitI === null ? songCount : limitI;
         const songsToGet = Math.min(newLimit, songCount);
 
+        const parseFunc = (contents: any): parsePlaylistItemsReturn =>
+          parsePlaylistItems(contents);
         if ('continuations' in results) {
-          const requestFunc = async (additionalParams: any): Promise<any> =>
-            await this._sendRequest(endpoint, body, additionalParams);
-          const parseFunc = (contents: any): any =>
-            parsePlaylistItems(contents);
           playlist['tracks'] = [
             ...playlist['tracks'],
             ...(await getContinuations(
@@ -177,35 +279,11 @@ export const PlaylistsMixin = <TBase extends GConstructor<ExploreMixin>>(
         }
       }
       // For some reason we are able to go over limit, so manually truncate at the end @codyduong TODO
-      // playlist['tracks'] = playlist['tracks'].slice(0, limit);
+      if (limitI) {
+        playlist['tracks'] = playlist['tracks'].slice(0, limitI);
+      }
       playlist['duration_seconds'] = sumTotalDuration(playlist);
       return playlist;
-    }
-
-    /**
-     * Gets suggested tracks to add to a playlist. Suggestions are offered for playlists with less than 100 tracks
-     * @param suggestionsToken Token returned by `getPlaylist` or this function
-     * @returns Object containing suggested `tracks` and a `refresh_token` to get another set of suggestions.
-     * For data format of tracks, check `getPlaylist`
-     */
-    async getPlaylistSuggestions(
-      suggestionsToken: string
-    ): Promise<Record<string, any>> {
-      if (!suggestionsToken) {
-        throw new Error(
-          'Suggestions token is undefined.\nPlease ensure the playlist is small enough to receive suggestions.'
-        );
-      }
-      const endpoint = 'browse';
-      const additionalParams = getContinuationString(suggestionsToken);
-      const response = await this._sendRequest(endpoint, {}, additionalParams);
-      const results = nav(response, [
-        'continuationContents',
-        'musicShelfContinuation',
-      ]);
-      const refreshToken = nav(results, RELOAD_CONTINUATION);
-      const suggestions = parsePlaylistItems(results['contents']);
-      return { tracks: suggestions, refresh_token: refreshToken };
     }
 
     /**
