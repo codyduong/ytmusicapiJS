@@ -6,7 +6,6 @@ import {
   MUSIC_SHELF,
   nav,
   NAVIGATION_BROWSE_ID,
-  RELOAD_CONTINUATION,
   SECTION_LIST_CONTINUATION,
   SECTION_LIST_ITEM,
   SINGLE_COLUMN_TAB,
@@ -19,7 +18,6 @@ import {
   getContinuationContents,
   getContinuationParams,
   getContinuations,
-  getContinuationString,
 } from '../continuations';
 import { parsePlaylistItems } from '../parsers/playlists';
 import { validatePlaylistId } from '../parsers/utils';
@@ -129,8 +127,8 @@ export const PlaylistsMixin = <TBase extends GConstructor<ExploreMixin>>(
     async getPlaylist(
       options: string,
       limit: number | null,
-      related: boolean,
-      suggestionsLimit: number
+      related?: boolean,
+      suggestionsLimit?: number
     ): Promise<pt.getPlaylistReturn>;
     async getPlaylist(
       options: string | pt.getPlaylistOptions,

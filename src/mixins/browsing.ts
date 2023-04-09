@@ -625,6 +625,8 @@ export const BrowsingMixin = <TBase extends GConstructor<_YTMusic>>(
           parseAlbum
         );
       }
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore: TODO
       album['duration_seconds'] = helpers.sumTotalDuration(album);
       for (const [i, _track] of album['tracks'].entries()) {
         album['tracks'][i]['album'] = album['title'];
