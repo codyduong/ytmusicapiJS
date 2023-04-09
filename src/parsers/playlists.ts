@@ -8,6 +8,7 @@ import {
   THUMBNAILS,
   BADGE_LABEL,
   nav,
+  NAVIGATION_VIDEO_TYPE,
 } from '.';
 import { parseDuration } from '../helpers';
 import { parseSongAlbum, parseSongArtists, parseSongMenuTokens } from './songs';
@@ -50,13 +51,15 @@ export function parsePlaylistItems(
         }
       }
       // if item is not playable, the videoId was retrieved above
-      if ('playNavigationEndpoint' in nav(data, PLAY_BUTTON)) {
-        videoId = nav(data, PLAY_BUTTON)['playNavigationEndpoint'][
-          'watchEndpoint'
-        ]['videoId'];
+      if (nav(data, PLAY_BUTTON, null) !== null) {
+        if ('playNavigationEndpoint' in nav(data, PLAY_BUTTON)) {
+          videoId = nav(data, PLAY_BUTTON)['playNavigationEndpoint'][
+            'watchEndpoint'
+          ]['videoId'];
 
-        if (data['menu']) {
-          like = nav(data, MENU_LIKE_STATUS, null);
+          if (data['menu']) {
+            like = nav(data, MENU_LIKE_STATUS, null);
+          }
         }
       }
       const title = getItemText(data, 0);
@@ -88,6 +91,18 @@ export function parsePlaylistItems(
 
       const isExplicit = !!nav(data, BADGE_LABEL, null);
 
+      const videoType = nav(
+        data,
+        [
+          ...MENU_ITEMS,
+          0,
+          'menuNavigationItemRenderer',
+          'navigationEndpoint',
+          ...NAVIGATION_VIDEO_TYPE,
+        ],
+        true
+      );
+
       const song: Record<string, any> = {
         videoId: videoId,
         title: title,
@@ -97,6 +112,7 @@ export function parsePlaylistItems(
         thumbnails: thumbnails,
         isAvailable: isAvailable,
         isExplicit: isExplicit,
+        videoType: videoType,
       };
       if (duration) {
         song['duration'] = duration;

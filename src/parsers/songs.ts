@@ -57,7 +57,7 @@ export function parseSongRuns(runs: Array<any>): parseSongRunsReturn {
         parsed['artists'].push(item);
       }
     } else {
-      if (re.match(/^\d([^ ])* [^ ]*$/, text)) {
+      if (re.match(/^\d([^ ])* [^ ]*$/, text) && i > 0) {
         parsed['views'] = text.split(' ')[0];
       } else if (re.match(/^(\d+:)*\d+:\d+$/, text)) {
         parsed['duration'] = text;
