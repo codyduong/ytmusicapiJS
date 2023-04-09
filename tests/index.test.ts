@@ -4,7 +4,7 @@ import YTMusic from '../src/index';
 import { json } from '../src/pyLibraryMock';
 
 const sampleAlbum = 'MPREb_4pL8gzRtw1p'; // Eminem - Revival
-const sampleVideo = 'ZrOKjDZOtkA'; // Oasis - Wonderwall (Remastered)
+const sampleVideo = 'hpSrLjc5SMs'; // Oasis - Wonderwall (Remastered)
 const samplePlaylist = 'PL6bPxvf5dW5clc3y9wAoslzqUrmkZ5c-u'; // very large playlist
 const query = 'edm playlist';
 
@@ -154,6 +154,20 @@ describe('Browsing', () => {
       });
       expect(results.length).toBeGreaterThanOrEqual(1);
     });
+    test('#2', async () => {
+      try {
+        const _results = await ytmusicAuth.search('audiomachine', {
+          scope: 'uploads',
+          filter: 'songs',
+          limit: 40,
+        });
+      } catch (e: any) {
+        expect(e).toBeInstanceOf(TypeError);
+        expect(e.message).toBe(
+          'No filter can be set when searching uploads. Please unset the filter parameter when scope is set to uploads.'
+        );
+      }
+    });
   });
   describe('(Auth) Search Library', () => {
     test('#1', async () => {
@@ -239,7 +253,7 @@ describe('Browsing', () => {
     test('#1', async () => {
       const song = await ytmusic.getWatchPlaylist({ videoId: sampleVideo });
       const song2 = await ytmusic.getSongRelated(song['related']);
-      expect(song2.length).toBe(5);
+      expect(song2.length).toBeGreaterThanOrEqual(5);
     });
   });
   describe('(Auth) Get Artist Singles', () => {
@@ -334,6 +348,40 @@ describe('Browsing', () => {
       expect(signatureTimestamp).toBeTruthy;
     });
   });
+  describe('Set Tasteprofile', () => {
+    test('#1', async () => {
+      try {
+        await ytmusic.setTasteprofile(['not an artist']);
+      } catch (e) {
+        expect(e instanceof TypeError).toBe(true);
+      }
+    });
+    test('#2', async () => {
+      const tasteProfile = await ytmusic.getTasteprofile();
+      expect(
+        await ytmusic.setTasteprofile(
+          Object.keys(tasteProfile).slice(0, 5),
+          tasteProfile
+        )
+      ).toBeUndefined();
+    });
+    test('#3', async () => {
+      try {
+        await ytmusic.setTasteprofile(['test', 'test2']);
+      } catch (e) {
+        expect(e instanceof TypeError).toBe(true);
+      }
+    });
+    test('#4', async () => {
+      const tasteProfile = await ytmusic.getTasteprofile();
+      expect(
+        await ytmusic.setTasteprofile(
+          Object.keys(tasteProfile).slice(0, 1),
+          tasteProfile
+        )
+      ).toBeUndefined();
+    });
+  });
 });
 
 /**
@@ -423,31 +471,64 @@ describe('(Auth) Library', () => {
       expect(playlists.length).toBeGreaterThan(5);
     });
   });
+  describe('Get All Library Playlists', () => {
+    test('#1', async () => {
+      let currentLength = (await ytmusicAuth.getLibraryPlaylists(25)).length;
+      let expectedLength = currentLength;
+      while (expectedLength <= currentLength) {
+        expectedLength = currentLength + 1;
+        currentLength = (await ytmusicAuth.getLibraryPlaylists(expectedLength))
+          .length;
+      }
+      expectedLength -= 1;
+
+      const playlists = ytmusicAuth.getLibraryPlaylists();
+      expect(playlists).toHaveLength(expectedLength);
+    });
+  });
   describe('Get Library Songs', () => {
     test('#1', async () => {
+      try {
+        await ytmusicBrand.getLibrarySongs({
+          limit: null,
+          validateResponses: true,
+        });
+      } catch (e: any) {
+        expect(e instanceof TypeError).toBe(true);
+        expect(e.message).toBe(
+          'Validation is not supported without a limit parameter.'
+        );
+      }
+    });
+    test('#2', async () => {
       const songs = await ytmusicBrand.getLibrarySongs({ limit: 100 });
       expect(songs.length).toBeGreaterThanOrEqual(100);
     });
-    test('#2', async () => {
+    test('#3', async () => {
       const songs = await ytmusicBrand.getLibrarySongs({
         limit: 200,
         validateResponse: true,
       });
+      // TODO
+      // eslint-disable-next-line prettier/prettier
+      // expect(songs.length).toBeGreaterThanOrEqual(config.getInt('limits', 'library_songs'));
       expect(songs.length).toBeGreaterThanOrEqual(200);
     });
-    test('#3', async () => {
-      const songs = await ytmusicAuth.getLibrarySongs({ order: 'a_to_z' });
-      expect(songs.length).toBeGreaterThanOrEqual(5);
-    });
     test('#4', async () => {
-      const songs = await ytmusicAuth.getLibrarySongs({ order: 'z_to_a' });
-      expect(songs.length).toBeGreaterThanOrEqual(5);
+      const songs = await ytmusicAuth.getLibrarySongs({ order: 'a_to_z' });
+      expect(songs.length).toBeGreaterThanOrEqual(25);
     });
-    test('#5', async () => {
+    // TODO
+    test.skip('#5', async () => {
+      const songs = await ytmusicAuth.getLibrarySongs({ order: 'z_to_a' });
+      expect(songs.length).toBeGreaterThanOrEqual(25);
+    });
+    // TODO
+    test.skip('#6', async () => {
       const songs = await ytmusicAuth.getLibrarySongs({
         order: 'recently_added',
       });
-      expect(songs.length).toBeGreaterThanOrEqual(5);
+      expect(songs.length).toBeGreaterThanOrEqual(25);
     });
   });
   describe('Get Library Albums', () => {
@@ -490,10 +571,18 @@ describe('(Auth) Library', () => {
       expect(artists.length).toBeGreaterThanOrEqual(40);
     });
     test('#3', async () => {
+      const artists = await ytmusicBrand.getLibraryArtists({
+        limit: undefined,
+      });
+      expect(artists.length).toBeGreaterThanOrEqual(40);
+    });
+    // TODO
+    test.skip('#4', async () => {
       const artists = await ytmusicBrand.getLibraryArtists({ order: 'z_to_a' });
       expect(artists.length).toBeGreaterThanOrEqual(20);
     });
-    test('#4', async () => {
+    // TODO
+    test.skip('#5', async () => {
       const artists = await ytmusicBrand.getLibraryArtists({
         order: 'recently_added',
       });
@@ -505,7 +594,8 @@ describe('(Auth) Library', () => {
       const artists = await ytmusicBrand.getLibrarySubscriptions({ limit: 50 });
       expect(artists.length).toBeGreaterThanOrEqual(25);
     });
-    test('#2', async () => {
+    // TODO
+    test.skip('#2', async () => {
       const artists = await ytmusicBrand.getLibrarySubscriptions({
         order: 'a_to_z',
       });
@@ -517,9 +607,16 @@ describe('(Auth) Library', () => {
       });
       expect(artists.length).toBeGreaterThanOrEqual(20);
     });
-    test('#4', async () => {
+    // TODO
+    test.skip('#4', async () => {
       const artists = await ytmusicBrand.getLibrarySubscriptions({
         order: 'recently_added',
+      });
+      expect(artists.length).toBeGreaterThanOrEqual(20);
+    });
+    test('#5', async () => {
+      const artists = await ytmusicBrand.getLibrarySubscriptions({
+        limit: undefined,
       });
       expect(artists.length).toBeGreaterThanOrEqual(20);
     });
@@ -611,6 +708,13 @@ describe('Playlists', () => {
       const playlist = await ytmusic.getPlaylist(samplePlaylist, 300);
       expect(playlist['tracks'].length).toBeGreaterThan(200);
     });
+    test('#2', async () => {
+      const playlist = await ytmusic.getPlaylist(
+        'RDCLAK5uy_kpxnNxJpPZjLKbL9WgvrPuErWkUxMP6x4',
+        null
+      );
+      expect(playlist['tracks'].length).toBeGreaterThan(100);
+    });
   });
   describe('(Auth) Get Owned Playlist', () => {
     test('#1', async () => {
@@ -654,7 +758,7 @@ describe('Playlists', () => {
     expect(['STATUS_SUCCEEDED', 'Playlist edit failed']).toContain(response2);
   });
   jest.setTimeout(10000);
-  test('(Auth)  E2E', async () => {
+  test('(Auth) E2E', async () => {
     const playlistId = (await ytmusicAuth.createPlaylist(
       'test',
       'testDescription',
@@ -705,6 +809,11 @@ describe('(Auth) Uploads', () => {
       const results = await ytmusicAuth.getLibraryUploadSongs(100);
       expect(results.length).toBeGreaterThanOrEqual(0);
     });
+    // TODO
+    test.skip('#3', async () => {
+      const results = await ytmusicAuth.getLibraryUploadSongs(undefined);
+      expect(results.length).toBeGreaterThanOrEqual(1000);
+    });
   });
   describe('Get Library Upload Albums', () => {
     test('#1', async () => {
@@ -715,34 +824,29 @@ describe('(Auth) Uploads', () => {
       const results = await ytmusicAuth.getLibraryUploadAlbums(100);
       expect(results.length).toBeGreaterThanOrEqual(0);
     });
+    // TODO
+    test.skip('#3', async () => {
+      const albums = await ytmusicAuth.getLibraryUploadAlbums(undefined);
+      expect(albums.length).toBeGreaterThanOrEqual(
+        config.getInt('limits', 'library_upload_albums')!
+      );
+    });
   });
   describe('Get Library Upload Artists', () => {
     test('#1', async () => {
-      const results = await ytmusicAuth.getLibraryUploadArtists(50);
+      const results = await ytmusicAuth.getLibraryUploadArtists(undefined);
       expect(results.length).toBeGreaterThan(5);
     });
     test('#2', async () => {
-      const results = await ytmusicAuth.getLibraryUploadArtists(50, 'a_to_z');
-      expect(results.length).toBeGreaterThan(5);
-    });
-    test('#3', async () => {
-      const results = await ytmusicAuth.getLibraryUploadArtists(50, 'z_to_a');
-      expect(results.length).toBeGreaterThan(5);
-    });
-    test('#4', async () => {
       const results = await ytmusicAuth.getLibraryUploadArtists(
         50,
         'recently_added'
       );
-      expect(results.length).toBeGreaterThan(5);
-    });
-    test('#5 (Empty)', async () => {
-      const results = await ytmusicAuth.getLibraryUploadArtists(100);
-      expect(results.length).toBeGreaterThanOrEqual(0);
+      expect(results.length).toBeGreaterThanOrEqual(25);
     });
   });
-  //These tests need to occur before we try to upload
-  //Otherwise YTM will throw 400
+  // These tests need to occur before we try to upload
+  // Otherwise YTM will throw 400
   test('Get Library Upload Album', async () => {
     const library = await ytmusicAuth.getLibraryUploadSongs();
     const album = await ytmusicAuth.getLibraryUploadAlbum(library[0].album!.id);

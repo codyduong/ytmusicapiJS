@@ -12,10 +12,7 @@ import {
   THUMBNAIL_CROPPED,
   TITLE_TEXT,
 } from '../parsers';
-import {
-  getContinuations,
-  getContinuationString,
-} from '../parsers/continuations';
+import { getContinuations, getContinuationString } from '../continuations';
 import { parsePlaylistItems } from '../parsers/playlists';
 import { validatePlaylistId } from '../parsers/utils';
 import { GConstructor, Mixin } from './.mixin.helper';
@@ -37,8 +34,8 @@ export const PlaylistsMixin = <TBase extends GConstructor<ExploreMixin>>(
   return class PlaylistsMixin extends Base {
     /**
      * Return a list of playlist items.
-     * @param {string} [playlistId ] Playlist id.
-     * @param {number} [limit=100] How many songs to return.
+     * @param {string} [playlistId] Playlist id.
+     * @param {number} [limit = 100] How many songs to return. `null` retrieves them all.
      * @example <caption>Each item is in the following format</caption>
      * {
      *   "id": "PLQwVIlKxHM6qv-o99iX9R85og7IzF9YS_",
@@ -83,7 +80,7 @@ export const PlaylistsMixin = <TBase extends GConstructor<ExploreMixin>>(
      */
     async getPlaylist(
       playlistId: string,
-      limit = 100
+      limit: number | null = 100
     ): Promise<pt.getPlaylistReturn> {
       const browseId = !playlistId.startsWith('VL')
         ? `VL${playlistId}`
@@ -159,7 +156,8 @@ export const PlaylistsMixin = <TBase extends GConstructor<ExploreMixin>>(
           ...playlist['tracks'],
           ...parsePlaylistItems(results['contents']),
         ];
-        const songsToGet = Math.min(limit, songCount);
+        const newLimit = limit === null ? songCount : limit;
+        const songsToGet = Math.min(newLimit, songCount);
 
         if ('continuations' in results) {
           const requestFunc = async (additionalParams: any): Promise<any> =>
@@ -178,8 +176,8 @@ export const PlaylistsMixin = <TBase extends GConstructor<ExploreMixin>>(
           ];
         }
       }
-      //For some reason we are able to go over limit, so manually truncate at the end @codyduong TODO
-      playlist['tracks'] = playlist['tracks'].slice(0, limit);
+      // For some reason we are able to go over limit, so manually truncate at the end @codyduong TODO
+      // playlist['tracks'] = playlist['tracks'].slice(0, limit);
       playlist['duration_seconds'] = sumTotalDuration(playlist);
       return playlist;
     }

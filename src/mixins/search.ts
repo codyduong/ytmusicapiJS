@@ -1,7 +1,7 @@
 import { nav } from '@codyduong/nav';
 import { SECTION_LIST, MUSIC_SHELF, TITLE_TEXT } from '../parsers';
 import { getSearchParams } from '../parsers/searchParams';
-import { getContinuations } from '../parsers/continuations';
+import { getContinuations } from '../continuations';
 import { Scope, Filter, FilterSingular } from '../types';
 import { _YTMusic } from '../ytmusic';
 import { GConstructor, Mixin } from './.mixin.helper';
@@ -24,18 +24,19 @@ export const SearchMixin = <TBase extends GConstructor<_YTMusic>>(
      * @param {string} query Query string, i.e. 'Oasis Wonderwall'
      * @param {options} [options=]
      * @param {'songs'|'videos'|'albums'|'artists'|'playlists'|'community_playlists'|'featured_playlists'} [options.filter=] Filter for item types.
-     *    @default: Default search, including all types of items.
+     *   @default: Default search, including all types of items.
      * @param {'libary'|'uploads'} [options.scope=] Search scope.
-     *    @default: Search the public YouTube Music catalogue.
+     *   For uploads, no filter can be set! An exception will be thrown if you attempt to do so.
+     *   @default: Search the public YouTube Music catalogue.
      * @param {number} [options.limit=20] Number of search results to return
      * @param {boolean} [ignoreSpelling=false] Whether to ignore YTM spelling suggestions.
-     * If true, the exact search term will be searched for, and will not be corrected.
-     * This does not have any effect when the filter is set to ``uploads``.
-     * Default: false, will use YTM's default behavior of autocorrecting the search.
+     *   If true, the exact search term will be searched for, and will not be corrected.
+     *   This does not have any effect when the filter is set to ``uploads``.
+     *   Default: false, will use YTM's default behavior of autocorrecting the search.
      * @return List of results depending on filter.
-     * resultType specifies the type of item (important for default search).
-     * albums, artists and playlists additionally contain a browseId, corresponding to
-     * albumId, channelId and playlistId (browseId=``VL``+playlistId)
+     *   resultType specifies the type of item (important for default search).
+     *   albums, artists and playlists additionally contain a browseId, corresponding to
+     *   albumId, channelId and playlistId (browseId=``VL``+playlistId)
      * @example <caption> list for default search with one result per resultType for brevity. Normally
      * there are 3 results per resultType and an additional ``thumbnails`` key. </caption>
      * [
@@ -226,7 +227,7 @@ export const SearchMixin = <TBase extends GConstructor<_YTMusic>>(
         'videos',
       ];
       if (filter && !filters.includes(filter)) {
-        throw new Error(
+        throw TypeError(
           `Invalid filter provided. Please use one of the following filters or leave out the parameter: ${filters.join(
             ', '
           )}`
@@ -235,12 +236,19 @@ export const SearchMixin = <TBase extends GConstructor<_YTMusic>>(
 
       const scopes: Scope[] = ['library', 'uploads'];
       if (scope && !scopes.includes(scope)) {
-        throw new Error(
+        throw TypeError(
           `Invalid scope provided. Please use one of the following scopes or leave out the parameter: ${scopes.join(
             ', '
           )}`
         );
       }
+
+      if (scope === scopes[1] && filter) {
+        throw TypeError(
+          'No filter can be set when searching uploads. Please unset the filter parameter when scope is set to uploads.'
+        );
+      }
+
       const params = getSearchParams(filter, scope, ignoreSpelling);
       if (params) {
         body['params'] = params;

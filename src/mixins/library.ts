@@ -28,7 +28,7 @@ import {
   getContinuations,
   resendRequestUntilParsedResponseIsValid,
   getValidatedContinuations,
-} from '../parsers/continuations';
+} from '../continuations';
 import { GConstructor, Mixin } from './.mixin.helper';
 import { PlaylistsMixin } from './playlists';
 
@@ -51,7 +51,7 @@ export const LibraryMixin = <TBase extends GConstructor<PlaylistsMixin>>(
   return class LibraryMixin extends Base {
     /**
      * Retrieves the playlists in the user's library.
-     * @param {number} [limit = 25] Number of playlists to retrieve.
+     * @param {number | null} [limit = 25] Number of playlists to retrieve. `null` retrieves them all.
      * @return Array of owned playlists.
      * @example <caption>Each item is in the following format</caption>
      * {
@@ -61,7 +61,9 @@ export const LibraryMixin = <TBase extends GConstructor<PlaylistsMixin>>(
      *   'count': 5
      * }
      */
-    async getLibraryPlaylists(limit = 25): Promise<parsePlaylistReturn[]> {
+    async getLibraryPlaylists(
+      limit: number | null = 25
+    ): Promise<parsePlaylistReturn[]> {
       this._checkAuth();
       const body = { browseId: 'FEmusic_liked_playlists' };
       const endpoint = 'browse';
@@ -83,12 +85,14 @@ export const LibraryMixin = <TBase extends GConstructor<PlaylistsMixin>>(
         // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
         const parseFunc = (contents: Record<string, any>[]) =>
           parseContentList(contents, parsePlaylist);
+        const remaininingLimit =
+          limit === null ? null : limit - playlists.length;
         playlists = [
           ...playlists,
           ...(await getContinuations(
             results,
             'gridContinuation',
-            limit - playlists.length,
+            remaininingLimit,
             requestFunc,
             parseFunc
           )),
@@ -102,18 +106,26 @@ export const LibraryMixin = <TBase extends GConstructor<PlaylistsMixin>>(
      * Gets the songs in the user's library (liked videos are not included).
      * To get liked songs and videos, use `getLikedSongs`.
      * @param {Object} [options=]
-     * @param {number} [options.limit = 25] Limit number of songs to retrieve.
-     * @param {boolean} [options.validateResponse = false] Flag indicating if responses from YTM should be validated and retried in case when some songs are missing.
+     * @param {number | null} [options.limit = 25] Limit number of songs to retrieve. `null` retrieves them all.
+     * @param {boolean} [options.validateResponses = false] Flag indicating if responses from YTM should be validated and retried in case when some songs are missing.
      * @param {lt.Order} [options.order=] Order of songs to return. Allowed values: 'a_to_z', 'z_to_a', 'recently_added'.
      * @return List of songs. Same format as `getPlaylist`
      */
-    async getLibrarySongs(options?: {
-      limit?: number;
-      validateResponse?: boolean;
-      order?: lt.Order;
-    }): Promise<getPlaylistReturn['tracks']> {
+    async getLibrarySongs(
+      options?: {
+        limit?: number | null;
+        validateResponses?: boolean;
+        /** @deprecated use validateResponses instead, kept for backwards compatiblity */
+        validateResponse?: boolean;
+        order?: lt.Order;
+      } | null
+    ): Promise<getPlaylistReturn['tracks']> {
       this._checkAuth();
-      const { limit = 25, validateResponse = false, order } = options ?? {};
+      const {
+        limit = 25,
+        validateResponses = options?.['validateResponse'] ?? false,
+        order,
+      } = options === null ? { limit: null, order: undefined } : options ?? {};
 
       const body: Record<string, any> = { browseId: 'FEmusic_liked_videos' };
 
@@ -129,10 +141,16 @@ export const LibraryMixin = <TBase extends GConstructor<PlaylistsMixin>>(
       const parseFunc = (rawResponse: any): parseLibarySongsReturn =>
         parseLibrarySongs(rawResponse);
 
+      if (validateResponses && limit === null) {
+        throw TypeError(
+          'Validation is not supported without a limit parameter.'
+        );
+      }
+
       let response;
-      if (validateResponse) {
+      if (validateResponses) {
         const validateFunc = (parsed: any): any =>
-          validateResponseFunc(parsed, perPage, limit, 0);
+          validateResponseFunc(parsed, perPage, limit!, 0);
         response = await resendRequestUntilParsedResponseIsValid(
           requestFunc,
           null,
@@ -156,25 +174,26 @@ export const LibraryMixin = <TBase extends GConstructor<PlaylistsMixin>>(
           contents: any
         ): parsePlaylistItemsReturn => parsePlaylistItems(contents);
 
-        if (validateResponse) {
+        if (validateResponses) {
           songs = [
             ...songs,
             ...(await getValidatedContinuations(
               results,
               'musicShelfContinuation',
-              limit - songs.length,
+              limit! - songs.length,
               perPage,
               requestContinuationsFunc,
               parseContinuationsFunc
             )),
           ];
         } else {
+          const remainingLimit = limit === null ? null : limit - songs.length;
           songs = [
             ...songs,
             ...(await getContinuations(
               results,
               'musicShelfContinuation',
-              limit - songs.length,
+              remainingLimit,
               requestContinuationsFunc,
               parseContinuationsFunc
             )),

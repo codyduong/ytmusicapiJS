@@ -22,7 +22,7 @@ export function initializeContext(): any {
     context: {
       client: {
         clientName: 'WEB_REMIX',
-        clientVersion: '0.1',
+        clientVersion: '0.1', // '1.' + time.strftime("%Y%m%d", time.gmtime()) + '.01.00'
       },
       user: {},
     },
@@ -53,8 +53,8 @@ export function sapisidFromCookie(_rawCookie: any): any {
   return cookie['__Secure-3PAPISID'];
 }
 
-// // SAPISID Hash reverse engineered by
-// // https://stackoverflow.com/a/32065323/5726546
+// SAPISID Hash reverse engineered by
+// https://stackoverflow.com/a/32065323/5726546
 export function getAuthorization(auth: any): string {
   const sha_1 = createHash('sha1');
   const unix_timestamp = Math.trunc(time.time()).toString();
@@ -62,7 +62,7 @@ export function getAuthorization(auth: any): string {
   return 'SAPISIDHASH ' + unix_timestamp + '_' + sha_1.digest('hex');
 }
 
-export function toInt(string: string): any {
+export function toInt(string: string): number {
   const numberString = re.sub(/^\\d/, '', string);
   let intValue: number;
   try {

@@ -1,16 +1,16 @@
 import { nav } from '@codyduong/nav';
-import { parsePlaylistItemsReturn } from './playlists.types';
+import { parsePlaylistItemsReturn } from './parsers/playlists.types';
 
 export async function getContinuations(
   results: any,
   continuation_type: string | number,
-  limit: number,
+  limit: number | undefined | null,
   requestFunc: (arg1: any) => Promise<Record<string, any>>,
   parse_func: (arg1: any) => any,
   ctokenPath = ''
 ): Promise<Array<any>> {
   let items: any[] = [];
-  while ('continuations' in results && items.length < limit) {
+  while ('continuations' in results && (!limit || items.length < limit)) {
     const additionalParams = getContinuationParams(results, ctokenPath);
     const response = await requestFunc(additionalParams);
     if ('continuationContents' in response) {

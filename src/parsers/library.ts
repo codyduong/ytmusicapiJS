@@ -20,7 +20,7 @@ import { isDigit } from '../pyLibraryMock';
 import { parsePlaylistItems } from './playlists';
 import { getItemText, parseMenuPlaylists } from './utils';
 import * as parser_lt from './library.types';
-import { getContinuations } from './continuations';
+import { getContinuations } from '../continuations';
 
 export function parseArtists(results: any, uploaded = false): Array<any> {
   const artists: Array<any> = [];
@@ -49,7 +49,7 @@ export function parseArtists(results: any, uploaded = false): Array<any> {
 export async function parseLibraryAlbums(
   response: any,
   requestFunc: any,
-  limit: number
+  limit?: number | null
 ): Promise<any> {
   let results = findObjectByKey(
     nav(response, [...SINGLE_COLUMN_TAB, ...SECTION_LIST]),
@@ -62,14 +62,15 @@ export async function parseLibraryAlbums(
   results = nav(results, GRID);
   let albums = parseAlbums(results['items']);
 
-  if (results['continuations']) {
+  if ('continuations' in results) {
     const parseFunc = (contents: any): any => parseAlbums(contents);
+    const remainingLimit = limit == null ? null : limit - albums.length;
     albums = [
       ...albums,
       ...(await getContinuations(
         results,
         'gridContinuation',
-        limit - albums.length,
+        remainingLimit,
         requestFunc,
         parseFunc
       )),
@@ -125,7 +126,7 @@ export function parseAlbums(results: any): parser_lt.parseAlbumsReturn {
 export async function parseLibraryArtists(
   response: any,
   requestFunc: (arg1: any) => Promise<Record<string, any>>,
-  limit: number
+  limit?: number | null
 ): Promise<parser_lt.parseLibraryArtistsReturn> {
   let results = findObjectByKey(
     nav(response, [...SINGLE_COLUMN_TAB, ...SECTION_LIST]),
@@ -138,12 +139,13 @@ export async function parseLibraryArtists(
 
   if (results['continuations']) {
     const parseFunc = (contents: any): any => parseArtists(contents);
+    const remainingLimit = limit == null ? null : limit - artists.length;
     artists = [
       ...artists,
       ...(await getContinuations(
         results,
         'musicShelfContinuation',
-        limit - artists.length,
+        remainingLimit,
         requestFunc,
         parseFunc
       )),
