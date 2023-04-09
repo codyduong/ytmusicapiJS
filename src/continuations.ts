@@ -7,11 +7,14 @@ export async function getContinuations(
   limit: number | undefined | null,
   requestFunc: (arg1: any) => Promise<Record<string, any>>,
   parse_func: (arg1: any) => any,
-  ctokenPath = ''
+  ctokenPath = '',
+  reloadable = false
 ): Promise<Array<any>> {
   let items: any[] = [];
   while ('continuations' in results && (!limit || items.length < limit)) {
-    const additionalParams = getContinuationParams(results, ctokenPath);
+    const additionalParams = reloadable
+      ? getReloadableContinuationParams(results)
+      : getContinuationParams(results, ctokenPath);
     const response = await requestFunc(additionalParams);
     if ('continuationContents' in response) {
       results = response['continuationContents'][continuation_type];
@@ -74,6 +77,16 @@ function getContinuationParams(results: any, ctoken_path: string): string {
     'continuations',
     0,
     'next' + ctoken_path + 'ContinuationData',
+    'continuation',
+  ]);
+  return getContinuationString(ctoken);
+}
+
+function getReloadableContinuationParams(results: any): string {
+  const ctoken = nav(results, [
+    'continuations',
+    0,
+    'reloadContinuationData',
     'continuation',
   ]);
   return getContinuationString(ctoken);

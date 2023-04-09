@@ -49,7 +49,7 @@ export async function getVisitorId(
 
 export function sapisidFromCookie(_rawCookie: any): any {
   const cookie = new SimpleCookie();
-  cookie.load(_rawCookie);
+  cookie.load(_rawCookie.replace('\\', ''));
   return cookie['__Secure-3PAPISID'];
 }
 
@@ -97,13 +97,13 @@ export function parseDuration(duration: string | undefined): number {
   return seconds;
 }
 
-export function sumTotalDuration(item: any): number {
-  return sum(
-    item.tracks.map(
-      ({ track }: { track?: { duration_seconds?: number } }) =>
-        track?.duration_seconds ?? 0
-    )
-  );
+export function sumTotalDuration<T extends Record<string, any>>(
+  item: T & { tracks: { duration_seconds?: number }[] }
+): number {
+  if (!('tracks' in item)) {
+    return 0;
+  }
+  return sum(item.tracks.map((track) => track?.duration_seconds ?? 0));
 }
 
 //Removes any headers controlled by browser

@@ -348,7 +348,7 @@ export function parseContentList<T>(
   return contents;
 }
 
-function parseAlbum(result: any): parser_bT.parseAlbumReturn {
+export function parseAlbum(result: any): parser_bT.parseAlbumReturn {
   return {
     title: nav(result, TITLE_TEXT, null), //@codyduong this isn't nullable in the py library? todo discovery why...
     year: nav(result, SUBTITLE2, null),
