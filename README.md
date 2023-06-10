@@ -1,3 +1,13 @@
+# Archived
+
+ytmusicapiJS was a library I started as an idea to help me make a cli-based YT Music user interface with JavaScript/TypeScript. However, this was also one of the first proper libraries I ever properly attempted to bundle and publish to npm, as well as maintain some semblance of SemVer. It also heavily leaned on the [`ytmusicapi`](https://github.com/sigma67/ytmusicapi) codebase, and should've been more decoupled. This has led to a variety of issues with supporting many environments, working/tested only in NodeJS, and probably rarely works as the average user expects it to (IE. in the browser).
+
+I no longer have the time/willingness to maintain this library, and there are much better alternatives that have popped up since I have started ytmusicapiJS. As such I have decided to archive this repository, so as not to mislead anybody about its development status.
+
+#### Please check out [vixalien/muse](https://github.com/vixalien/muse) as an alternative to ytmusicapiJS
+
+----
+
 [![Downloads](https://img.shields.io/npm/dm/@codyduong/ytmusicapi?style=flat-square)](https://www.npmjs.com/package/@codyduong/ytmusicapi)
 [![Code coverage](https://img.shields.io/codecov/c/github/codyduong/ytmusicapijs?style=flat-square)](https://codecov.io/gh/codyduong/ytmusicapiJS)
 [![Latest release](https://img.shields.io/github/v/release/codyduong/ytmusicapijs?style=flat-square)](https://github.com/codyduong/ytmusicapiJS/releases)
@@ -8,9 +18,7 @@ ytmusicapiJS is a TypeScript implementation of the Python 3 library [`ytmusicapi
 
 It emulates YouTube Music web client requests using the user's cookie data for authentication.
 
-This library is intended to carry the same functionality as the library it is inspired by. As such, unless the need becomes great enough for a specific feature in this library, I recommend all API specific changes be directed to [`ytmusicapi`](https://github.com/sigma67/ytmusicapi) instead. 
-
-##### **Alternatively, check out**: [vixalien/muse](https://github.com/vixalien/muse) which targets more JS/TS environments (NodeJS/Deno/Browser)
+This library is intended to carry the same functionality as the library it is inspired by. As such, unless the need becomes great enough for a specific feature in this library, I recommend all API specific changes be directed to [`ytmusicapi`](https://github.com/sigma67/ytmusicapi) instead.
 
 # Features
 See API here https://codyduong.github.io/ytmusicapiJS/
